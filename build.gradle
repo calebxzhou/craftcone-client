@@ -1,24 +1,16 @@
-buildscript {
-    ext.kotlin_version = '1.8.22'
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
     id "dev.architectury.loom" version "1.1-SNAPSHOT" apply false
+    id 'org.jetbrains.kotlin.jvm' version '1.8.22'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.22'
 }
-apply plugin: 'kotlin'
-
 architectury {
     minecraft = rootProject.minecraft_version
 }
 
 subprojects {
     apply plugin: "dev.architectury.loom"
+    apply plugin: "kotlin"
 
     loom {
         silentMojangMappingsLicense()
@@ -28,8 +20,10 @@ subprojects {
         minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
         // The following line declares the mojmap mappings, you may use other mappings as well
         mappings loom.officialMojangMappings()
-        // The following line declares the yarn mappings you may select this one as well.
-        // mappings "net.fabricmc:yarn:1.19.2+build.3:v2"
+        implementation('org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0')
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+        implementation('org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4')
+        implementation('org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.4')
     }
 }
 
@@ -61,17 +55,4 @@ allprojects {
 }
 repositories {
     mavenCentral()
-}
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-}
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
 }
