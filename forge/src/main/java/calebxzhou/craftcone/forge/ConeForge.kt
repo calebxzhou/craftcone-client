@@ -1,15 +1,16 @@
-package calebxzhou.craftcone.forge;
+package calebxzhou.craftcone.forge
 
-import dev.architectury.platform.forge.EventBuses;
-import calebxzhou.craftcone.ExampleMod;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import calebxzhou.craftcone.Cone.init
+import calebxzhou.craftcone.MOD_ID
+import dev.architectury.platform.forge.EventBuses
+import net.minecraftforge.fml.common.Mod
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext
 
-@Mod(ExampleMod.MOD_ID)
-public class ExampleModForge {
-    public ExampleModForge() {
+@Mod(MOD_ID)
+class ConeForge {
+    init {
         // Submit our event bus to let architectury register our content on the right time
-        EventBuses.registerModEventBus(ExampleMod.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
-        ExampleMod.init();
+        EventBuses.registerModEventBus(MOD_ID, FMLJavaModLoadingContext.get().modEventBus)
+        init()
     }
 }

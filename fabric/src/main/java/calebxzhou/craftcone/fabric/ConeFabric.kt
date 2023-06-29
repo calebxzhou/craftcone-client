@@ -1,11 +1,10 @@
-package calebxzhou.craftcone.fabric;
+package calebxzhou.craftcone.fabric
 
-import calebxzhou.craftcone.ExampleMod;
-import net.fabricmc.api.ModInitializer;
+import calebxzhou.craftcone.Cone.init
+import net.fabricmc.api.ModInitializer
 
-public class ExampleModFabric implements ModInitializer {
-    @Override
-    public void onInitialize() {
-        ExampleMod.init();
+class ConeFabric : ModInitializer {
+    override fun onInitialize() {
+        init()
     }
 }

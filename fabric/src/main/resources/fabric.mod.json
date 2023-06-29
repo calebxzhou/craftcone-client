@@ -16,7 +16,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "calebxzhou.craftcone.fabric.ExampleModFabric"
+      "calebxzhou.craftcone.fabric.ConeFabric"
     ]
   },
   "mixins": [

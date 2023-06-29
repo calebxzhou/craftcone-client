@@ -7,7 +7,8 @@
     "mTitleScreen"
   ],
   "mixins": [
-    "mConnection"
+    "mConnection",
+    "mLevel"
   ],
   "injectors": {
     "defaultRequire": 1
