@@ -1,5 +1,6 @@
 package calebxzhou.craftcone
 
+import calebxzhou.craftcone.net.ConeNetManager
 import net.minecraft.client.Minecraft
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.level.Level
@@ -14,11 +15,12 @@ val MC: Minecraft
     get() = Minecraft.getInstance()
 
 object Cone {
-    val dimensionNumberMap = hashMapOf<Int,ResourceKey<Level>>()
+    //维度编号与维度（eg 0=overworld 1=the_end 2=the_nether）
+    val numDimKeyMap = hashMapOf<Int,ResourceKey<Level>>()
     @JvmStatic
     fun init() {
         Events.register()
-        NetworkManager
+        ConeNetManager
     }
 }
 /*

@@ -1,6 +1,6 @@
 package calebxzhou.craftcone.mixin;
 
-import calebxzhou.craftcone.NetworkManager;
+import calebxzhou.craftcone.net.ConeNetManager;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -23,7 +23,7 @@ public class mPauseScreen extends Screen {
     @Inject(method = "createPauseMenu",at=@At("TAIL"))
     private void ad(CallbackInfo ci){
         addRenderableWidget(new Button(0,0,100,20,Component.literal("Reconn"),button -> {
-            NetworkManager.reconnect();
+            ConeNetManager.reconnect();
         }));
     }
 }

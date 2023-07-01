@@ -7,8 +7,11 @@
     "mTitleScreen"
   ],
   "mixins": [
+    "mChunkHolder",
     "mConnection",
-    "mLevel"
+    "mFallingBlockEntity",
+    "mLevel",
+    "mServerGamePacketListenerImpl"
   ],
   "injectors": {
     "defaultRequire": 1

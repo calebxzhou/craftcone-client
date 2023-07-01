@@ -1,23 +1,7 @@
 package calebxzhou.craftcone.mixin;
 
-import calebxzhou.craftcone.NetworkManager;
-import calebxzhou.craftcone.PacketsToBroadcast;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandlerContext;
-import net.minecraft.network.*;
-import net.minecraft.network.protocol.Packet;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.network.Connection;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.*;
-import java.nio.ByteBuffer;
 
 /**
  * Created  on 2023-06-20,22:21.
