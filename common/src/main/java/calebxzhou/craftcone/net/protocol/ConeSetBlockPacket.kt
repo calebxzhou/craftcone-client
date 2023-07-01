@@ -4,47 +4,50 @@ import calebxzhou.craftcone.Cone
 import calebxzhou.craftcone.LOG
 import calebxzhou.craftcone.MC
 import calebxzhou.craftcone.net.ConePacketSender
+import calebxzhou.craftcone.utils.LevelUtils.setBlockDefault
 import net.minecraft.core.BlockPos
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.LiquidBlock
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.material.FluidState
 
 /**
  * Created  on 2023-06-29,20:46.
  */
 //设置单个方块的包
 data class ConeSetBlockPacket(
-    val dimId: Int, //varint
-    val bpos:BlockPos,
-    val state:BlockState?,
-   // val flags:Int, 默认是3
-   // val recursionLeft:Int,  默认是512
+    //维度
+    val level: Level,
+    //方块位置
+    val bpos: BlockPos,
+    //状态
+    val state: BlockState?,
+) : ConePacket {
 
-    ) : ConePacket{
 
-    constructor(level: Level, pos: BlockPos, state: BlockState,
-    ) : this(
-        Cone.numDimKeyMap.filterValues { it == level.dimension() }.keys.first(),
-        pos, state,
-    )
-    companion object{
-        var prevSetBlockPos: BlockPos?=null
-        var prevSetBlockState: BlockState?=null
-        const val DEFAULT_FLAG = 3
-        const val DEFAULT_RECURSION_LEFT = 512
+    companion object {
+        //上次设定的方块位置与状态
+        var prevSetBlockPos: BlockPos? = null
+        var prevSetBlockState: BlockState? = null
 
-        fun read(buf: FriendlyByteBuf) : ConeSetBlockPacket {
-            return ConeSetBlockPacket(buf.readVarInt(),
-            buf.readBlockPos(),
-            buf.readById(Block.BLOCK_STATE_REGISTRY))
+        //从buf读
+        fun read(buf: FriendlyByteBuf): ConeSetBlockPacket {
+            return ConeSetBlockPacket(
+                ConePacket.getLevelByDimId(buf.readVarInt()),
+                buf.readBlockPos(),
+                buf.readById(Block.BLOCK_STATE_REGISTRY),
+            )
         }
     }
+
     override fun write(buf: FriendlyByteBuf) {
-        buf.writeVarInt(dimId)
+        buf.writeVarInt(ConePacket.getDimIdByLevel(level))
         buf.writeBlockPos(bpos)
-        buf.writeId(Block.BLOCK_STATE_REGISTRY,state?:run{
+        buf.writeId(Block.BLOCK_STATE_REGISTRY, state ?: run {
             LOG.warn("无效的方块状态，将使用空气代替")
             Blocks.AIR.defaultBlockState()
         })
@@ -52,12 +55,12 @@ data class ConeSetBlockPacket(
 
 
     override fun process() {
-        ConePacket.getLevelByDimId(dimId).setBlock(bpos,state?:run{
-            LOG.warn("无效的方块状态，将使用空气代替")
-            Blocks.AIR.defaultBlockState()
-        },
-            DEFAULT_FLAG,
-            DEFAULT_RECURSION_LEFT)
+        level.setBlockDefault(
+            bpos, state ?: run {
+                LOG.warn("无效的方块状态，将使用空气代替")
+                Blocks.AIR.defaultBlockState()
+            }
+        )
         prevSetBlockPos = bpos
         prevSetBlockState = state
 
@@ -66,8 +69,16 @@ data class ConeSetBlockPacket(
     override fun checkSendCondition(): Boolean {
         var send = true
 
+        //不发送非满格液体
+        val block = state?.block
+        if(block is LiquidBlock){
+            if (state?.fluidState?.amount != FluidState.AMOUNT_FULL) {
+
+                send = false
+            }
+        }
         //检查一下别跟上回发送的一样，否则死循环了
-        if(prevSetBlockPos == bpos && prevSetBlockState == state){
+        if (prevSetBlockPos == bpos && prevSetBlockState == state) {
             send = false
         }
 

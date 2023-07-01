@@ -4,6 +4,7 @@ import calebxzhou.craftcone.PacketsToBroadcast
 import calebxzhou.craftcone.net.protocol.ConeExplodePacket
 import calebxzhou.craftcone.net.protocol.ConePacket
 import calebxzhou.craftcone.net.protocol.ConeSetBlockPacket
+import calebxzhou.craftcone.net.protocol.ConeSetSectionPacket
 import io.netty.buffer.Unpooled
 import net.minecraft.network.ConnectionProtocol
 import net.minecraft.network.FriendlyByteBuf
@@ -22,7 +23,7 @@ import java.util.concurrent.Executors
 //网络管理器
 object ConeNetManager {
     //网络线程池
-    val thpool = Executors.newFixedThreadPool(4, NamedThreadFactory("CraftCone-Network"))
+    val thpool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(), NamedThreadFactory("CraftCone-Network"))
     var serverSocket: Socket
     var connected = false
 
@@ -37,11 +38,11 @@ object ConeNetManager {
         connected = true
         val packetClassList = listOf(
             ConeSetBlockPacket::class.java,
-            ConeExplodePacket::class.java,
+            ConeSetSectionPacket::class.java,
         )
         val packetList: List<(FriendlyByteBuf) -> ConePacket> = listOf(
             ConeSetBlockPacket::read,
-            ConeExplodePacket::read,
+            ConeSetSectionPacket::read,
         )
 
         packetList.forEach {

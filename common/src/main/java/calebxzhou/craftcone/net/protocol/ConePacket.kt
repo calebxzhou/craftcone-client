@@ -15,6 +15,7 @@ interface ConePacket {
         fun read(buf: FriendlyByteBuf): ConePacket{
             throw NotImplementedError("必须使用实现类的read方法")
         }
+        //根据维度编号取维度
         fun getLevelByDimId(dimId : Int) : Level {
             val dim = Cone.numDimKeyMap[dimId]?:run {
                 Cone.numDimKeyMap.forEach { (k, v) -> LOG.error("$k $v") }
@@ -25,6 +26,10 @@ interface ConePacket {
                 throw IllegalStateException("处理数据包时，未在游玩状态！")
             }
             return level
+        }
+        //根据维度取维度编号
+        fun getDimIdByLevel(level: Level) : Int{
+            return Cone.numDimKeyMap.filterValues { it == level.dimension() }.keys.first()
         }
     }
     //写数据进FriendlyByteBuf

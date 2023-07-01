@@ -9,9 +9,12 @@
   "mixins": [
     "mChunkHolder",
     "mConnection",
+    "mExplosion",
     "mFallingBlockEntity",
     "mLevel",
-    "mServerGamePacketListenerImpl"
+    "mLevelChunk",
+    "mServerGamePacketListenerImpl",
+    "mServerLevel"
   ],
   "injectors": {
     "defaultRequire": 1
