@@ -16,28 +16,31 @@ object ConePacketSender {
             LOG.info("包$packet 不符合发送条件")
             return
         }
+
+        if (!ConeNetManager.connected) {
+            LOG.warn("未连接服务器就发包了")
+            return
+        }
+        val data = FriendlyByteBuf(Unpooled.buffer())
+        val packetId = ConeNetManager.packetClassIdMap[packet.javaClass] ?: run {
+            LOG.error("找不到包$packet 对应的ID！")
+            return
+        }
+
+        data.writeByte(packetId)
+        packet.write(data)
+
+        val length = data.writerIndex()
+        val newData = FriendlyByteBuf(Unpooled.buffer())
+        //写入长度，防止粘包
+        newData.writeVarInt(length)
+        newData.writeBytes(data.array())
         ConeNetManager.thpool.submit {
-            if (!ConeNetManager.connected) {
-                LOG.warn("未连接服务器就发包了")
-                return@submit
-            }
-            val data = FriendlyByteBuf(Unpooled.buffer())
-            val packetId = ConeNetManager.packetClassIdMap[packet.javaClass] ?: run {
-                LOG.error("找不到包$packet 对应的ID！")
-                return@submit
-            }
-
-            data.writeByte(packetId)
-            packet.write(data)
-            val length = data.writerIndex()
-            val newData = FriendlyByteBuf(Unpooled.buffer())
-            //先写入长度，防止粘包
-            newData.writeVarInt(length)
-            //再写入数据
-            newData.writeBytes(data.array())
-
             try {
-                ConeNetManager.serverSocket.getOutputStream().write(newData.array())
+                val out = ConeNetManager.serverSocket.getOutputStream()
+                val arr = newData.array()
+                //println(arr.joinToString { String.format("%02X",it) })
+                out.write(arr)
             } catch (e: IOException) {
                 LOG.error("发包错误：", e)
             }
