@@ -1,6 +1,6 @@
 package calebxzhou.craftcone.mixin;
 
-import calebxzhou.craftcone.net.ConePacketSender;
+import calebxzhou.craftcone.net.ConeNetManager;
 import calebxzhou.craftcone.net.protocol.ConeSetBlockPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
@@ -25,6 +25,6 @@ abstract class mServerGamePacketListenerImpl {
     private void onPlayerUseItemOn(ServerboundUseItemOnPacket packet, CallbackInfo ci){
         ServerLevel level = player.getLevel();
         BlockPos blockPos = packet.getHitResult().getBlockPos();
-        ConePacketSender.checkAndSendPacket(new ConeSetBlockPacket(level,blockPos,level.getBlockState(blockPos)));
+        ConeNetManager.checkAndSendPacket(new ConeSetBlockPacket(level,blockPos,level.getBlockState(blockPos)));
     }
 }

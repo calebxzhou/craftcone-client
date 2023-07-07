@@ -1,19 +1,15 @@
 package calebxzhou.craftcone.net.protocol
 
-import calebxzhou.craftcone.Cone
 import calebxzhou.craftcone.LOG
 import calebxzhou.craftcone.MC
-import calebxzhou.craftcone.net.ConePacketSender
 import calebxzhou.craftcone.utils.LevelUtils.setBlockDefault
 import net.minecraft.core.BlockPos
-import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.block.LiquidBlock
+import net.minecraft.world.level.block.*
+import net.minecraft.world.level.block.piston.PistonBaseBlock
+import net.minecraft.world.level.block.piston.PistonHeadBlock
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.level.material.FluidState
 
 /**
  * Created  on 2023-06-29,20:46.
@@ -37,7 +33,7 @@ data class ConeSetBlockPacket(
         //从buf读
         fun read(buf: FriendlyByteBuf): ConeSetBlockPacket {
             return ConeSetBlockPacket(
-                ConePacket.getLevelByDimId(buf.readVarInt()),
+                ConePacket.getLevelByDimId(buf.readByte().toInt()),
                 buf.readBlockPos(),
                 buf.readById(Block.BLOCK_STATE_REGISTRY),
             )
@@ -45,7 +41,7 @@ data class ConeSetBlockPacket(
     }
 
     override fun write(buf: FriendlyByteBuf) {
-        buf.writeVarInt(ConePacket.getDimIdByLevel(level))
+        buf.writeByte(ConePacket.getDimIdByLevel(level))
         buf.writeBlockPos(bpos)
         buf.writeId(Block.BLOCK_STATE_REGISTRY, state ?: run {
             LOG.warn("无效的方块状态，将使用空气代替")
@@ -55,12 +51,15 @@ data class ConeSetBlockPacket(
 
 
     override fun process() {
-        level.setBlockDefault(
-            bpos, state ?: run {
-                LOG.warn("无效的方块状态，将使用空气代替")
-                Blocks.AIR.defaultBlockState()
-            }
-        )
+        //MC?.execute{
+            level.setBlockDefault(
+                bpos, state ?: run {
+                    LOG.warn("无效的方块状态，将使用空气代替")
+                    Blocks.AIR.defaultBlockState()
+                }
+            )
+       // }
+
         prevSetBlockPos = bpos
         prevSetBlockState = state
 
@@ -69,14 +68,29 @@ data class ConeSetBlockPacket(
     override fun checkSendCondition(): Boolean {
         var send = true
 
-        //不发送非满格液体
+        //不发送非源头液体
         val block = state?.block
         if(block is LiquidBlock){
-            if (state?.fluidState?.amount != FluidState.AMOUNT_FULL) {
-
+            val isLiquidSource = state?.fluidState?.isSource?: false
+            if (!isLiquidSource) {
                 send = false
             }
         }
+        //不发送活塞 伸缩的方块
+        if( block is PistonHeadBlock){
+            send = false
+        }
+
+        //不发送红石更新（红石线/比较器）
+        if(block is RedStoneWireBlock || block is DiodeBlock){
+            if (state != block.defaultBlockState())
+            send = false
+        }
+        //不更新方块的状态
+        /*if(block !is DirectionalBlock){
+            if(state != block?.defaultBlockState())
+                send=false
+        }*/
         //检查一下别跟上回发送的一样，否则死循环了
         if (prevSetBlockPos == bpos && prevSetBlockState == state) {
             send = false

@@ -18,11 +18,12 @@ interface ConePacket {
         //根据维度编号取维度
         fun getLevelByDimId(dimId : Int) : Level {
             val dim = Cone.numDimKeyMap[dimId]?:run {
-                Cone.numDimKeyMap.forEach { (k, v) -> LOG.error("$k $v") }
-                throw IllegalArgumentException("找不到编号为${dimId}的维度，当前只有以上这些维度。")
+                //Cone.numDimKeyMap.forEach { (k, v) -> LOG.error("$k $v") }
+                LOG.warn("找不到编号为${dimId}的维度。")
+                Level.OVERWORLD
             }
 
-            val level = MC.singleplayerServer?.getLevel(dim) ?:run {
+            val level = MC?.singleplayerServer?.getLevel(dim) ?:run {
                 throw IllegalStateException("处理数据包时，未在游玩状态！")
             }
             return level

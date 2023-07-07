@@ -1,17 +1,10 @@
 package calebxzhou.craftcone.mixin;
 
-import calebxzhou.craftcone.net.ConePacketSender;
-import calebxzhou.craftcone.net.protocol.ConeSetBlockPacket;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * Created  on 2023-07-01,9:57.
@@ -25,7 +18,7 @@ abstract class mFallingBlockEntity extends Entity {
     private void onFallingBlockFellSuccess(CallbackInfo ci){
         BlockPos blockPos = blockPosition();
         BlockState blockState = level.getBlockState(blockPos);
-        ConePacketSender.checkAndSendPacket(new ConeSetBlockPacket(level,blockPos,blockState));
+        ConeNetManager.checkAndSendPacket(new ConeSetBlockPacket(level,blockPos,blockState));
     }*/
 
 
