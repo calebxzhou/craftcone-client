@@ -20,7 +20,7 @@
     ]
   },
   "mixins": [
-    "craftcone-fabric.mixins.json",
+    "craftcone-common.mixins.json",
     "rdi4.mixins.json"
   ],
   "depends": {

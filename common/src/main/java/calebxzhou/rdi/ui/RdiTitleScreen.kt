@@ -1,11 +1,13 @@
 package calebxzhou.rdi.ui
 
+import calebxzhou.craftcone.net.ConeNetManager
 import calebxzhou.libertorch.MC
 import calebxzhou.libertorch.mc.gui.LtTheme
 import calebxzhou.libertorch.util.Gl
 import calebxzhou.libertorch.util.OsDialogUt
 import calebxzhou.libertorch.util.SysUt
 import calebxzhou.libertorch.util.TimeUt
+import calebxzhou.rdi.RdiConsts
 import calebxzhou.rdi.RdiLevel
 import com.mojang.blaze3d.platform.InputConstants
 import com.mojang.blaze3d.vertex.PoseStack
@@ -64,6 +66,7 @@ class RdiTitleScreen : Screen(Component.literal("主界面")) {
                 return
             }
             InputConstants.isKeyDown(handle, InputConstants.KEY_RETURN) || InputConstants.isKeyDown(handle, InputConstants.KEY_NUMPADENTER) -> {
+                ConeNetManager.connect(RdiConsts.serverAddr)
                 RdiLevel.load(RdiTitleScreen(),RdiLevel.defaultLevelName)
             }
         }

@@ -23,7 +23,12 @@ object RdiLevel {
     const val defaultWorldGenSeed = 1145141919810L
 
     private fun getDefaultSettings(levelName: String): LevelSettings {
-        return LevelSettings(levelName,GameType.SURVIVAL,false,Difficulty.HARD,false,GameRules(), DataPackConfig.DEFAULT)
+        return LevelSettings(levelName,
+            if(RdiConsts.DebugGameMode) GameType.CREATIVE else GameType.SURVIVAL,
+            false,
+            Difficulty.HARD,
+            RdiConsts.DebugGameMode,
+            GameRules(), DataPackConfig.DEFAULT)
     }
     private fun getDefaultWorldPresets(registry: RegistryAccess): WorldGenSettings {
         return WorldPresets.createNormalWorldFromPreset(registry, defaultWorldGenSeed)

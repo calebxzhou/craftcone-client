@@ -20,7 +20,9 @@ class ConeClientChannelHandler(val serverAddr: InetSocketAddress) : SimpleChanne
     //发包数
     var packetCountTx = 0
 
-
+    override fun channelInactive(ctx: ChannelHandlerContext) {
+        super.channelInactive(ctx)
+    }
 
     override fun exceptionCaught(ctx: ChannelHandlerContext?, cause: Throwable?) {
         LOG.error("连接错误：",cause)
