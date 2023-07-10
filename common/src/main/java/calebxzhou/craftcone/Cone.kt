@@ -13,8 +13,6 @@ import java.net.InetSocketAddress
 const val MOD_ID = "craftcone"
 val LOG: Logger = LoggerFactory.getLogger("CraftCone")
 
-val MC: Minecraft?
-    get() = Minecraft.getInstance()
 
 object Cone {
     //维度编号与维度（eg 0=overworld 1=the_end 2=the_nether）

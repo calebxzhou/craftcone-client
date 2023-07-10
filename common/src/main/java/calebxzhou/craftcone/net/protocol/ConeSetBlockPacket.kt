@@ -1,8 +1,8 @@
 package calebxzhou.craftcone.net.protocol
 
 import calebxzhou.craftcone.LOG
-import calebxzhou.craftcone.MC
 import calebxzhou.craftcone.utils.LevelUtils.setBlockDefault
+import calebxzhou.libertorch.MC
 import net.minecraft.core.BlockPos
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.world.level.Level
@@ -51,14 +51,14 @@ data class ConeSetBlockPacket(
 
 
     override fun process() {
-        //MC?.execute{
+        MC?.execute{
             level.setBlockDefault(
                 bpos, state ?: run {
                     LOG.warn("无效的方块状态，将使用空气代替")
                     Blocks.AIR.defaultBlockState()
                 }
             )
-       // }
+        }
 
         prevSetBlockPos = bpos
         prevSetBlockState = state
@@ -82,19 +82,19 @@ data class ConeSetBlockPacket(
         }
 
         //不发送红石更新（红石线/比较器）
-        if(block is RedStoneWireBlock || block is DiodeBlock){
+        /*if(block is RedStoneWireBlock || block is DiodeBlock){
             if (state != block.defaultBlockState())
             send = false
-        }
+        }*/
         //不更新方块的状态
         /*if(block !is DirectionalBlock){
             if(state != block?.defaultBlockState())
                 send=false
         }*/
         //检查一下别跟上回发送的一样，否则死循环了
-        if (prevSetBlockPos == bpos && prevSetBlockState == state) {
+        /*if (prevSetBlockPos == bpos && prevSetBlockState == state) {
             send = false
-        }
+        }*/
 
         return send
     }

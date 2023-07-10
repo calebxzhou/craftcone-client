@@ -20,10 +20,10 @@ public class mPauseScreen extends Screen {
     }
 
     //点击暂停画面上的按钮，重连服务器
-    @Inject(method = "createPauseMenu",at=@At("TAIL"))
+    /*@Inject(method = "createPauseMenu",at=@At("TAIL"))
     private void ad(CallbackInfo ci){
         addRenderableWidget(new Button(0,0,100,20,Component.literal("Reconn"),button -> {
             ConeNetManager.reconnect();
         }));
-    }
+    }*/
 }

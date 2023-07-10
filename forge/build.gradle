@@ -15,7 +15,7 @@ loom {
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
 
         mixinConfig "craftcone-common.mixins.json"
-        mixinConfig "craftcone-forge.mixins.json"
+        mixinConfig "rdi4.mixins.json"
     }
 }
 

@@ -21,10 +21,10 @@ abstract class mServerGamePacketListenerImpl {
     @Shadow public ServerPlayer player;
 
     //广播包：成功设置方块时（玩家使用物品）
-    @Inject(method = "handleUseItemOn",at=@At(value = "INVOKE",target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;send(Lnet/minecraft/network/protocol/Packet;)V",ordinal = 0))
+   /* @Inject(method = "handleUseItemOn",at=@At(value = "INVOKE",target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;send(Lnet/minecraft/network/protocol/Packet;)V",ordinal = 0))
     private void onPlayerUseItemOn(ServerboundUseItemOnPacket packet, CallbackInfo ci){
         ServerLevel level = player.getLevel();
         BlockPos blockPos = packet.getHitResult().getBlockPos();
         ConeNetManager.checkAndSendPacket(new ConeSetBlockPacket(level,blockPos,level.getBlockState(blockPos)));
-    }
+    }*/
 }

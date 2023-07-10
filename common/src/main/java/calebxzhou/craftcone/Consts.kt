@@ -7,5 +7,5 @@ import java.net.InetSocketAddress
  */
 
 object Consts {
-    val serverAddr = InetSocketAddress("localhost",19198)
+
 }

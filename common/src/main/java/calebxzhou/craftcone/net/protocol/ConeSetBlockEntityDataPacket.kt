@@ -1,6 +1,6 @@
 package calebxzhou.craftcone.net.protocol
 
-import calebxzhou.craftcone.MC
+import calebxzhou.libertorch.MC
 import net.minecraft.client.gui.screens.inventory.CommandBlockEditScreen
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Registry

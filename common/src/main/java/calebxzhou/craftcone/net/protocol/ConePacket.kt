@@ -2,7 +2,7 @@ package calebxzhou.craftcone.net.protocol
 
 import calebxzhou.craftcone.Cone
 import calebxzhou.craftcone.LOG
-import calebxzhou.craftcone.MC
+import calebxzhou.libertorch.MC
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.world.level.Level
 import java.lang.IllegalArgumentException

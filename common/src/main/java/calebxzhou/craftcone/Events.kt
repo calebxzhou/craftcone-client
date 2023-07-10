@@ -4,6 +4,7 @@ import calebxzhou.craftcone.net.ConeNetManager
 import calebxzhou.craftcone.net.ConeNetManager.checkAndSendPacket
 import calebxzhou.craftcone.net.protocol.ConeChatPacket
 import calebxzhou.craftcone.net.protocol.ConeSetBlockPacket
+import calebxzhou.libertorch.MC
 import dev.architectury.event.EventResult
 import dev.architectury.event.events.common.BlockEvent
 import dev.architectury.event.events.common.ChatEvent
@@ -26,7 +27,7 @@ import net.minecraft.world.level.block.state.BlockState
  */
 object Events{
     fun register(){
-        BlockEvent.PLACE.register(::onPlaceBlock)
+        //BlockEvent.PLACE.register(::onPlaceBlock)
         BlockEvent.BREAK.register(::onBreakBlock)
         ChatEvent.RECEIVED.register(::onChat )
         LifecycleEvent.SERVER_STARTED.register(::onLocalServerStarted)
@@ -48,8 +49,10 @@ object Events{
                 val handBlock = handItem.block
                 if(handBlock is DirectionalBlock){
                     //TODO 解决方向同步问题
+                    realState = blockState
+                }else{
+                    realState = handBlock.defaultBlockState()
                 }
-                realState = handBlock.defaultBlockState()
             }
         }else{
             //发射器放置方块
@@ -88,7 +91,7 @@ object Events{
     private fun onChat(player: ServerPlayer?, component: Component?): EventResult? {
         if(player==null || component==null)
             return EventResult.pass()
-        ConeNetManager.checkAndSendPacket(ConeChatPacket(player.uuid,component.string))
+        ConeNetManager.checkAndSendPacket(ConeChatPacket(MC.user.name,component.string))
         return EventResult.pass()
     }
 

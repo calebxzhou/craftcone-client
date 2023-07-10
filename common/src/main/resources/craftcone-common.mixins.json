@@ -3,14 +3,10 @@
   "package": "calebxzhou.craftcone.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "mChatScreen",
-    "mPauseScreen",
-    "mTitleScreen"
+    "mPauseScreen"
   ],
   "mixins": [
     "mChunkHolder",
-    "mConnection",
-    "mExplosion",
     "mFallingBlockEntity",
     "mLevel",
     "mLevelChunk",

@@ -13,6 +13,6 @@ fun main() {
     var inputString: String?
     do {
         inputString = scanner.nextLine()
-        ConeNetManager.checkAndSendPacket(ConeChatPacket(UUID(0L,0L),inputString))
+        //ConeNetManager.checkAndSendPacket(ConeChatPacket(UUID(0L,0L),inputString))
     } while (inputString != "stop")
 }

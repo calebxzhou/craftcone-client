@@ -5,6 +5,7 @@ import calebxzhou.craftcone.LOG
 import calebxzhou.craftcone.net.protocol.ConeChatPacket
 import calebxzhou.craftcone.net.protocol.ConePacket
 import calebxzhou.craftcone.net.protocol.ConeSetBlockPacket
+import calebxzhou.rdi.RdiConsts
 import io.netty.bootstrap.Bootstrap
 import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelFuture
@@ -100,10 +101,6 @@ object ConeNetManager {
         val udpPacket = DatagramPacket(data,channelHandlerNow!!.serverAddr)
         channelFutureNow!!.channel().writeAndFlush(udpPacket)
         channelHandlerNow!!.packetCountTx++
-    }
-    @JvmStatic
-    fun reconnect() {
-        connect(Consts.serverAddr)
     }
 
 }

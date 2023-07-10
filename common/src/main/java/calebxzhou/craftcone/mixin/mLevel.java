@@ -17,10 +17,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 abstract class mLevel {
 
     //广播包：成功设置方块时（通常为放置）
-    /*@Inject(method = "setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z",
+    @Inject(method = "setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z",
             at=@At(value = "HEAD"))
     private void onSetBlock(BlockPos blockPos, BlockState blockState, int i, CallbackInfoReturnable<Boolean> cir){
         ConeNetManager.checkAndSendPacket(new ConeSetBlockPacket((Level)(Object)this,blockPos,blockState));
-    }*/
+    }
 
 }
