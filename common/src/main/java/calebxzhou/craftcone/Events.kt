@@ -1,25 +1,25 @@
 package calebxzhou.craftcone
 
+import calebxzhou.craftcone.Cone.inGame
 import calebxzhou.craftcone.net.ConeNetManager
-import calebxzhou.craftcone.net.ConeNetManager.checkAndSendPacket
-import calebxzhou.craftcone.net.protocol.ConeChatPacket
-import calebxzhou.craftcone.net.protocol.ConeSetBlockPacket
+import calebxzhou.craftcone.net.ConeNetManager.sendPacket
+import calebxzhou.craftcone.net.protocol.game.ConeChatPacket
+import calebxzhou.craftcone.net.protocol.game.ConePlayerJoinPacket
+import calebxzhou.craftcone.net.protocol.game.ConePlayerQuitPacket
+import calebxzhou.craftcone.net.protocol.game.ConeSetBlockPacket
 import calebxzhou.libertorch.MC
 import dev.architectury.event.EventResult
 import dev.architectury.event.events.common.BlockEvent
 import dev.architectury.event.events.common.ChatEvent
 import dev.architectury.event.events.common.LifecycleEvent
+import dev.architectury.event.events.common.PlayerEvent
 import dev.architectury.utils.value.IntValue
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.player.Player
-import net.minecraft.world.item.BlockItem
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.block.DirectionalBlock
 import net.minecraft.world.level.block.state.BlockState
 
 /**
@@ -27,46 +27,32 @@ import net.minecraft.world.level.block.state.BlockState
  */
 object Events{
     fun register(){
-        //BlockEvent.PLACE.register(::onPlaceBlock)
         BlockEvent.BREAK.register(::onBreakBlock)
+        PlayerEvent.PLAYER_JOIN.register(::onPlayerJoin)
+        PlayerEvent.PLAYER_QUIT.register(::onPlayerQuit)
         ChatEvent.RECEIVED.register(::onChat )
         LifecycleEvent.SERVER_STARTED.register(::onLocalServerStarted)
         LifecycleEvent.SERVER_STOPPING.register(::onLocalServerStopping)
     }
 
-    //放置方块
-    private fun onPlaceBlock(
-        level: Level,
-        blockPos: BlockPos,
-        blockState: BlockState,
-        entity: Entity?
-    ): EventResult {
-        var realState: BlockState = blockState
-        //实体放置方块
-        if(entity is Entity){
-            val handItem = entity.handSlots.first()?.item
-            if(handItem is BlockItem){
-                val handBlock = handItem.block
-                if(handBlock is DirectionalBlock){
-                    //TODO 解决方向同步问题
-                    realState = blockState
-                }else{
-                    realState = handBlock.defaultBlockState()
-                }
-            }
-        }else{
-            //发射器放置方块
-            realState = blockState
-        }
-        checkAndSendPacket(
-            ConeSetBlockPacket(
-                level,
-                blockPos,
-                realState
+    private fun onPlayerQuit(player: ServerPlayer) {
+        sendPacket(
+            ConePlayerQuitPacket(
+                player.uuid,
+                player.displayName.string
             )
         )
-        return EventResult.pass()
     }
+
+    private fun onPlayerJoin(player: ServerPlayer) {
+        sendPacket(
+            ConePlayerJoinPacket(
+                player.uuid,
+                player.displayName.string
+            )
+        )
+    }
+
 
 
     private fun onBreakBlock(
@@ -76,7 +62,7 @@ object Events{
         serverPlayer: ServerPlayer?,
         intValue: IntValue?
     ): EventResult? {
-        checkAndSendPacket(
+        sendPacket(
             ConeSetBlockPacket(
                 level,
                 blockPos,
@@ -91,26 +77,26 @@ object Events{
     private fun onChat(player: ServerPlayer?, component: Component?): EventResult? {
         if(player==null || component==null)
             return EventResult.pass()
-        ConeNetManager.checkAndSendPacket(ConeChatPacket(MC.user.name,component.string))
+        ConeNetManager.sendPacket(ConeChatPacket(MC.user.name,component.string))
         return EventResult.pass()
     }
 
     //本地服务器启动时
     private fun onLocalServerStarted(server: MinecraftServer) {
         //打开地图时，每个维度编成数字
+        Cone.numDimKeyMap.clear()
         server.levelKeys().forEach {
             val number = Cone.numDimKeyMap.size
             LOG.info("Dimension Number: $number $it")
             Cone.numDimKeyMap += Pair(number,it)
         }
-        //启动Listener
-        //ConePacketListener.start()
+
+        inGame = true
     }
 
 
     //本地服务器关闭时
     private fun onLocalServerStopping(server: MinecraftServer?) {
-        //关闭listener
-        //ConePacketListener.interrupt()
+        inGame = false
     }
 }

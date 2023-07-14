@@ -1,5 +1,6 @@
-package calebxzhou.craftcone.net.protocol
+package calebxzhou.craftcone.net.protocol.game
 
+import calebxzhou.craftcone.net.protocol.ConeInGamePacket
 import calebxzhou.libertorch.MC
 import net.minecraft.client.gui.screens.inventory.CommandBlockEditScreen
 import net.minecraft.core.BlockPos
@@ -18,12 +19,12 @@ data class ConeSetBlockEntityDataPacket(
     val pos: BlockPos,
     val type:BlockEntityType<*>?,
     val tag:CompoundTag?,
-): ConePacket {
+): ConeInGamePacket {
 
     companion object{
-        fun read(buf: FriendlyByteBuf): ConeSetBlockEntityDataPacket{
+        fun read(buf: FriendlyByteBuf): ConeSetBlockEntityDataPacket {
             return ConeSetBlockEntityDataPacket(
-                ConePacket.getLevelByDimId(buf.readByte().toInt()),
+                ConeInGamePacket.getLevelByDimId(buf.readByte().toInt()),
                 buf.readBlockPos(),
                 buf.readById(Registry.BLOCK_ENTITY_TYPE),
                 buf.readNbt()
@@ -31,7 +32,7 @@ data class ConeSetBlockEntityDataPacket(
         }
     }
     override fun write(buf: FriendlyByteBuf) {
-        buf.writeByte(ConePacket.getDimIdByLevel(level))
+        buf.writeByte(ConeInGamePacket.getDimIdByLevel(level))
         buf.writeBlockPos(pos)
         buf.writeId(Registry.BLOCK_ENTITY_TYPE,type)
         buf.writeNbt(tag)
@@ -49,7 +50,4 @@ data class ConeSetBlockEntityDataPacket(
         }
     }
 
-    override fun checkSendCondition(): Boolean {
-        return true
-    }
 }

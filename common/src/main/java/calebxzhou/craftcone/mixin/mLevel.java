@@ -1,9 +1,10 @@
 package calebxzhou.craftcone.mixin;
 
 import calebxzhou.craftcone.net.ConeNetManager;
-import calebxzhou.craftcone.net.protocol.ConeSetBlockPacket;
+import calebxzhou.craftcone.net.protocol.game.ConeSetBlockPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,7 +21,13 @@ abstract class mLevel {
     @Inject(method = "setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z",
             at=@At(value = "HEAD"))
     private void onSetBlock(BlockPos blockPos, BlockState blockState, int i, CallbackInfoReturnable<Boolean> cir){
-        ConeNetManager.checkAndSendPacket(new ConeSetBlockPacket((Level)(Object)this,blockPos,blockState));
+        if(blockState.getBlock() instanceof LiquidBlock lb){
+            if (!blockState.getFluidState().isSource()) {
+                //不发送非源头液体
+                return;
+            }
+        }
+        ConeNetManager.sendPacket(new ConeSetBlockPacket((Level)(Object)this,blockPos,blockState));
     }
 
 }

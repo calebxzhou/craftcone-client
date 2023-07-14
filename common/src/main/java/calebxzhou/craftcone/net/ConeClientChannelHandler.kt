@@ -1,7 +1,8 @@
 package calebxzhou.craftcone.net
 
 import calebxzhou.craftcone.LOG
-import calebxzhou.craftcone.net.protocol.ConePacket
+import calebxzhou.craftcone.net.protocol.ConePacketSet
+import calebxzhou.craftcone.net.protocol.ConeProcessablePacket
 import io.netty.channel.*
 import io.netty.channel.ChannelHandler.Sharable
 import io.netty.channel.socket.DatagramPacket
@@ -29,11 +30,22 @@ class ConeClientChannelHandler(val serverAddr: InetSocketAddress) : SimpleChanne
     }
     override fun channelRead0(ctx: ChannelHandlerContext?, msg: DatagramPacket) {
         ++packetCountRx
-        val packetId = msg.content().readByte().toInt()
+        //第一个byte
+        val byte1 = msg.content().readByte().toInt()
+        //第1个bit（包类型，in game/out game）
+        val bit1 = byte1 shr 7 and 1
+        //第2~8个bit（包ID）
+        val packetId = byte1 shl 1
+
         val data = FriendlyByteBuf(msg.content())
-        ConeNetManager.createPacket(packetId,data)?.process() ?:let {
-            LOG.error("找不到包ID $packetId 的ctor")
-            return
+        val packet : ConeProcessablePacket = if(bit1 == 0){
+            //0代表out game数据包
+            ConePacketSet.OutGame.createPacket(packetId, data)
+
+        }else{
+            //1代表in game数据包
+            ConePacketSet.InGame.createPacket(packetId,data)
         }
+        packet.process()
     }
 }

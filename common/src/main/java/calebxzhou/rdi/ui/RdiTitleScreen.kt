@@ -66,6 +66,7 @@ class RdiTitleScreen : Screen(Component.literal("主界面")) {
                 return
             }
             InputConstants.isKeyDown(handle, InputConstants.KEY_RETURN) || InputConstants.isKeyDown(handle, InputConstants.KEY_NUMPADENTER) -> {
+                //连接
                 ConeNetManager.connect(RdiConsts.serverAddr)
                 RdiLevel.load(RdiTitleScreen(),RdiLevel.defaultLevelName)
             }

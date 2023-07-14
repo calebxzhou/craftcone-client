@@ -1,5 +1,6 @@
-package calebxzhou.craftcone.net.protocol
+package calebxzhou.craftcone.net.protocol.game
 
+import calebxzhou.craftcone.net.protocol.ConeInGamePacket
 import calebxzhou.libertorch.MC
 import net.minecraft.ChatFormatting
 import net.minecraft.network.FriendlyByteBuf
@@ -12,7 +13,7 @@ import java.util.UUID
 data class ConePlayerJoinPacket (
     val pid: UUID,
     val pName: String,
-): ConePacket {
+): ConeInGamePacket {
 
     companion object{
         fun read(buf: FriendlyByteBuf): ConePlayerJoinPacket {
@@ -26,10 +27,8 @@ data class ConePlayerJoinPacket (
 
     override fun process() {
         MC.gui.chat.addMessage(Component.literal("$pName 加入了房间").withStyle(ChatFormatting.YELLOW))
+
     }
 
-    override fun checkSendCondition(): Boolean {
-        return true
-    }
 
 }

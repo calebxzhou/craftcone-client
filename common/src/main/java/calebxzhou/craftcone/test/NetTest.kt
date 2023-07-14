@@ -1,7 +1,5 @@
 package calebxzhou.craftcone.test
 
-import calebxzhou.craftcone.net.ConeNetManager
-import calebxzhou.craftcone.net.protocol.ConeChatPacket
 import java.util.*
 
 /**

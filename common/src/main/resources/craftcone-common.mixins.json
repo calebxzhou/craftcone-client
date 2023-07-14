@@ -3,11 +3,9 @@
   "package": "calebxzhou.craftcone.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "mPauseScreen"
   ],
   "mixins": [
     "mChunkHolder",
-    "mFallingBlockEntity",
     "mLevel",
     "mLevelChunk",
     "mServerGamePacketListenerImpl",

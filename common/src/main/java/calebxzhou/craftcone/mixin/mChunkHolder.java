@@ -1,10 +1,7 @@
 package calebxzhou.craftcone.mixin;
 
-import calebxzhou.craftcone.net.ConeNetManager;
-import calebxzhou.craftcone.net.protocol.ConeSetBlockEntityDataPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;

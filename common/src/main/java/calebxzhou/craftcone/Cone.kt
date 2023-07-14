@@ -17,6 +17,7 @@ val LOG: Logger = LoggerFactory.getLogger("CraftCone")
 object Cone {
     //维度编号与维度（eg 0=overworld 1=the_end 2=the_nether）
     val numDimKeyMap = hashMapOf<Int,ResourceKey<Level>>()
+    var inGame = false
     init {
     }
     @JvmStatic

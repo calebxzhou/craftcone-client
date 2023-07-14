@@ -1,5 +1,9 @@
 package calebxzhou.craftcone.utils
 
+import calebxzhou.craftcone.LOG
+import calebxzhou.craftcone.utils.ReflectUtils.fieldsNameValueMap
+import com.google.gson.Gson
+import net.minecraft.network.protocol.Packet
 import java.io.DataInputStream
 
 /**
@@ -30,6 +34,8 @@ object NetUtils {
         }
         return value
     }
-
-
+    val gson = Gson()
+    fun Packet<*>.printAllData(){
+        LOG.info(this.javaClass.simpleName+" "+this.fieldsNameValueMap().toString())
+    }
 }

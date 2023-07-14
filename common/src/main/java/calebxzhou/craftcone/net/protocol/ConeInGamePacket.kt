@@ -5,14 +5,14 @@ import calebxzhou.craftcone.LOG
 import calebxzhou.libertorch.MC
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.world.level.Level
-import java.lang.IllegalArgumentException
 
 /**
  * Created  on 2023-06-29,20:43.
  */
-interface ConePacket {
+//游戏内数据包
+interface ConeInGamePacket : ConeProcessablePacket,ConeWritablePacket{
     companion object{
-        fun read(buf: FriendlyByteBuf): ConePacket{
+        fun read(buf: FriendlyByteBuf): ConeInGamePacket {
             throw NotImplementedError("必须使用实现类的read方法")
         }
         //根据维度编号取维度
@@ -33,11 +33,6 @@ interface ConePacket {
             return Cone.numDimKeyMap.filterValues { it == level.dimension() }.keys.first()
         }
     }
-    //写数据进FriendlyByteBuf
-    fun write(buf: FriendlyByteBuf)
-    //处理包（把数据应用到游戏逻辑中）
-    fun process()
-    //检查发送条件
-    fun checkSendCondition()  : Boolean
+
 
 }

@@ -1,11 +1,10 @@
-package calebxzhou.craftcone.net.protocol
+package calebxzhou.craftcone.net.protocol.game
 
 import calebxzhou.craftcone.LOG
+import calebxzhou.craftcone.net.protocol.ConeInGamePacket
 import calebxzhou.libertorch.MC
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.chat.Component
-import net.minecraft.world.level.block.Block
-import java.util.UUID
 
 /**
  * Created  on 2023-07-06,8:48.
@@ -13,7 +12,7 @@ import java.util.UUID
 data class ConeChatPacket (
     val senderName: String,
     val content: String,
-): ConePacket {
+): ConeInGamePacket {
 
     companion object{
         fun read(buf: FriendlyByteBuf): ConeChatPacket {
@@ -31,7 +30,4 @@ data class ConeChatPacket (
         MC.gui.chat.addMessage(Component.literal(str))
     }
 
-    override fun checkSendCondition(): Boolean {
-        return true
-    }
 }
