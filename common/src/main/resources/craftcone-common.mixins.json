@@ -13,7 +13,8 @@
     "mLevel",
     "mLevelChunk",
     "mServerGamePacketListenerImpl",
-    "mServerLevel"
+    "mServerLevel",
+    "mBlockStateBase"
   ],
   "injectors": {
     "defaultRequire": 1

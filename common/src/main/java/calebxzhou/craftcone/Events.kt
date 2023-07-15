@@ -8,16 +8,21 @@ import calebxzhou.craftcone.net.protocol.game.ConePlayerJoinPacket
 import calebxzhou.craftcone.net.protocol.game.ConePlayerQuitPacket
 import calebxzhou.craftcone.net.protocol.game.ConeSetBlockPacket
 import calebxzhou.libertorch.MC
+import calebxzhou.libertorch.MCS
 import dev.architectury.event.EventResult
 import dev.architectury.event.events.common.BlockEvent
 import dev.architectury.event.events.common.ChatEvent
+import dev.architectury.event.events.common.InteractionEvent
 import dev.architectury.event.events.common.LifecycleEvent
 import dev.architectury.event.events.common.PlayerEvent
 import dev.architectury.utils.value.IntValue
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.network.chat.Component
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
@@ -34,6 +39,8 @@ object Events{
         LifecycleEvent.SERVER_STARTED.register(::onLocalServerStarted)
         LifecycleEvent.SERVER_STOPPING.register(::onLocalServerStopping)
     }
+
+
 
     private fun onPlayerQuit(player: ServerPlayer) {
         sendPacket(
