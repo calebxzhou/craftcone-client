@@ -1,1 +1,11 @@
 accessWidener   v2  named
+accessible class net/minecraft/world/level/redstone/CollectingNeighborUpdater$NeighborUpdates
+accessible class net/minecraft/world/level/redstone/CollectingNeighborUpdater$ShapeUpdate
+accessible class net/minecraft/world/level/redstone/CollectingNeighborUpdater$SimpleNeighborUpdate
+accessible class net/minecraft/world/level/redstone/CollectingNeighborUpdater$SimpleNeighborUpdate
+accessible class net/minecraft/world/level/chunk/LevelChunk$RebindableTickingBlockEntityWrapper
+accessible class net/minecraft/world/level/chunk/LevelChunk$BoundTickingBlockEntity
+accessible class net/minecraft/world/level/redstone/CollectingNeighborUpdater$MultiNeighborUpdate
+accessible class net/minecraft/world/level/redstone/CollectingNeighborUpdater$FullNeighborUpdate
+accessible class net/minecraft/world/level/redstone/CollectingNeighborUpdater$ShapeUpdate
+accessible class net/minecraft/world/level/redstone/CollectingNeighborUpdater$SimpleNeighborUpdate

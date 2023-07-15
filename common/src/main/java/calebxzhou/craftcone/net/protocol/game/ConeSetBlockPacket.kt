@@ -49,7 +49,7 @@ data class ConeSetBlockPacket(
 
 
     override fun process() {
-        MCS.execute{
+
             MCS.getLevel(level.dimension())?.setBlockDefault(
                 bpos, state ?: run {
                     LOG.warn("无效的方块状态，将使用空气代替")
@@ -57,9 +57,8 @@ data class ConeSetBlockPacket(
                 }
             )?:run {
                 LOG.warn("不存在维度${level.dimension()}")
-                return@execute
+                return
             }
-        }
 
     }
 

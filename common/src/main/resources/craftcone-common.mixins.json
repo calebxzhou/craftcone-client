@@ -5,7 +5,11 @@
   "client": [
   ],
   "mixins": [
+    "aCollectingNeighborUpdater",
+    "aMultiNeighborUpdate",
+    "mBlockItem",
     "mChunkHolder",
+    "mCollectingNeighborUpdater",
     "mLevel",
     "mLevelChunk",
     "mServerGamePacketListenerImpl",

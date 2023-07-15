@@ -1,8 +1,10 @@
 package calebxzhou.craftcone.net
 
 import calebxzhou.craftcone.LOG
+import calebxzhou.craftcone.net.protocol.ConeInGamePacket
 import calebxzhou.craftcone.net.protocol.ConePacketSet
 import calebxzhou.craftcone.net.protocol.ConeProcessablePacket
+import calebxzhou.libertorch.MCS
 import io.netty.channel.*
 import io.netty.channel.ChannelHandler.Sharable
 import io.netty.channel.socket.DatagramPacket
@@ -47,6 +49,12 @@ class ConeClientChannelHandler(val serverAddr: InetSocketAddress) : SimpleChanne
             ConePacketSet.InGame.createPacket(packetId,data)
         }
         //处理包
-        packet.process()
+        if(bit1 == ConeInGamePacket.PacketTypeNumber){
+            MCS.execute{
+                packet.process()
+            }
+        }else{
+            packet.process()
+        }
     }
 }
