@@ -12,6 +12,7 @@ import net.minecraft.world.level.Level
 //游戏内数据包
 interface ConeInGamePacket : ConeProcessablePacket,ConeWritablePacket{
     companion object{
+        const val PacketTypeNumber = 1
         fun read(buf: FriendlyByteBuf): ConeInGamePacket {
             throw NotImplementedError("必须使用实现类的read方法")
         }

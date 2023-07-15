@@ -20,6 +20,8 @@ object ConePacketSet {
         fun createPacket(packetId : Int, data : FriendlyByteBuf): ConeInGamePacket {
             return idToReader[packetId].invoke(data)
         }
+        private val classToId = linkedMapOf<Class<out ConeInGamePacket>, Int>()
+        private val idToReader = arrayListOf<(FriendlyByteBuf) -> ConeInGamePacket>()
         init {
             addPackets(
                 Pair(ConeSetBlockPacket::class.java,ConeSetBlockPacket::read),
@@ -28,8 +30,6 @@ object ConePacketSet {
                 Pair(ConePlayerQuitPacket::class.java,ConePlayerQuitPacket::read),
             )
         }
-        private val classToId = linkedMapOf<Class<out ConeInGamePacket>, Int>()
-        private val idToReader = arrayListOf<(FriendlyByteBuf) -> ConeInGamePacket>()
         private fun addPackets(vararg packetClassAndReader: Pair<Class<out ConeInGamePacket>,(FriendlyByteBuf) -> ConeInGamePacket>){
             packetClassAndReader.forEach {
                 val packetClass = it.first
@@ -39,15 +39,14 @@ object ConePacketSet {
         }
         private fun addPacket(packetClass: Class<out ConeInGamePacket>, packetReader : (FriendlyByteBuf) -> ConeInGamePacket){
             val size = idToReader.size
-            val id = classToId.put( packetClass,size)
-            if(id != -1){
-                throw IllegalArgumentException("$packetClass 已经注册ID为$id")
-            }
+            classToId[packetClass] = size
             idToReader += packetReader
         }
     }
 
     object OutGame{
+        private val classToId = linkedMapOf<Class<out ConeOutGamePacket>, Int>()
+        private val idToReader = arrayListOf<(FriendlyByteBuf) -> ConeOutGamePacket>()
         fun getPacketId(packetClass: Class<out ConeOutGamePacket>): Int? {
             return classToId[packetClass]
         }
@@ -60,8 +59,6 @@ object ConePacketSet {
                 Pair(ConeLoginResponsePacket::class.java,ConeLoginResponsePacket::read),
             )
         }
-        private val classToId = linkedMapOf<Class<out ConeOutGamePacket>, Int>()
-        private val idToReader = arrayListOf<(FriendlyByteBuf) -> ConeOutGamePacket>()
         private fun addPackets(vararg packetClassAndReader: Pair<Class<out ConeOutGamePacket>,(FriendlyByteBuf) -> ConeOutGamePacket>){
             packetClassAndReader.forEach {
                 val packetClass = it.first
@@ -71,10 +68,7 @@ object ConePacketSet {
         }
         private fun addPacket(packetClass: Class<out ConeOutGamePacket>, packetReader : (FriendlyByteBuf) -> ConeOutGamePacket){
             val size = idToReader.size
-            val id = classToId.put( packetClass,size)
-            if(id != -1){
-                throw IllegalArgumentException("$packetClass 已经注册ID为$id")
-            }
+            classToId[packetClass] = size
             idToReader += packetReader
         }
         

@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level
 //游戏内数据包
 interface ConeOutGamePacket : ConeProcessablePacket,ConeWritablePacket{
     companion object{
-
+        const val PacketTypeNumber = 0
     }
 
 }

@@ -61,12 +61,12 @@ object ConeNetManager {
         val packetType: Int
         val packetId = when (packet) {
             is ConeInGamePacket -> {
-                packetType = 1
+                packetType = ConeInGamePacket.PacketTypeNumber
                 ConePacketSet.InGame.getPacketId(packet.javaClass)
             }
 
             is ConeOutGamePacket -> {
-                packetType = 0
+                packetType = ConeOutGamePacket.PacketTypeNumber
                 ConePacketSet.OutGame.getPacketId(packet.javaClass)
             }
 

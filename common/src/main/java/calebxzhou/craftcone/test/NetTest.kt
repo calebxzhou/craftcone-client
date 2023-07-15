@@ -6,11 +6,9 @@ import java.util.*
  * Created  on 2023-07-06,7:20.
  */
 fun main() {
-   // ConeNetManager.reconnect()
-    val scanner = Scanner(System.`in`)
-    var inputString: String?
-    do {
-        inputString = scanner.nextLine()
-        //ConeNetManager.checkAndSendPacket(ConeChatPacket(UUID(0L,0L),inputString))
-    } while (inputString != "stop")
+    val byte1 = 0b10000010
+    val bit1 = byte1 shr 7
+    val packetId = (byte1 shl 1).toByte().toInt()
+    println(bit1)
+    println(packetId)
 }
