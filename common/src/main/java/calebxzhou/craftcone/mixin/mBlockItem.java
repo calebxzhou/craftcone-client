@@ -1,6 +1,6 @@
 package calebxzhou.craftcone.mixin;
 
-import calebxzhou.craftcone.NeighborUpdateManager;
+import calebxzhou.craftcone.misc.NeighborUpdateManager;
 import calebxzhou.craftcone.net.ConeNetManager;
 import calebxzhou.craftcone.net.protocol.game.ConeSetBlockPacket;
 import net.minecraft.core.BlockPos;
@@ -10,7 +10,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

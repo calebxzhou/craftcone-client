@@ -1,6 +1,6 @@
 package calebxzhou.craftcone.mixin;
 
-import calebxzhou.craftcone.NeighborUpdateManager;
+import calebxzhou.craftcone.misc.NeighborUpdateManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.redstone.CollectingNeighborUpdater;
 import org.spongepowered.asm.mixin.Mixin;

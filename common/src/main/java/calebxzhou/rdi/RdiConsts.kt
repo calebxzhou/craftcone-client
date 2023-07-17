@@ -8,7 +8,7 @@ import java.net.InetSocketAddress
  */
 object RdiConsts {
     //服务器地址
-    val serverAddr = InetSocketAddress("localhost",19198)
+    const val serverAddr = "localhost"
 
     //调试
     //创造模式+指令启用

@@ -2,19 +2,18 @@ package calebxzhou.craftcone.net.protocol.game
 
 import calebxzhou.craftcone.LOG
 import calebxzhou.craftcone.net.protocol.ConeInGamePacket
-import calebxzhou.craftcone.utils.LevelUtils.setBlockDefault
+import calebxzhou.craftcone.utils.LevelUt.setBlockDefault
 import calebxzhou.libertorch.MCS
 import net.minecraft.core.BlockPos
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.*
-import net.minecraft.world.level.block.piston.PistonHeadBlock
 import net.minecraft.world.level.block.state.BlockState
 
 /**
  * Created  on 2023-06-29,20:46.
  */
-//设置单个方块的包
+//设置单个方块的包（玩家破坏+放置）
 data class ConeSetBlockPacket(
     //维度
     val level: Level,

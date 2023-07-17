@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public class mBlockStateBase {
-    //广播包：右键点击完方块
+    //广播包：右键点击完方块，就更新它的状态
     @Inject(method = "use",at=@At(value = "RETURN"))
     private void onRightClickBlock(Level level, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult, CallbackInfoReturnable<InteractionResult> cir){
         var pos = blockHitResult.getBlockPos();

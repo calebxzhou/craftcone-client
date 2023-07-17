@@ -1,6 +1,8 @@
 package calebxzhou.rdi.ui
 
 import calebxzhou.craftcone.net.ConeNetManager
+import calebxzhou.craftcone.ui.screen.ConeLoginScreen
+import calebxzhou.craftcone.ui.screen.ConeRoomSelectScreen
 import calebxzhou.libertorch.MC
 import calebxzhou.libertorch.mc.gui.LtTheme
 import calebxzhou.libertorch.util.Gl
@@ -67,8 +69,9 @@ class RdiTitleScreen : Screen(Component.literal("主界面")) {
             }
             InputConstants.isKeyDown(handle, InputConstants.KEY_RETURN) || InputConstants.isKeyDown(handle, InputConstants.KEY_NUMPADENTER) -> {
                 //连接
-                ConeNetManager.connect(RdiConsts.serverAddr)
-                RdiLevel.load(RdiTitleScreen(),RdiLevel.defaultLevelName)
+                //ConeNetManager.connect(RdiConsts.serverAddr)
+                MC.setScreen(ConeLoginScreen())
+                //RdiLevel.load(RdiTitleScreen(),RdiLevel.defaultLevelName)
             }
         }
     }

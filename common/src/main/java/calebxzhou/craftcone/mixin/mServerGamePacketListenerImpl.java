@@ -23,15 +23,5 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(ServerGamePacketListenerImpl.class)
 public class mServerGamePacketListenerImpl {
-    @Inject(method = "send(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V",at=@At("HEAD"))
 
-    private void onSendPacket(Packet<?> packet, @Nullable PacketSendListener packetSendListener, CallbackInfo ci){
-        if(packet instanceof ClientboundContainerSetSlotPacket
-        || packet instanceof ClientboundContainerSetContentPacket
-    || packet instanceof ClientboundContainerSetDataPacket
-        || packet instanceof ClientboundContainerClosePacket)
-        {
-            NetUtils.INSTANCE.printAllData(packet);
-        }
-    }
 }

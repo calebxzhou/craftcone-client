@@ -26,8 +26,6 @@ import java.util.concurrent.Executors
 //网络管理器
 object ConeNetManager {
     //TODO 做容器同步
-    //网络线程池
-    val thpool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(), NamedThreadFactory("CraftCone-Network"))
 
     private val workGroup= NioEventLoopGroup()
     private var channelFutureNow : ChannelFuture? = null
@@ -47,7 +45,7 @@ object ConeNetManager {
             })
             .connect(address.address, address.port).syncUninterruptibly()
         channelFutureNow = b
-        LOG.info("连接完成")
+        LOG.info("连接完成 $address")
         return b
     }
 
