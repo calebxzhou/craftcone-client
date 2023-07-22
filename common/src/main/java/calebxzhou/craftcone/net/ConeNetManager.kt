@@ -11,7 +11,6 @@ import io.netty.channel.socket.DatagramChannel
 import io.netty.channel.socket.DatagramPacket
 import io.netty.channel.socket.nio.NioDatagramChannel
 import net.minecraft.network.FriendlyByteBuf
-import java.lang.IllegalArgumentException
 import java.net.InetSocketAddress
 
 
@@ -30,7 +29,7 @@ object ConeNetManager {
         }
     fun connect(address: InetSocketAddress) {
         LOG.info("连接到$address")
-        val handler = ConeClientChannelHandler(address)
+        val handler = ConeClientChannelHandler()
         this.conn = ConeConnection(
             Bootstrap().group(workGroup)
                 .channel(NioDatagramChannel::class.java)
@@ -41,7 +40,9 @@ object ConeNetManager {
                     }
 
                 })
-                .connect(address.address, address.port).syncUninterruptibly(), handler
+                .connect(address.address, address.port).syncUninterruptibly(),
+            handler,
+            address
         )
         LOG.info("连接完成 $address")
     }
@@ -49,34 +50,16 @@ object ConeNetManager {
     @JvmStatic
     fun sendPacket(packet: WritablePacket) {
         val data = FriendlyByteBuf(Unpooled.buffer())
-        val packetType: Int
-        val packetId = when (packet) {
-            is ConeInGamePacket -> {
-                packetType = ConeInGamePacket.PacketTypeNumber
-                ConePacketSet.InGame.getPacketId(packet.javaClass)
-            }
-
-            is ConeOutGamePacket -> {
-                packetType = ConeOutGamePacket.PacketTypeNumber
-                ConePacketSet.OutGame.getPacketId(packet.javaClass)
-            }
-
-            else -> {
-                throw IllegalArgumentException("cone packet必须是in game || out game")
-            }
-        } ?: let {
+        val packetId = ConePacketSet.getPacketId(packet.javaClass) ?: let {
             LOG.error("找不到$packet 对应的包ID")
             return
         }
-        //第1个byte，1st bit是包类型（ingame outgame)，剩下7bit是包ID
-        val byte1 = (packetType shl 7) or packetId
-        data.writeByte(byte1)
-        //写入包数据
+        data.writeByte(packetId)
         packet.write(data)
         //发走
-        val udpPacket = DatagramPacket(data, channelHandlerNow!!.serverAddr)
-        channelFutureNow!!.channel().writeAndFlush(udpPacket)
-        channelHandlerNow!!.packetCountTx++
+        val udpPacket = DatagramPacket(data, serverConnection.address)
+        serverConnection.channelFuture.channel().writeAndFlush(udpPacket)
+        serverConnection.channelHandler.packetCountTx++
     }
 
 }
