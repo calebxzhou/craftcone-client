@@ -1,77 +1,100 @@
 package calebxzhou.craftcone.net.protocol
 
-import calebxzhou.craftcone.net.protocol.account.ConeLoginRequestPacket
-import calebxzhou.craftcone.net.protocol.account.ConeLoginResponsePacket
-import calebxzhou.craftcone.net.protocol.game.ConeChatPacket
-import calebxzhou.craftcone.net.protocol.game.ConePlayerJoinPacket
-import calebxzhou.craftcone.net.protocol.game.ConePlayerQuitPacket
-import calebxzhou.craftcone.net.protocol.game.ConeSetBlockPacket
+import calebxzhou.craftcone.LOG
+import calebxzhou.craftcone.net.protocol.account.*
 import net.minecraft.network.FriendlyByteBuf
-import java.lang.IllegalArgumentException
 
 /**
  * Created  on 2023-07-14,8:55.
  */
 object ConePacketSet {
-    object InGame{
-        fun getPacketId(packetClass: Class<out ConeInGamePacket>): Int? {
-            return classToId[packetClass]
-        }
-        fun createPacket(packetId : Int, data : FriendlyByteBuf): ConeInGamePacket {
-            return idToReader[packetId].invoke(data)
-        }
-        private val classToId = linkedMapOf<Class<out ConeInGamePacket>, Int>()
-        private val idToReader = arrayListOf<(FriendlyByteBuf) -> ConeInGamePacket>()
-        init {
-            addPackets(
-                Pair(ConeSetBlockPacket::class.java,ConeSetBlockPacket::read),
-                Pair(ConeChatPacket::class.java,ConeChatPacket::read),
-                Pair(ConePlayerJoinPacket::class.java,ConePlayerJoinPacket::read),
-                Pair(ConePlayerQuitPacket::class.java,ConePlayerQuitPacket::read),
-            )
-        }
-        private fun addPackets(vararg packetClassAndReader: Pair<Class<out ConeInGamePacket>,(FriendlyByteBuf) -> ConeInGamePacket>){
-            packetClassAndReader.forEach {
-                val packetClass = it.first
-                val packetReader = it.second
-                addPacket(packetClass,packetReader)
+    //包id和包类型对应map 全局通用
+    private val idToPacketType = arrayListOf<PacketType>()
+
+    //包class和包id对应map 全局通用
+    private val classToPacketId = linkedMapOf<Class<out Packet>, Int>()
+
+    /**S2C**/
+    //包id和read方法对应map s2c读包用
+    private val s2c_idToPacketReader = linkedMapOf<Int,(FriendlyByteBuf) -> S2CPacket>()
+    private fun registerS2CPacket(reader: (FriendlyByteBuf) -> S2CPacket) {
+        s2c_idToPacketReader += Pair(idToPacketType.size,reader)
+        idToPacketType += PacketType.S2C
+    }
+
+    /**C2S**/
+    private fun registerC2SPacket(packetClass: Class<out C2SPacket>) {
+        classToPacketId += Pair(packetClass, idToPacketType.size)
+        idToPacketType += PacketType.C2S
+    }
+
+    /**C2C**/
+    private val c2c_idToPacketReader = linkedMapOf<Int,(FriendlyByteBuf) -> C2CPacket>()
+
+    //idToPacketClassReader
+    private fun registerC2CPacket(packetClass: Class<out C2CPacket>, reader: (FriendlyByteBuf) -> C2CPacket) {
+        classToPacketId += Pair(packetClass, idToPacketType.size)
+        c2c_idToPacketReader += Pair(idToPacketType.size,reader)
+        idToPacketType += PacketType.C2C
+    }
+    fun createPacketAndProcess(packetId: Int, data: FriendlyByteBuf) {
+        val packet = try {
+            when (idToPacketType[packetId]) {
+                PacketType.S2C -> {
+                    s2c_idToPacketReader[packetId]?.invoke(data)?:let{
+                        LOG.error("找不到C2S包ID$packetId ")
+                        return
+                    }
+                }
+
+                PacketType.C2C -> {
+                    c2c_idToPacketReader[packetId]?.invoke(data)?:let {
+                        LOG.error("找不到C2C包ID$packetId ")
+                        return
+                    }
+                }
+
+                else -> {
+                    LOG.error("客户端不应该收到C2S数据包（ID=$packetId）")
+                    return
+                }
             }
+        } catch (e: IndexOutOfBoundsException) {
+            LOG.error("读包ID$packetId 错误 ${e.localizedMessage}")
+            return
         }
-        private fun addPacket(packetClass: Class<out ConeInGamePacket>, packetReader : (FriendlyByteBuf) -> ConeInGamePacket){
-            val size = idToReader.size
-            classToId[packetClass] = size
-            idToReader += packetReader
+
+        try {
+            packet.process()
+        } catch (e: Exception) {
+            LOG.error("处理包ID$packetId 错误",e)
         }
     }
 
-    object OutGame{
-        private val classToId = linkedMapOf<Class<out ConeOutGamePacket>, Int>()
-        private val idToReader = arrayListOf<(FriendlyByteBuf) -> ConeOutGamePacket>()
-        fun getPacketId(packetClass: Class<out ConeOutGamePacket>): Int? {
-            return classToId[packetClass]
-        }
-        fun createPacket(packetId : Int, data : FriendlyByteBuf): ConeOutGamePacket {
-            return idToReader[packetId].invoke(data)
-        }
-        init {
-            addPackets(
-                Pair(ConeLoginRequestPacket::class.java,ConeLoginRequestPacket::read),
-                Pair(ConeLoginResponsePacket::class.java,ConeLoginResponsePacket::read),
-            )
-        }
-        private fun addPackets(vararg packetClassAndReader: Pair<Class<out ConeOutGamePacket>,(FriendlyByteBuf) -> ConeOutGamePacket>){
-            packetClassAndReader.forEach {
-                val packetClass = it.first
-                val packetReader = it.second
-                addPacket(packetClass,packetReader)
-            }
-        }
-        private fun addPacket(packetClass: Class<out ConeOutGamePacket>, packetReader : (FriendlyByteBuf) -> ConeOutGamePacket){
-            val size = idToReader.size
-            classToId[packetClass] = size
-            idToReader += packetReader
-        }
-        
+    fun getPacketId(packetClass: Class<out Packet>): Int? {
+        return classToPacketId[packetClass]
+    }
+
+
+    init {
+        registerC2SPacket(CheckPlayerExistC2SPacket::class.java)
+        registerS2CPacket(CheckPlayerExistS2CPacket::read)
+
+        registerC2SPacket(LoginC2SPacket::class.java)
+        registerS2CPacket(LoginS2CPacket::read)
+
+        registerC2SPacket(RegisterC2SPacket::class.java)
+        registerS2CPacket(RegisterS2CPacket::read)
+
+
+        /*registerS2CPacket(PlayerJoinRoomC2SPacket::read)
+
+        registerS2CPacket(PlayerLeaveRoomC2SPacket::read)
+
+        registerC2CPacket(ChatC2CPacket::class.java, ChatC2CPacket::read)
+        registerC2CPacket(PlayerMoveC2CPacket::class.java, PlayerMoveC2CPacket::read)
+        registerC2CPacket(SetBlockC2CPacket::class.java, SetBlockC2CPacket::read)*/
+
     }
     
 

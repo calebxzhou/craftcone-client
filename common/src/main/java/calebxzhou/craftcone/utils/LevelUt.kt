@@ -1,5 +1,8 @@
 package calebxzhou.craftcone.utils
 
+import calebxzhou.craftcone.Cone
+import calebxzhou.craftcone.LOG
+import calebxzhou.libertorch.MC
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.Level
@@ -20,6 +23,25 @@ object LevelUt {
     @JvmStatic
     fun Level.dimensionName(): String {
         return this.dimension().location().toString()
+    }
+    //根据维度编号取维度
+    @JvmStatic
+    fun getLevelByDimId(dimId : Int) : Level {
+        val dim = Cone.numDimKeyMap[dimId]?:run {
+            //Cone.numDimKeyMap.forEach { (k, v) -> LOG.error("$k $v") }
+            LOG.warn("找不到编号为${dimId}的维度。")
+            Level.OVERWORLD
+        }
+
+        val level = MC?.singleplayerServer?.getLevel(dim) ?:run {
+            throw IllegalStateException("处理数据包时，未在游玩状态！")
+        }
+        return level
+    }
+    //根据维度取维度编号
+    @JvmStatic
+    fun getDimIdByLevel(level: Level) : Int{
+        return Cone.numDimKeyMap.filterValues { it == level.dimension() }.keys.first()
     }
 }
 

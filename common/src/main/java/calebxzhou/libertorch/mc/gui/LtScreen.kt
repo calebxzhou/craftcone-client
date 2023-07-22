@@ -22,8 +22,9 @@ open class LtScreen : Screen {
     constructor(title: Component) : super(title)
     constructor(title: String): super(Component.literal(title))
 
+    val fontColor
+        get() = LtTheme.now.fontActiveColor.opaque
     override fun render(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {
-        renderBg()
         super.render(poseStack, mouseX, mouseY, partialTick)
     }
 

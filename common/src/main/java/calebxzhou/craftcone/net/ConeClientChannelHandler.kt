@@ -1,9 +1,7 @@
 package calebxzhou.craftcone.net
 
 import calebxzhou.craftcone.LOG
-import calebxzhou.craftcone.net.protocol.ConeInGamePacket
 import calebxzhou.craftcone.net.protocol.ConePacketSet
-import calebxzhou.craftcone.net.protocol.ConeProcessablePacket
 import calebxzhou.libertorch.MCS
 import io.netty.channel.*
 import io.netty.channel.ChannelHandler.Sharable
@@ -33,12 +31,7 @@ class ConeClientChannelHandler(val serverAddr: InetSocketAddress) : SimpleChanne
     override fun channelRead0(ctx: ChannelHandlerContext?, msg: DatagramPacket) {
         ++packetCountRx
         //第一个byte
-        val byte1 = msg.content().readByte().toInt()
-        //第1个bit（包类型，in game/out game）
-        val bit1 = byte1 shr 7
-        //第2~8个bit（包ID）
-        val packetId = (byte1 shl 1).toByte().toInt()
-
+        val packetId = msg.content().readByte().toInt()
         val data = FriendlyByteBuf(msg.content())
         val packet : ConeProcessablePacket = if(bit1 == 0){
             //0代表out game数据包

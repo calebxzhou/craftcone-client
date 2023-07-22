@@ -1,7 +1,8 @@
 package calebxzhou.craftcone.net.protocol.game
 
 import calebxzhou.craftcone.LOG
-import calebxzhou.craftcone.net.protocol.ConeInGamePacket
+import calebxzhou.craftcone.net.protocol.C2CPacket
+import calebxzhou.craftcone.net.protocol.ReadablePacket
 import calebxzhou.libertorch.MC
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.chat.Component
@@ -9,19 +10,16 @@ import net.minecraft.network.chat.Component
 /**
  * Created  on 2023-07-06,8:48.
  */
-data class ConeChatPacket (
+data class ChatC2CPacket (
     val senderName: String,
     val content: String,
-): ConeInGamePacket {
+): C2CPacket {
 
-    companion object{
-        fun read(buf: FriendlyByteBuf): ConeChatPacket {
-            return ConeChatPacket(buf.readUtf(),buf.readUtf())
+
+    companion object : ReadablePacket {
+        override fun read(buf: FriendlyByteBuf): ChatC2CPacket {
+            return ChatC2CPacket(buf.readUtf(),buf.readUtf())
         }
-    }
-    override fun write(buf: FriendlyByteBuf) {
-        buf.writeUtf(senderName)
-        buf.writeUtf(content)
     }
 
     override fun process() {
@@ -29,5 +27,11 @@ data class ConeChatPacket (
         LOG.info(str)
         MC.gui.chat.addMessage(Component.literal(str))
     }
+
+    override fun write(buf: FriendlyByteBuf) {
+        buf.writeUtf(senderName)
+        buf.writeUtf(content)
+    }
+
 
 }
