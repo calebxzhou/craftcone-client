@@ -5,7 +5,6 @@ import net.minecraft.client.gui.screens.GenericDirtMessageScreen
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.RegistryAccess
 import net.minecraft.network.chat.Component
-import net.minecraft.server.MinecraftServer
 import net.minecraft.world.Difficulty
 import net.minecraft.world.level.DataPackConfig
 import net.minecraft.world.level.GameRules

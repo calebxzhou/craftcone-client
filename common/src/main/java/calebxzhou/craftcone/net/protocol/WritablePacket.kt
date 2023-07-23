@@ -1,6 +1,7 @@
 package calebxzhou.craftcone.net.protocol
 
-import calebxzhou.craftcone.net.FriendlyByteBuf
+import net.minecraft.network.FriendlyByteBuf
+
 
 /**
  * Created  on 2023-07-21,22:22.

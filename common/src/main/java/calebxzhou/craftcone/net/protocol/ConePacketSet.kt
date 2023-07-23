@@ -2,6 +2,7 @@ package calebxzhou.craftcone.net.protocol
 
 import calebxzhou.craftcone.LOG
 import calebxzhou.craftcone.net.protocol.account.*
+import calebxzhou.libertorch.MC
 import net.minecraft.network.FriendlyByteBuf
 
 /**
@@ -16,9 +17,9 @@ object ConePacketSet {
 
     /**S2C**/
     //包id和read方法对应map s2c读包用
-    private val s2c_idToPacketReader = linkedMapOf<Int,(FriendlyByteBuf) -> S2CPacket>()
+    private val s2c_idToPacketReader = linkedMapOf<Int, (FriendlyByteBuf) -> S2CPacket>()
     private fun registerS2CPacket(reader: (FriendlyByteBuf) -> S2CPacket) {
-        s2c_idToPacketReader += Pair(idToPacketType.size,reader)
+        s2c_idToPacketReader += Pair(idToPacketType.size, reader)
         idToPacketType += PacketType.S2C
     }
 
@@ -29,26 +30,27 @@ object ConePacketSet {
     }
 
     /**C2C**/
-    private val c2c_idToPacketReader = linkedMapOf<Int,(FriendlyByteBuf) -> C2CPacket>()
+    private val c2c_idToPacketReader = linkedMapOf<Int, (FriendlyByteBuf) -> C2CPacket>()
 
     //idToPacketClassReader
     private fun registerC2CPacket(packetClass: Class<out C2CPacket>, reader: (FriendlyByteBuf) -> C2CPacket) {
         classToPacketId += Pair(packetClass, idToPacketType.size)
-        c2c_idToPacketReader += Pair(idToPacketType.size,reader)
+        c2c_idToPacketReader += Pair(idToPacketType.size, reader)
         idToPacketType += PacketType.C2C
     }
+
     fun createPacketAndProcess(packetId: Int, data: FriendlyByteBuf) {
         val packet = try {
             when (idToPacketType[packetId]) {
                 PacketType.S2C -> {
-                    s2c_idToPacketReader[packetId]?.invoke(data)?:let{
+                    s2c_idToPacketReader[packetId]?.invoke(data) ?: let {
                         LOG.error("找不到C2S包ID$packetId ")
                         return
                     }
                 }
 
                 PacketType.C2C -> {
-                    c2c_idToPacketReader[packetId]?.invoke(data)?:let {
+                    c2c_idToPacketReader[packetId]?.invoke(data) ?: let {
                         LOG.error("找不到C2C包ID$packetId ")
                         return
                     }
@@ -59,15 +61,18 @@ object ConePacketSet {
                     return
                 }
             }
-        } catch (e: IndexOutOfBoundsException) {
-            LOG.error("读包ID$packetId 错误 ${e.localizedMessage}")
+        } catch (e: Exception) {
+            LOG.error("读包ID$packetId 错误 ", e)
             return
         }
 
         try {
-            packet.process()
+
+            MC.execute {
+                packet.process()
+            }
         } catch (e: Exception) {
-            LOG.error("处理包ID$packetId 错误",e)
+            LOG.error("处理包ID$packetId 错误", e)
         }
     }
 
@@ -96,6 +101,6 @@ object ConePacketSet {
         registerC2CPacket(SetBlockC2CPacket::class.java, SetBlockC2CPacket::read)*/
 
     }
-    
+
 
 }

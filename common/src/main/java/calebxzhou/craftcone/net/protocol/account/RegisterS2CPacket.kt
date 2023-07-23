@@ -2,6 +2,8 @@ package calebxzhou.craftcone.net.protocol.account
 
 import calebxzhou.craftcone.net.protocol.ReadablePacket
 import calebxzhou.craftcone.net.protocol.S2CPacket
+import calebxzhou.craftcone.ui.screen.ConeRegisterScreen
+import calebxzhou.libertorch.MC
 import net.minecraft.network.FriendlyByteBuf
 
 /**
@@ -21,7 +23,11 @@ data class RegisterS2CPacket(
 
     }
     override fun process() {
-        TODO("Not yet implemented")
+
+        val screen = MC.screen
+        if(screen is ConeRegisterScreen){
+            screen.onResponse(this)
+        }
     }
 
 

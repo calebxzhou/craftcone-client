@@ -1,20 +1,22 @@
 package calebxzhou.craftcone
 
-import calebxzhou.craftcone.Cone.inGame
 import calebxzhou.craftcone.net.ConeNetManager
 import calebxzhou.craftcone.net.ConeNetManager.sendPacket
+import calebxzhou.craftcone.net.protocol.game.ChatC2CPacket
+import calebxzhou.craftcone.net.protocol.game.SetBlockC2CPacket
+import calebxzhou.craftcone.utils.LevelUt
 import calebxzhou.libertorch.MC
 import dev.architectury.event.EventResult
 import dev.architectury.event.events.common.BlockEvent
 import dev.architectury.event.events.common.ChatEvent
 import dev.architectury.event.events.common.LifecycleEvent
-import dev.architectury.event.events.common.PlayerEvent
 import dev.architectury.utils.value.IntValue
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
 
@@ -24,8 +26,8 @@ import net.minecraft.world.level.block.state.BlockState
 object Events{
     fun register(){
         BlockEvent.BREAK.register(::onBreakBlock)
-        PlayerEvent.PLAYER_JOIN.register(::onPlayerJoin)
-        PlayerEvent.PLAYER_QUIT.register(::onPlayerQuit)
+        //PlayerEvent.PLAYER_JOIN.register(::onPlayerJoin)
+        //PlayerEvent.PLAYER_QUIT.register(::onPlayerQuit)
         ChatEvent.RECEIVED.register(::onChat )
         LifecycleEvent.SERVER_STARTED.register(::onLocalServerStarted)
         LifecycleEvent.SERVER_STOPPING.register(::onLocalServerStopping)
@@ -33,7 +35,7 @@ object Events{
 
 
 
-    private fun onPlayerQuit(player: ServerPlayer) {
+   /* private fun onPlayerQuit(player: ServerPlayer) {
         sendPacket(
             ConePlayerQuitPacket(
                 player.uuid,
@@ -49,7 +51,7 @@ object Events{
                 player.displayName.string
             )
         )
-    }
+    }*/
 
 
 
@@ -61,10 +63,10 @@ object Events{
         intValue: IntValue?
     ): EventResult? {
         sendPacket(
-            ConeSetBlockPacket(
-                level,
-                blockPos,
-                Blocks.AIR.defaultBlockState()
+            SetBlockC2CPacket(
+                LevelUt.getDimIdByLevel(level),
+                blockPos.asLong(),
+                Block.BLOCK_STATE_REGISTRY.getId(Blocks.AIR.defaultBlockState())
             )
         )
         return EventResult.pass()
@@ -75,7 +77,7 @@ object Events{
     private fun onChat(player: ServerPlayer?, component: Component?): EventResult? {
         if(player==null || component==null)
             return EventResult.pass()
-        ConeNetManager.sendPacket(ConeChatPacket(MC.user.name,component.string))
+        ConeNetManager.sendPacket(ChatC2CPacket(MC.user.name,component.string))
         return EventResult.pass()
     }
 
@@ -89,12 +91,10 @@ object Events{
             Cone.numDimKeyMap += Pair(number,it)
         }
 
-        inGame = true
     }
 
 
     //本地服务器关闭时
     private fun onLocalServerStopping(server: MinecraftServer?) {
-        inGame = false
     }
 }

@@ -1,16 +1,19 @@
 package calebxzhou.craftcone.ui.screen
 
 import calebxzhou.craftcone.net.ConeNetManager
+import calebxzhou.craftcone.net.protocol.account.CheckPlayerExistC2SPacket
+import calebxzhou.craftcone.net.protocol.account.CheckPlayerExistS2CPacket
+import calebxzhou.libertorch.MC
 import calebxzhou.libertorch.mc.gui.LtScreen
-import calebxzhou.libertorch.mc.gui.LtTheme
-import calebxzhou.libertorch.ui.DefaultColors
 import calebxzhou.rdi.RdiConsts
+import com.mojang.blaze3d.platform.InputConstants
 import com.mojang.blaze3d.vertex.PoseStack
-import net.minecraft.client.gui.GuiComponent
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.network.chat.Component
 import java.net.InetSocketAddress
+import kotlin.concurrent.thread
 
 /**
  * Created  on 2023-06-19,21:47.
@@ -30,6 +33,12 @@ class ConeConnectScreen : LtScreen("连接服务器") {
     }
 
     override fun tick() {
+        val handle = Minecraft.getInstance().window.window
+        when {
+            InputConstants.isKeyDown(handle, InputConstants.KEY_RETURN) || InputConstants.isKeyDown(handle, InputConstants.KEY_NUMPADENTER) -> {
+                onConnect(null)
+            }
+        }
         super.tick()
     }
     override fun render(poseStack: PoseStack, i: Int, j: Int, f: Float) {
@@ -45,7 +54,7 @@ class ConeConnectScreen : LtScreen("连接服务器") {
         connectBtn.render(poseStack,i, j, f)
         super.render(poseStack, i, j, f)
     }
-    private fun onConnect(button: Button) {
+    private fun onConnect(button: Button?) {
         var ip = addrEbox.value
         ip = ip.replace("：",":")
 
@@ -58,7 +67,16 @@ class ConeConnectScreen : LtScreen("连接服务器") {
             ip = RdiConsts.serverAddr
 
         val addr = InetSocketAddress(ip,port)
-        ConeNetManager.connect(addr)
-        //TODO 发登录用户名密码验证包
+        thread {
+            ConeNetManager.connect(addr)
+            ConeNetManager.sendPacket(CheckPlayerExistC2SPacket(MC.user.profileId!!))
+        }
+    }
+    fun onResponse(packet: CheckPlayerExistS2CPacket){
+            if(packet.exists){
+                MC.setScreen(ConeLoginScreen())
+            }else{
+                MC.setScreen(ConeRegisterScreen())
+            }
     }
 }
