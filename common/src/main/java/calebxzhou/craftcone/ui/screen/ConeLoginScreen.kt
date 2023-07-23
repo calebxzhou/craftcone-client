@@ -7,7 +7,9 @@ import calebxzhou.craftcone.ui.overlay.ConeDialog
 import calebxzhou.craftcone.ui.overlay.ConeDialogType
 import calebxzhou.libertorch.MC
 import calebxzhou.libertorch.mc.gui.LtScreen
+import com.mojang.blaze3d.platform.InputConstants
 import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.network.chat.Component
@@ -29,12 +31,18 @@ class ConeLoginScreen : LtScreen("登录") {
         addRenderableWidget(pwdBox)
     }
 
-    private fun onSubmit(button: Button) {
+    private fun onSubmit(button: Button?) {
         ConeNetManager.sendPacket(LoginC2SPacket(MC.user.profileId!!, pwdBox.value))
     }
 
     override fun tick() {
         okBtn.visible = pwdBox.value.isNotEmpty() &&  pwdBox.value.length<=16 && pwdBox.value.length>=6
+        val handle = Minecraft.getInstance().window.window
+        when {
+            InputConstants.isKeyDown(handle, InputConstants.KEY_RETURN) || InputConstants.isKeyDown(handle, InputConstants.KEY_NUMPADENTER) -> {
+                onSubmit(null)
+            }
+        }
         super.tick()
     }
 
