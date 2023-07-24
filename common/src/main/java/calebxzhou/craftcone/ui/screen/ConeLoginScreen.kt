@@ -50,10 +50,6 @@ class ConeLoginScreen : LtScreen("登录"),S2CResponsibleScreen<LoginS2CPacket> 
         renderBg()
         drawCenteredString(
             poseStack,
-            font, "登录", width / 2, 17, fontColor
-        )
-        drawCenteredString(
-            poseStack,
             font,"昵称：${MC.user.name}",width/2,height-32,fontColor
         )
         drawCenteredString(

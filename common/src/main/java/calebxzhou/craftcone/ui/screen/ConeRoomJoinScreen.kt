@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component
 /**
  * Created  on 2023-06-20,10:00.
  */
-class ConeRoomJoinScreen() : LtScreen("加入房间") {
+class ConeRoomJoinScreen() : LtScreen("加入房间ID") {
     private lateinit var joinBtn: Button
     private lateinit var createBtn: Button
     private lateinit var myBtn: Button
@@ -20,7 +20,7 @@ class ConeRoomJoinScreen() : LtScreen("加入房间") {
         createBtn = Button(180,height-30,80,20,Component.literal("创建房间"),::onCreateRoom)
         myBtn = Button(260,height-30,80,20,Component.literal("我的房间"),::onMyRoom)
         //00000000-0000-0000-0000-000000000000
-        roomIdBox  = UuidEditBox(width/3,50,250,20)
+        roomIdBox  = UuidEditBox(width/4,50,250,20)
         addRenderableWidget(joinBtn)
         addRenderableWidget(createBtn)
         addRenderableWidget(roomIdBox)
@@ -30,12 +30,17 @@ class ConeRoomJoinScreen() : LtScreen("加入房间") {
 
     }
 
+    private fun onCreateRoom(button: Button) {
+        MC.setScreen(ConeRoomJoinScreen())
+    }
+
+    private fun onJoinRoom(button: Button) {
+
+    }
+
     override fun render(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {
         renderBg()
-        drawCenteredString(
-            poseStack,
-            font, "输入房间ID", width / 2, 17, fontColor
-        )
+
         super.render(poseStack, mouseX, mouseY, partialTick)
 
     }
@@ -46,15 +51,7 @@ class ConeRoomJoinScreen() : LtScreen("加入房间") {
         super.tick()
     }
 
-    private fun onCreateRoom(button: Button) {
-        MC.setScreen(ConeRoomJoinScreen())
-    }
-
     override fun shouldCloseOnEsc(): Boolean {
         return true
-    }
-
-    private fun onJoinRoom(button: Button) {
-
     }
 }

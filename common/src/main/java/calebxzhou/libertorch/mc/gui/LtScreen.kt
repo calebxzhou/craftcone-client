@@ -17,14 +17,15 @@ import net.minecraft.network.chat.Component
 /**
  * Created  on 2023-03-01,16:23.
  */
-open class LtScreen : Screen {
-
-    constructor(title: Component) : super(title)
-    constructor(title: String): super(Component.literal(title))
+open class LtScreen(title: String) : Screen(Component.literal(title)) {
 
     val fontColor
         get() = LtTheme.now.fontActiveColor.opaque
     override fun render(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {
+        drawCenteredString(
+            poseStack,
+            font, this.title, width / 2, 17, fontColor
+        )
         super.render(poseStack, mouseX, mouseY, partialTick)
     }
 

@@ -2,6 +2,8 @@ package calebxzhou.craftcone.net
 
 import calebxzhou.craftcone.LOG
 import calebxzhou.craftcone.net.protocol.ConePacketSet
+import calebxzhou.craftcone.ui.overlay.ConeDialog
+import calebxzhou.craftcone.ui.overlay.ConeDialogType
 import io.netty.channel.ChannelHandler.Sharable
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
@@ -24,8 +26,10 @@ class ConeClientChannelHandler : SimpleChannelInboundHandler<DatagramPacket>() {
         super.channelInactive(ctx)
     }
 
-    override fun exceptionCaught(ctx: ChannelHandlerContext?, cause: Throwable?) {
+    override fun exceptionCaught(ctx: ChannelHandlerContext?, cause: Throwable) {
         LOG.error("连接错误：",cause)
+        ConeDialog.show(ConeDialogType.ERR,"连接错误。${cause.javaClass.name}:${cause.localizedMessage}")
+        ConeNetManager.conn = null
     }
     override fun channelRead0(ctx: ChannelHandlerContext?, msg: DatagramPacket) {
         ++packetCountRx

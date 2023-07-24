@@ -45,10 +45,7 @@ class ConeRegisterScreen : LtScreen("注册") {
     }
     override fun render(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {
         renderBg()
-        drawCenteredString(
-            poseStack,
-            font, "注册", width / 2, 17, fontColor
-        )
+
         drawCenteredString(
             poseStack,
             font,"昵称：${MC.user.name}",width/2,height-32,fontColor

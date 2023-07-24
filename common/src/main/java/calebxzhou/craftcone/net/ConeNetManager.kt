@@ -5,6 +5,7 @@ import calebxzhou.craftcone.net.protocol.ConePacketSet
 import calebxzhou.craftcone.net.protocol.WritablePacket
 import io.netty.bootstrap.Bootstrap
 import io.netty.buffer.Unpooled
+import io.netty.channel.ChannelFuture
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.DatagramChannel
@@ -19,18 +20,30 @@ import java.net.InetSocketAddress
  */
 //网络管理器
 object ConeNetManager {
+    data class ConeConnection(
+        val channelFuture: ChannelFuture,
+        val channelHandler: ConeClientChannelHandler,
+        val address: InetSocketAddress
+    )
     //TODO 做容器同步
 
     private val workGroup = NioEventLoopGroup()
-    private var conn: ConeConnection? = null
-    val serverConnection
-        get() = conn?:let {
-            throw IllegalStateException("服务器连接为null，禁止发送数据包")
+    //服务器连接
+    private var servConn: ConeConnection? = null
+        private set
+    val isConnected
+        get() = servConn != null
+    val serverConnection :ConeConnection
+        get() {
+            if (!isConnected)
+                throw IllegalStateException("未连接到服务器！")
+            else
+                return servConn!!
         }
     fun connect(address: InetSocketAddress) {
         LOG.info("连接到$address")
         val handler = ConeClientChannelHandler()
-        this.conn = ConeConnection(
+        this.servConn = ConeConnection(
             Bootstrap().group(workGroup)
                 .channel(NioDatagramChannel::class.java)
                 .handler(object : ChannelInitializer<DatagramChannel>() {

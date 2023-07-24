@@ -47,10 +47,6 @@ class ConeConnectScreen : LtScreen("连接服务器"), S2CResponsibleScreen<Chec
         addrEbox.x = width / 2
         addrEbox.y = 50
         drawString(poseStack, font, "IP地址", width / 3, addrEbox.y, fontColor)
-        drawCenteredString(
-            poseStack,
-            font, "连接CraftCone服务器", width / 2, 17, fontColor
-        )
         addrEbox.render(poseStack, i, j, f)
         connectBtn.render(poseStack, i, j, f)
         super.render(poseStack, i, j, f)
