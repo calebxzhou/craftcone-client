@@ -18,65 +18,68 @@ import kotlin.concurrent.thread
 /**
  * Created  on 2023-06-19,21:47.
  */
-class ConeConnectScreen : LtScreen("连接服务器") {
+class ConeConnectScreen : LtScreen("连接服务器"), S2CResponsibleScreen<CheckPlayerExistS2CPacket> {
     private lateinit var addrEbox: EditBox
-    //private lateinit var pwdEbox: EditBox
-    private lateinit var connectBtn : Button
+    private lateinit var connectBtn: Button
     override fun init() {
         super.init()
-        addrEbox = EditBox(font,width/2,50,100,20, Component.literal("服务器ip"))
-        //pwdEbox = EditBox(font,150,150,100,20, Component.literal("用户密码"))
-        connectBtn = Button(150,150,100,20,Component.literal("连接"),::onConnect)
+        addrEbox = EditBox(font, width / 2, 50, 100, 20, Component.literal("服务器ip"))
+        connectBtn = Button(150, 150, 100, 20, Component.literal("连接"), ::onConnect)
         addRenderableWidget(addrEbox)
-        //addWidget(pwdEbox)
         addRenderableWidget(connectBtn)
     }
 
     override fun tick() {
         val handle = Minecraft.getInstance().window.window
         when {
-            InputConstants.isKeyDown(handle, InputConstants.KEY_RETURN) || InputConstants.isKeyDown(handle, InputConstants.KEY_NUMPADENTER) -> {
+            InputConstants.isKeyDown(handle, InputConstants.KEY_RETURN) || InputConstants.isKeyDown(
+                handle,
+                InputConstants.KEY_NUMPADENTER
+            ) -> {
                 onConnect(null)
             }
         }
         super.tick()
     }
+
     override fun render(poseStack: PoseStack, i: Int, j: Int, f: Float) {
         renderBg()
         addrEbox.x = width / 2
         addrEbox.y = 50
-        drawString(poseStack,font,"IP地址",width/3,addrEbox.y,fontColor)
+        drawString(poseStack, font, "IP地址", width / 3, addrEbox.y, fontColor)
         drawCenteredString(
             poseStack,
             font, "连接CraftCone服务器", width / 2, 17, fontColor
         )
         addrEbox.render(poseStack, i, j, f)
-        connectBtn.render(poseStack,i, j, f)
+        connectBtn.render(poseStack, i, j, f)
         super.render(poseStack, i, j, f)
     }
+
     private fun onConnect(button: Button?) {
         var ip = addrEbox.value
-        ip = ip.replace("：",":")
+        ip = ip.replace("：", ":")
 
         //端口号
         var port = 19198
-        if(ip.contains(":")){
+        if (ip.contains(":")) {
             port = ip.split(":")[1].toInt()
         }
-        if(ip == "rdi4")
+        if (ip == "rdi4")
             ip = RdiConsts.serverAddr
 
-        val addr = InetSocketAddress(ip,port)
+        val addr = InetSocketAddress(ip, port)
         thread {
             ConeNetManager.connect(addr)
             ConeNetManager.sendPacket(CheckPlayerExistC2SPacket(MC.user.profileId!!))
         }
     }
-    fun onResponse(packet: CheckPlayerExistS2CPacket){
-            if(packet.exists){
-                MC.setScreen(ConeLoginScreen())
-            }else{
-                MC.setScreen(ConeRegisterScreen())
-            }
+
+    override fun onResponse(packet: CheckPlayerExistS2CPacket) {
+        if (packet.exists) {
+            MC.setScreen(ConeLoginScreen())
+        } else {
+            MC.setScreen(ConeRegisterScreen())
+        }
     }
 }

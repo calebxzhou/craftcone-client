@@ -17,7 +17,7 @@ import net.minecraft.network.chat.Component
 /**
  * Created  on 2023-07-17,21:30.
  */
-class ConeLoginScreen : LtScreen("登录") {
+class ConeLoginScreen : LtScreen("登录"),S2CResponsibleScreen<LoginS2CPacket> {
     private lateinit var okBtn : Button
     private lateinit var pwdBox : EditBox
     override fun shouldCloseOnEsc(): Boolean {
@@ -64,9 +64,9 @@ class ConeLoginScreen : LtScreen("登录") {
         super.render(poseStack, mouseX, mouseY, partialTick)
     }
 
-    fun onResponse(packet: LoginS2CPacket) {
+    override fun onResponse(packet: LoginS2CPacket) {
         if(packet.isSuccess){
-            MC.setScreen(ConeRoomSelectScreen())
+            MC.setScreen(ConeRoomJoinScreen())
         }else{
             ConeDialog.show(ConeDialogType.ERR,packet.msg)
         }

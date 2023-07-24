@@ -7,6 +7,7 @@ import java.util.*
 /**
  * Created  on 2023-07-06,8:48.
  */
+//玩家请求加入房间
 data class PlayerJoinRoomC2SPacket(
     val roomId: UUID
 ): C2SPacket {

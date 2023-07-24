@@ -34,7 +34,7 @@ class ConeRegisterScreen : LtScreen("注册") {
     }
     fun onResponse(packet: RegisterS2CPacket){
         if(packet.isSuccess){
-            MC.setScreen(ConeRoomSelectScreen())
+            MC.setScreen(ConeRoomJoinScreen())
         }else{
             ConeDialog.show(ConeDialogType.ERR,packet.msg)
         }
