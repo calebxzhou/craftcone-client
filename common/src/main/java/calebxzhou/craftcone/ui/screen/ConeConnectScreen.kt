@@ -1,6 +1,7 @@
 package calebxzhou.craftcone.ui.screen
 
 import calebxzhou.craftcone.model.ConeConnection
+import calebxzhou.craftcone.model.ConeUser
 import calebxzhou.craftcone.net.ConeNetManager
 import calebxzhou.craftcone.net.coneNetThread
 import calebxzhou.craftcone.net.protocol.account.CheckPlayerExistC2SPacket
@@ -19,9 +20,12 @@ import java.net.InetSocketAddress
 class ConeConnectScreen : LtScreen("输入服务器IP地址"), S2CResponsibleScreen<CheckPlayerExistS2CPacket> {
     private lateinit var addrEbox: EditBox
     override fun init() {
-        super.init()
         addrEbox = EditBox(font, width / 2 - 50, 50, 100, 20, Component.literal("服务器ip"))
         addRenderableWidget(addrEbox)
+        if(ConeUser.now != null && ConeConnection.now !=null){
+            MC.setScreen(ConeRoomJoinScreen())
+        }
+        super.init()
     }
 
     override fun onPressEnterKey() {

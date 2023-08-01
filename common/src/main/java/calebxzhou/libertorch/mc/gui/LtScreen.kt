@@ -20,7 +20,8 @@ import net.minecraft.network.chat.Component
  * Created  on 2023-03-01,16:23.
  */
 open class LtScreen(var comment: String) : Screen(Component.literal(comment)) {
-
+    //window handle
+    val hwnd = MC.window.window
     val fontColor
         get() = LtTheme.now.fontActiveColor.opaque
     override fun render(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {
@@ -45,10 +46,8 @@ open class LtScreen(var comment: String) : Screen(Component.literal(comment)) {
         )
     }
     override fun tick() {
-        val handle = Minecraft.getInstance().window.window
         when {
-            InputConstants.isKeyDown(handle, InputConstants.KEY_RETURN) || InputConstants.isKeyDown(
-                handle,
+            InputConstants.isKeyDown(hwnd, InputConstants.KEY_RETURN) || InputConstants.isKeyDown(hwnd,
                 InputConstants.KEY_NUMPADENTER
             ) -> {
                 onPressEnterKey()
