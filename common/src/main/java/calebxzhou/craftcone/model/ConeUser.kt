@@ -7,9 +7,11 @@ import java.util.*
  */
 data class ConeUser(
     val pid: UUID,
+    val pwd:String,
+
     val pName: String,
 ){
     companion object{
-        var currentUser : ConeUser? = null
+        var now : ConeUser? = null
     }
 }

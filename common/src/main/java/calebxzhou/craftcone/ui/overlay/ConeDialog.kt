@@ -38,15 +38,15 @@ class ConeDialog private constructor(val type: ConeDialogType, val msg: String) 
         )
         drawCenteredString(
             poseStack, MC.font,
-            "Enter = 明白",
+            "(L+R)Alt = 明白",
             w / 2,
             h / 2 + 10,
             DefaultColors.White.color.opaque
         )
         val handle = Minecraft.getInstance().window.window
-        if (InputConstants.isKeyDown(handle, InputConstants.KEY_RETURN) || InputConstants.isKeyDown(
+        if (InputConstants.isKeyDown(handle, InputConstants.KEY_LALT) && InputConstants.isKeyDown(
                 handle,
-                InputConstants.KEY_NUMPADENTER
+                InputConstants.KEY_RALT
             )
         ) {
             MC.overlay = null

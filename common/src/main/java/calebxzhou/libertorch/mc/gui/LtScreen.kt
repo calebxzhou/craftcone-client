@@ -1,7 +1,9 @@
 package calebxzhou.libertorch.mc.gui
 
+import calebxzhou.libertorch.MC
 import calebxzhou.libertorch.ui.DefaultColors
 import calebxzhou.libertorch.util.Gl
+import com.mojang.blaze3d.platform.InputConstants
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.*
 import com.mojang.math.Matrix4f
@@ -17,18 +19,44 @@ import net.minecraft.network.chat.Component
 /**
  * Created  on 2023-03-01,16:23.
  */
-open class LtScreen(title: String) : Screen(Component.literal(title)) {
+open class LtScreen(var comment: String) : Screen(Component.literal(comment)) {
 
     val fontColor
         get() = LtTheme.now.fontActiveColor.opaque
     override fun render(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {
         drawCenteredString(
             poseStack,
-            font, this.title, width / 2, 17, fontColor
+            font, comment, width / 2, 17, fontColor
         )
         super.render(poseStack, mouseX, mouseY, partialTick)
     }
+    open fun onPressEnterKey(){
 
+    }
+
+    fun renderUidNameAtBottom(poseStack: PoseStack){
+        drawCenteredString(
+            poseStack,
+            font,"昵称：${MC.user.name}",width/2,height-32,fontColor
+        )
+        drawCenteredString(
+            poseStack,
+            font,"ID：${MC.user.profileId}",width/2,height-18,fontColor
+        )
+    }
+    override fun tick() {
+        val handle = Minecraft.getInstance().window.window
+        when {
+            InputConstants.isKeyDown(handle, InputConstants.KEY_RETURN) || InputConstants.isKeyDown(
+                handle,
+                InputConstants.KEY_NUMPADENTER
+            ) -> {
+                onPressEnterKey()
+            }
+        }
+
+        super.tick()
+    }
     companion object{
         @JvmStatic
         fun renderBg(
@@ -47,6 +75,7 @@ open class LtScreen(title: String) : Screen(Component.literal(title)) {
         fun renderBg() {
             Gl.clearColor(DefaultColors.PineGreen.color)
         }
+
         fun fillGradient(poseStack: PoseStack, x1: Int, y1: Int, x2: Int, y2: Int, colorFrom: Int, colorTo: Int) {
             fillGradient(poseStack, x1, y1, x2, y2, colorFrom, colorTo, 0)
         }

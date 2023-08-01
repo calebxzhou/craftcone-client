@@ -8,53 +8,40 @@ import calebxzhou.craftcone.ui.overlay.ConeDialogType
 import calebxzhou.libertorch.MC
 import calebxzhou.libertorch.mc.gui.LtScreen
 import com.mojang.blaze3d.vertex.PoseStack
-import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.network.chat.Component
 
 /**
  * Created  on 2023-07-17,21:30.
  */
-class ConeRegisterScreen : LtScreen("注册") {
-    private lateinit var okBtn : Button
+class ConeRegisterScreen : LtScreen("注册·请设置密码"), S2CResponsibleScreen<RegisterS2CPacket> {
     private lateinit var pwdBox : EditBox
     override fun shouldCloseOnEsc(): Boolean {
         return true
     }
     override fun init() {
-        okBtn = Button(150,150,100,20, Component.literal("提交"),::onSubmit)
         pwdBox  = EditBox(font,width/2,50,100,20, Component.literal("密码"))
-        okBtn.visible =false
-        addRenderableWidget(okBtn)
         addRenderableWidget(pwdBox)
     }
 
-    private fun onSubmit(button: Button) {
-        ConeNetManager.sendPacket(RegisterC2SPacket(MC.user.profileId!!,pwdBox.value))
+    override fun onPressEnterKey() {
+        if(pwdBox.value.isNotEmpty() &&  pwdBox.value.length<=16 && pwdBox.value.length>=6)
+            ConeNetManager.sendPacket(RegisterC2SPacket(MC.user.profileId!!,pwdBox.value))
+        else
+            ConeDialog.show(ConeDialogType.ERR,"密码长度必须6到16位，现在只有${pwdBox.value.length}位")
     }
-    fun onResponse(packet: RegisterS2CPacket){
+
+    override fun onResponse(packet: RegisterS2CPacket){
         if(packet.isSuccess){
             MC.setScreen(ConeRoomJoinScreen())
         }else{
             ConeDialog.show(ConeDialogType.ERR,packet.msg)
         }
     }
-    override fun tick() {
-        okBtn.visible = pwdBox.value.isNotEmpty() &&  pwdBox.value.length<=16 && pwdBox.value.length>=6
-        super.tick()
-    }
+
     override fun render(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {
         renderBg()
-
-        drawCenteredString(
-            poseStack,
-            font,"昵称：${MC.user.name}",width/2,height-32,fontColor
-        )
-        drawCenteredString(
-            poseStack,
-            font,"ID：${MC.user.profileId}",width/2,height-18,fontColor
-        )
-        drawString(poseStack,font,"密码",width/3,50,fontColor)
+        renderUidNameAtBottom(poseStack)
         super.render(poseStack, mouseX, mouseY, partialTick)
     }
 }
