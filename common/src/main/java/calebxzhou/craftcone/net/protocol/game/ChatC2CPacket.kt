@@ -16,7 +16,7 @@ data class ChatC2CPacket (
 ): C2CPacket {
 
 
-    companion object : ReadablePacket {
+    companion object : ReadablePacket<ChatC2CPacket> {
         override fun read(buf: FriendlyByteBuf): ChatC2CPacket {
             return ChatC2CPacket(buf.readUtf(),buf.readUtf())
         }

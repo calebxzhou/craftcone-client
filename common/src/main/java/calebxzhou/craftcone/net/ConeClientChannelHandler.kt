@@ -1,7 +1,7 @@
 package calebxzhou.craftcone.net
 
 import calebxzhou.craftcone.LOG
-import calebxzhou.craftcone.model.ConeConnection
+import calebxzhou.craftcone.entity.ConeConnection
 import calebxzhou.craftcone.net.protocol.ConePacketSet
 import calebxzhou.craftcone.ui.overlay.ConeDialog
 import calebxzhou.craftcone.ui.overlay.ConeDialogType

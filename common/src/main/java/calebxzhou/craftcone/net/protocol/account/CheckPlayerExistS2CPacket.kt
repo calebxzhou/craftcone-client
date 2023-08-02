@@ -12,7 +12,7 @@ import net.minecraft.network.FriendlyByteBuf
 data class CheckPlayerExistS2CPacket(
     val exists: Boolean
 ): S2CPacket {
-    companion object : ReadablePacket{
+    companion object : ReadablePacket<CheckPlayerExistS2CPacket>{
         override fun read(buf: FriendlyByteBuf): CheckPlayerExistS2CPacket {
             return CheckPlayerExistS2CPacket(buf.readBoolean())
         }

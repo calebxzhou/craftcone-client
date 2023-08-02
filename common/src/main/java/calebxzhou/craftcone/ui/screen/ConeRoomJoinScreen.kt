@@ -1,5 +1,12 @@
 package calebxzhou.craftcone.ui.screen
 
+import calebxzhou.craftcone.entity.ConeRoomManager
+import calebxzhou.craftcone.net.ConeNetManager
+import calebxzhou.craftcone.net.protocol.room.PlayerJoinRoomC2SPacket
+import calebxzhou.craftcone.net.protocol.room.PlayerJoinRoomS2CPacket
+import calebxzhou.craftcone.ui.overlay.ConeDialog
+import calebxzhou.craftcone.ui.overlay.ConeDialogType
+import calebxzhou.craftcone.utils.blockStateAmount
 import calebxzhou.libertorch.MC
 import calebxzhou.libertorch.mc.gui.LtScreen
 import calebxzhou.libertorch.mc.gui.UuidEditBox
@@ -8,11 +15,12 @@ import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.Button
 import net.minecraft.network.chat.Component
+import java.util.*
 
 /**
  * Created  on 2023-06-20,10:00.
  */
-class ConeRoomJoinScreen() : LtScreen("输入房间ID") {
+class ConeRoomJoinScreen() : LtScreen("输入房间ID"),S2CResponsibleScreen<PlayerJoinRoomS2CPacket> {
     private lateinit var createBtn: Button
     private lateinit var myBtn: Button
     private lateinit var roomIdBox : UuidEditBox
@@ -34,14 +42,26 @@ class ConeRoomJoinScreen() : LtScreen("输入房间ID") {
     }
 
     private fun onJoinRoom() {
+        ConeNetManager.sendPacket(PlayerJoinRoomC2SPacket(UUID.fromString(roomIdBox.value)))
 
     }
+    override fun
+            onResponse(packet: PlayerJoinRoomS2CPacket) {
+        if(blockStateAmount == packet.blockStateAmount){
+            ConeRoomManager.loadRoom(roomIdBox.value,packet.seed)
+        }else{
+            ConeDialog.show(ConeDialogType.ERR,"方块状态数量不一致：您${blockStateAmount}个/房间${packet.blockStateAmount}个。检查Mod列表！")
+        }
+    }
+
     override fun render(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {
         renderBg()
 
         super.render(poseStack, mouseX, mouseY, partialTick)
 
     }
+
+
 
     override fun tick() {
         comment = if(roomIdBox.isValueValid){
@@ -55,13 +75,12 @@ class ConeRoomJoinScreen() : LtScreen("输入房间ID") {
                 handle,
                 InputConstants.KEY_NUMPADENTER
             ) -> {
-                onJoinRoom()
+                if(roomIdBox.isValueValid)
+                    onJoinRoom()
             }
         }
         super.tick()
     }
-
-
 
     override fun shouldCloseOnEsc(): Boolean {
         return true

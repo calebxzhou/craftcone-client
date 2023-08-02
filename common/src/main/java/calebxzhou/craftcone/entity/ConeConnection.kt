@@ -1,4 +1,4 @@
-package calebxzhou.craftcone.model
+package calebxzhou.craftcone.entity
 
 import calebxzhou.craftcone.LOG
 import calebxzhou.craftcone.net.ConeClientChannelHandler

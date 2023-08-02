@@ -9,10 +9,10 @@ import java.util.*
  */
 //玩家请求加入房间
 data class PlayerJoinRoomC2SPacket(
-    val roomId: UUID
+    val rid: UUID
 ): C2SPacket {
     override fun write(buf: FriendlyByteBuf) {
-        buf.writeUUID(roomId)
+        buf.writeUUID(rid)
     }
 
 

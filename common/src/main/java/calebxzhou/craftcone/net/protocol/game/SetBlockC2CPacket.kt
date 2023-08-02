@@ -2,6 +2,7 @@ package calebxzhou.craftcone.net.protocol.game
 
 import calebxzhou.craftcone.LOG
 import calebxzhou.craftcone.net.protocol.C2CPacket
+import calebxzhou.craftcone.net.protocol.ReadablePacket
 import calebxzhou.craftcone.utils.LevelUt
 import calebxzhou.craftcone.utils.LevelUt.setBlockDefault
 import calebxzhou.libertorch.MCS
@@ -24,10 +25,10 @@ data class SetBlockC2CPacket(
 ) : C2CPacket {
 
 
-    companion object {
+    companion object :ReadablePacket<SetBlockC2CPacket> {
 
         //从buf读
-        fun read(buf: FriendlyByteBuf): SetBlockC2CPacket {
+        override fun read(buf: FriendlyByteBuf): SetBlockC2CPacket {
             return SetBlockC2CPacket(
                 buf.readByte().toInt(),
                 buf.readLong(),

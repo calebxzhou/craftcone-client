@@ -1,6 +1,6 @@
 package calebxzhou.craftcone.ui.screen
 
-import calebxzhou.craftcone.model.ConeUser
+import calebxzhou.craftcone.entity.ConeUser
 import calebxzhou.craftcone.net.ConeNetManager
 import calebxzhou.craftcone.net.protocol.account.LoginC2SPacket
 import calebxzhou.craftcone.net.protocol.account.LoginS2CPacket

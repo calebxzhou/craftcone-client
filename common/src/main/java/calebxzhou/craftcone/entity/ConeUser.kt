@@ -1,4 +1,4 @@
-package calebxzhou.craftcone.model
+package calebxzhou.craftcone.entity
 
 import java.util.*
 

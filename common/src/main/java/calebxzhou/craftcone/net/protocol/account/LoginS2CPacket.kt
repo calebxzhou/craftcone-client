@@ -16,7 +16,7 @@ data class LoginS2CPacket(
     //错误信息
     val msg: String,
 ) : S2CPacket {
-    companion object : ReadablePacket{
+    companion object : ReadablePacket<LoginS2CPacket>{
         override fun read(buf: FriendlyByteBuf): LoginS2CPacket {
             //for client
             return LoginS2CPacket(buf.readBoolean(),buf.readUtf())

@@ -16,7 +16,7 @@ data class RegisterS2CPacket(
     //错误信息
     val msg: String,
 ) : S2CPacket {
-    companion object : ReadablePacket {
+    companion object : ReadablePacket <RegisterS2CPacket>{
         override fun read(buf: FriendlyByteBuf): RegisterS2CPacket {
             return RegisterS2CPacket(buf.readBoolean(),buf.readUtf())
         }

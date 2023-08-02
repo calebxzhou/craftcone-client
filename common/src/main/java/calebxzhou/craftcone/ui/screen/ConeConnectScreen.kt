@@ -1,7 +1,7 @@
 package calebxzhou.craftcone.ui.screen
 
-import calebxzhou.craftcone.model.ConeConnection
-import calebxzhou.craftcone.model.ConeUser
+import calebxzhou.craftcone.entity.ConeConnection
+import calebxzhou.craftcone.entity.ConeUser
 import calebxzhou.craftcone.net.ConeNetManager
 import calebxzhou.craftcone.net.coneNetThread
 import calebxzhou.craftcone.net.protocol.account.CheckPlayerExistC2SPacket

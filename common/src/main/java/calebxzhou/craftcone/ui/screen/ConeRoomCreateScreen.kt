@@ -1,6 +1,6 @@
 package calebxzhou.craftcone.ui.screen
 
-import calebxzhou.craftcone.model.ConeUser
+import calebxzhou.craftcone.entity.ConeUser
 import calebxzhou.craftcone.net.ConeNetManager
 import calebxzhou.craftcone.net.protocol.room.PlayerCreateRoomC2SPacket
 import calebxzhou.craftcone.net.protocol.room.PlayerCreateRoomS2CPacket
@@ -18,6 +18,7 @@ import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import net.minecraft.world.level.block.Block
+import java.util.*
 
 /**
  * Created  on 2023-07-24,22:43.
@@ -45,7 +46,7 @@ class ConeRoomCreateScreen(val prevScreen: Screen): LtScreen("填写房间信息
             InputConstants.isKeyDown(hwnd, InputConstants.KEY_LCONTROL) && InputConstants.isKeyDown(hwnd,
                 InputConstants.KEY_RCONTROL
             ) -> {
-                ConeNetManager.sendPacket(PlayerCreateRoomC2SPacket(ConeUser.now!!.pid,isCreative,isFabric,blockStateAmount))
+                ConeNetManager.sendPacket(PlayerCreateRoomC2SPacket(isCreative,isFabric,blockStateAmount))
             }
         }
         super.tick()
@@ -76,11 +77,12 @@ class ConeRoomCreateScreen(val prevScreen: Screen): LtScreen("填写房间信息
 
     override fun onResponse(packet: PlayerCreateRoomS2CPacket) {
         if(packet.isSuccess){
-            ConeDialog.show(ConeDialogType.OK,"成功！请牢记房间ID：${packet.rid}（已自动复制。建议截图保存）")
-            MC.keyboardHandler.clipboard = packet.rid.toString()
+            val rid = UUID.fromString(packet.data)
+            ConeDialog.show(ConeDialogType.OK,"成功！请牢记房间ID：${rid}（已自动复制。建议截图保存）")
+            MC.keyboardHandler.clipboard =  packet.data
             MC.setScreen(ConeRoomJoinScreen())
         }else{
-            ConeDialog.show(ConeDialogType.ERR,packet.msg)
+            ConeDialog.show(ConeDialogType.ERR,packet.data)
         }
 
     }
