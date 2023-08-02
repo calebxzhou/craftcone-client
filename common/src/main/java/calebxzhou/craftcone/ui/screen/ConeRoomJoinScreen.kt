@@ -1,9 +1,9 @@
 package calebxzhou.craftcone.ui.screen
 
-import calebxzhou.craftcone.entity.ConeRoomManager
+import calebxzhou.craftcone.misc.ConeRoomManager
 import calebxzhou.craftcone.net.ConeNetManager
 import calebxzhou.craftcone.net.protocol.room.PlayerJoinRoomC2SPacket
-import calebxzhou.craftcone.net.protocol.room.PlayerJoinRoomS2CPacket
+import calebxzhou.craftcone.net.protocol.room.RoomInfoS2CPacket
 import calebxzhou.craftcone.ui.overlay.ConeDialog
 import calebxzhou.craftcone.ui.overlay.ConeDialogType
 import calebxzhou.craftcone.utils.blockStateAmount
@@ -20,7 +20,7 @@ import java.util.*
 /**
  * Created  on 2023-06-20,10:00.
  */
-class ConeRoomJoinScreen() : LtScreen("输入房间ID"),S2CResponsibleScreen<PlayerJoinRoomS2CPacket> {
+class ConeRoomJoinScreen() : LtScreen("输入房间ID"),S2CResponsibleScreen<RoomInfoS2CPacket> {
     private lateinit var createBtn: Button
     private lateinit var myBtn: Button
     private lateinit var roomIdBox : UuidEditBox
@@ -45,13 +45,18 @@ class ConeRoomJoinScreen() : LtScreen("输入房间ID"),S2CResponsibleScreen<Pla
         ConeNetManager.sendPacket(PlayerJoinRoomC2SPacket(UUID.fromString(roomIdBox.value)))
 
     }
-    override fun
-            onResponse(packet: PlayerJoinRoomS2CPacket) {
-        if(blockStateAmount == packet.blockStateAmount){
-            ConeRoomManager.loadRoom(roomIdBox.value,packet.seed)
-        }else{
-            ConeDialog.show(ConeDialogType.ERR,"方块状态数量不一致：您${blockStateAmount}个/房间${packet.blockStateAmount}个。检查Mod列表！")
+    override fun onResponse(packet: RoomInfoS2CPacket) {
+        if(blockStateAmount==0){
+            ConeRoomManager.initialize(roomIdBox.value)
+            return
         }
+        if (blockStateAmount != packet.blockStateAmount) {
+            ConeDialog.show(ConeDialogType.ERR,"方块状态数量不一致：您${blockStateAmount}个/房间${packet.blockStateAmount}个。检查Mod列表！")
+            return
+        }
+        ConeRoomManager.now = packet
+        ConeRoomManager.loadRoom(roomIdBox.value,packet.isCreative,packet.seed)
+
     }
 
     override fun render(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {

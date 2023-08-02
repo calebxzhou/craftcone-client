@@ -1,4 +1,4 @@
-package calebxzhou.craftcone.net.protocol.room
+package calebxzhou.craftcone.net.protocol.game
 
 import calebxzhou.craftcone.net.protocol.C2SPacket
 import net.minecraft.network.FriendlyByteBuf
