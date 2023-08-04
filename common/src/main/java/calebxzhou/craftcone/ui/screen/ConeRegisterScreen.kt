@@ -1,12 +1,13 @@
 package calebxzhou.craftcone.ui.screen
 
-import calebxzhou.craftcone.net.ConeNetManager
+import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.protocol.account.RegisterC2SPacket
 import calebxzhou.craftcone.net.protocol.account.RegisterS2CPacket
 import calebxzhou.craftcone.ui.overlay.ConeDialog
 import calebxzhou.craftcone.ui.overlay.ConeDialogType
 import calebxzhou.libertorch.MC
 import calebxzhou.libertorch.mc.gui.LtScreen
+import calebxzhou.rdi.ui.RdiTitleScreen
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.network.chat.Component
@@ -20,22 +21,22 @@ class ConeRegisterScreen : LtScreen("注册·请设置密码"), S2CResponsibleSc
         return true
     }
     override fun init() {
-        pwdBox  = EditBox(font,width/2,50,100,20, Component.literal("密码"))
+        pwdBox  = EditBox(font,width/2-100,50,100,20, Component.literal("密码"))
         addRenderableWidget(pwdBox)
     }
 
     override fun onPressEnterKey() {
         if(pwdBox.value.isNotEmpty() &&  pwdBox.value.length<=16 && pwdBox.value.length>=6)
-            ConeNetManager.sendPacket(RegisterC2SPacket(MC.user.profileId!!,pwdBox.value))
+            ConeNetSender.sendPacket(RegisterC2SPacket(MC.user.profileId!!, MC.user.name,pwdBox.value))
         else
             ConeDialog.show(ConeDialogType.ERR,"密码长度必须6到16位，现在只有${pwdBox.value.length}位")
     }
 
     override fun onResponse(packet: RegisterS2CPacket){
-        if(packet.isSuccess){
-            MC.setScreen(ConeRoomJoinScreen())
+        if(packet.ok){
+            MC.setScreen(RdiTitleScreen())
         }else{
-            ConeDialog.show(ConeDialogType.ERR,packet.msg)
+            ConeDialog.show(ConeDialogType.ERR,packet.data)
         }
     }
 

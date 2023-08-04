@@ -1,6 +1,6 @@
 package calebxzhou.craftcone.misc
 
-import calebxzhou.craftcone.LOG
+import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.mixin.aMultiNeighborUpdate
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.redstone.CollectingNeighborUpdater
@@ -30,7 +30,7 @@ object NeighborUpdateManager {
                 updates.pos
             }
             else ->{
-                LOG.error("无效的方块更新！ $updates")
+                logger.error("无效的方块更新！ $updates")
                 return
             }
         }

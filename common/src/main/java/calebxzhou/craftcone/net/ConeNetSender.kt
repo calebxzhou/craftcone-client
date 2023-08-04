@@ -1,9 +1,8 @@
 package calebxzhou.craftcone.net
 
-import calebxzhou.craftcone.LOG
+import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.entity.ConeConnection
-import calebxzhou.craftcone.net.protocol.ConePacketSet
-import calebxzhou.craftcone.net.protocol.WritablePacket
+import calebxzhou.craftcone.net.protocol.BufferWritable
 import calebxzhou.craftcone.ui.overlay.ConeDialog
 import calebxzhou.craftcone.ui.overlay.ConeDialogType
 import calebxzhou.libertorch.MC
@@ -18,19 +17,17 @@ import net.minecraft.network.FriendlyByteBuf
  * Created  on 2023-06-22,22:37.
  */
 //网络管理器
-object ConeNetManager {
+object ConeNetSender {
 
     //TODO 做容器同步
 
     val workGroup = NioEventLoopGroup()
 
-
-
     @JvmStatic
-    fun sendPacket(packet: WritablePacket) {
+    fun sendPacket(packet: BufferWritable) {
         val data = FriendlyByteBuf(Unpooled.buffer())
         val packetId = ConePacketSet.getPacketId(packet.javaClass) ?: let {
-            LOG.error("找不到$packet 对应的包ID")
+            logger.error("找不到$packet 对应的包ID")
             return
         }
         data.writeByte(packetId)

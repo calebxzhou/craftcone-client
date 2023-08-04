@@ -1,6 +1,6 @@
 package calebxzhou.craftcone.mixin;
 
-import calebxzhou.craftcone.net.ConeNetManager;
+import calebxzhou.craftcone.net.ConeNetSender;
 import calebxzhou.craftcone.net.protocol.game.SaveBlockC2SPacket;
 import calebxzhou.craftcone.utils.LevelUt;
 import net.minecraft.core.BlockPos;
@@ -22,7 +22,7 @@ abstract class mLevel {
     @Inject(method = "setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;II)Z",
             at=@At(value = "RETURN",ordinal = 3))
     private void onSetBlockAir(BlockPos blockPos, BlockState blockState, int i, int j, CallbackInfoReturnable<Boolean> cir){
-        ConeNetManager.sendPacket(
+        ConeNetSender.sendPacket(
                 new SaveBlockC2SPacket(
                         LevelUt.getDimIdByLevel((Level)(Object)this),
                         blockPos.asLong(),

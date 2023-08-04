@@ -1,6 +1,6 @@
 package calebxzhou.rdi.ui
 
-import calebxzhou.craftcone.LOG
+import calebxzhou.craftcone.logger
 import net.minecraft.client.gui.screens.Screen
 
 /**
@@ -24,7 +24,7 @@ object UiMetrics {
             str.append(nextScreen.javaClass.name)
         else
             str.append("null")
-        LOG.info(str.toString())
+        logger.info(str.toString())
 
     }
 

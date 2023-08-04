@@ -1,7 +1,9 @@
 package calebxzhou.craftcone.net.protocol.account
 
-import calebxzhou.craftcone.net.protocol.ReadablePacket
-import calebxzhou.craftcone.net.protocol.S2CPacket
+import calebxzhou.craftcone.net.protocol.BufferReadable
+import calebxzhou.craftcone.net.protocol.ClientProcessable
+import calebxzhou.craftcone.net.protocol.Packet
+import calebxzhou.craftcone.net.protocol.ResultPacket
 import calebxzhou.craftcone.ui.screen.ConeLoginScreen
 import calebxzhou.libertorch.MC
 import net.minecraft.network.FriendlyByteBuf
@@ -12,11 +14,11 @@ import net.minecraft.network.FriendlyByteBuf
 //登录响应
 data class LoginS2CPacket(
     //是否登录成功
-    val isSuccess: Boolean,
+    override val ok: Boolean,
     //错误信息
-    val msg: String,
-) : S2CPacket {
-    companion object : ReadablePacket<LoginS2CPacket>{
+    override val data: String,
+) : Packet, ClientProcessable,ResultPacket {
+    companion object : BufferReadable<LoginS2CPacket>{
         override fun read(buf: FriendlyByteBuf): LoginS2CPacket {
             //for client
             return LoginS2CPacket(buf.readBoolean(),buf.readUtf())

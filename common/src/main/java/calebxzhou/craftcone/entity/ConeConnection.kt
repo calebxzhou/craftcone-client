@@ -1,8 +1,8 @@
 package calebxzhou.craftcone.entity
 
-import calebxzhou.craftcone.LOG
-import calebxzhou.craftcone.net.ConeClientChannelHandler
-import calebxzhou.craftcone.net.ConeNetManager
+import calebxzhou.craftcone.logger
+import calebxzhou.craftcone.net.ConeNetReceiver
+import calebxzhou.craftcone.net.ConeNetSender
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.ChannelFuture
 import io.netty.channel.ChannelInitializer
@@ -15,16 +15,16 @@ import java.net.InetSocketAddress
  */
 data class ConeConnection(
     val channelFuture: ChannelFuture,
-    val channelHandler: ConeClientChannelHandler,
+    val channelHandler: ConeNetReceiver,
     val address: InetSocketAddress
 ){
     companion object{
         var now:ConeConnection? = null
         fun connect(address: InetSocketAddress) {
-            LOG.info("连接到$address")
-            val handler = ConeClientChannelHandler()
+            logger.info("连接到$address")
+            val handler = ConeNetReceiver()
             now = ConeConnection(
-                Bootstrap().group(ConeNetManager.workGroup)
+                Bootstrap().group(ConeNetSender.workGroup)
                     .channel(NioDatagramChannel::class.java)
                     .handler(object : ChannelInitializer<DatagramChannel>() {
                         override fun initChannel(ch: DatagramChannel) {
@@ -37,10 +37,10 @@ data class ConeConnection(
                 handler,
                 address
             )
-            LOG.info("连接完成 $address")
+            logger.info("连接完成 $address")
         }
         fun disconnect(){
-            LOG.info("断开连接")
+            logger.info("断开连接")
             now=null
         }
     }

@@ -1,21 +1,14 @@
 package calebxzhou.craftcone.misc
 
-import calebxzhou.craftcone.net.ConeNetManager
-import calebxzhou.craftcone.net.protocol.game.SetBlockStateC2SPacket
 import calebxzhou.craftcone.net.protocol.room.RoomInfoS2CPacket
-import calebxzhou.craftcone.ui.overlay.ConeDialog
-import calebxzhou.craftcone.ui.overlay.ConeDialogType
 import calebxzhou.craftcone.ui.screen.ConeRoomJoinScreen
-import calebxzhou.craftcone.utils.blockStates
 import calebxzhou.libertorch.MC
 import net.minecraft.core.RegistryAccess
-import net.minecraft.nbt.NbtOps
 import net.minecraft.world.Difficulty
 import net.minecraft.world.level.DataPackConfig
 import net.minecraft.world.level.GameRules
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.LevelSettings
-import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.levelgen.presets.WorldPresets
 
 /**
@@ -42,7 +35,7 @@ object ConeRoomManager{
         }
     }
 
-    fun initialize(rid: String) {
+    /*fun initialize(rid: String) {
         ConeDialog.show(ConeDialogType.WARN,"正在初始化房间，禁止退出游戏，禁止断开网络连接！")
         blockStates.forEachIndexed { i: Int, blockState: BlockState ->
             val bState = BlockState.CODEC.encodeStart(NbtOps.INSTANCE, blockState)
@@ -50,5 +43,5 @@ object ConeRoomManager{
             ConeNetManager.sendPacket(SetBlockStateC2SPacket(i,stateStr))
         }
         ConeDialog.show(ConeDialogType.INFO,"初始化完成")
-    }
+    }*/
 }

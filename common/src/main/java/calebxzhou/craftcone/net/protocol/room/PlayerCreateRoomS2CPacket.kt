@@ -1,9 +1,10 @@
 package calebxzhou.craftcone.net.protocol.room
 
-import calebxzhou.craftcone.net.protocol.ReadablePacket
-import calebxzhou.craftcone.net.protocol.S2CPacket
+import calebxzhou.craftcone.net.protocol.BufferReadable
+import calebxzhou.craftcone.net.protocol.ClientProcessable
+import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.ui.screen.ConeRoomCreateScreen
-import calebxzhou.libertorch.MC
+import calebxzhou.craftcone.utils.screenNow
 import net.minecraft.network.FriendlyByteBuf
 
 /**
@@ -12,17 +13,16 @@ import net.minecraft.network.FriendlyByteBuf
 data class PlayerCreateRoomS2CPacket(
     val isSuccess:Boolean,
     val data: String,
-) : S2CPacket{
-    companion object:ReadablePacket<PlayerCreateRoomS2CPacket>{
+) : Packet, ClientProcessable{
+    companion object:BufferReadable<PlayerCreateRoomS2CPacket>{
         override fun read(buf: FriendlyByteBuf): PlayerCreateRoomS2CPacket {
             return PlayerCreateRoomS2CPacket(buf.readBoolean(),buf.readUtf())
         }
 
     }
     override fun process() {
-        val screen = MC.screen
-        if(screen is ConeRoomCreateScreen){
-            screen.onResponse(this)
+        if(screenNow is ConeRoomCreateScreen){
+            screenNow.onResponse(this)
         }
     }
 

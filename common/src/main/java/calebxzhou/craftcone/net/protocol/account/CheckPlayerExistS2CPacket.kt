@@ -1,7 +1,8 @@
 package calebxzhou.craftcone.net.protocol.account
 
-import calebxzhou.craftcone.net.protocol.ReadablePacket
-import calebxzhou.craftcone.net.protocol.S2CPacket
+import calebxzhou.craftcone.net.protocol.BufferReadable
+import calebxzhou.craftcone.net.protocol.ClientProcessable
+import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.ui.screen.ConeConnectScreen
 import calebxzhou.libertorch.MC
 import net.minecraft.network.FriendlyByteBuf
@@ -11,8 +12,8 @@ import net.minecraft.network.FriendlyByteBuf
  */
 data class CheckPlayerExistS2CPacket(
     val exists: Boolean
-): S2CPacket {
-    companion object : ReadablePacket<CheckPlayerExistS2CPacket>{
+): Packet, ClientProcessable {
+    companion object : BufferReadable<CheckPlayerExistS2CPacket>{
         override fun read(buf: FriendlyByteBuf): CheckPlayerExistS2CPacket {
             return CheckPlayerExistS2CPacket(buf.readBoolean())
         }

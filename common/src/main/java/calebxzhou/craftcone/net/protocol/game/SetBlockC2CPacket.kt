@@ -1,8 +1,10 @@
 package calebxzhou.craftcone.net.protocol.game
 
-import calebxzhou.craftcone.LOG
-import calebxzhou.craftcone.net.protocol.C2CPacket
-import calebxzhou.craftcone.net.protocol.ReadablePacket
+import calebxzhou.craftcone.logger
+import calebxzhou.craftcone.net.protocol.BufferReadable
+import calebxzhou.craftcone.net.protocol.BufferWritable
+import calebxzhou.craftcone.net.protocol.ClientProcessable
+import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.utils.LevelUt
 import calebxzhou.craftcone.utils.LevelUt.setBlockDefault
 import calebxzhou.libertorch.MCS
@@ -21,11 +23,11 @@ data class SetBlockC2CPacket(
     //方块位置
     val bpos: Long,
     //状态
-    val state: Int,
-) : C2CPacket {
+    val stateId: Int,
+) : Packet,ClientProcessable,BufferWritable {
 
 
-    companion object :ReadablePacket<SetBlockC2CPacket> {
+    companion object :BufferReadable<SetBlockC2CPacket> {
 
         //从buf读
         override fun read(buf: FriendlyByteBuf): SetBlockC2CPacket {
@@ -40,14 +42,14 @@ data class SetBlockC2CPacket(
     override fun process() {
         val level = LevelUt.getLevelByDimId(this.levelId)
         val bpos = BlockPos.of(this.bpos)
-        val state = Block.BLOCK_STATE_REGISTRY.byId(this.state)
+        val state = Block.BLOCK_STATE_REGISTRY.byId(this.stateId)
         MCS.getLevel(level.dimension())?.setBlockDefault(
             bpos, state ?: run {
-                LOG.warn("无效的方块状态，将使用空气代替")
+                logger.warn("无效的方块状态，将使用空气代替")
                 Blocks.AIR.defaultBlockState()
             }
         )?:run {
-            LOG.warn("不存在维度${level.dimension()}")
+            logger.warn("不存在维度${level.dimension()}")
             return
         }
     }
@@ -55,7 +57,7 @@ data class SetBlockC2CPacket(
     override fun write(buf: FriendlyByteBuf) {
         buf.writeByte(levelId)
         buf.writeLong(bpos)
-        buf.writeVarInt(state)
+        buf.writeVarInt(stateId)
     }
 
 }

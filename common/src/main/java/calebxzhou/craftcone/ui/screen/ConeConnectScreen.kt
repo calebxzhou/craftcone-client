@@ -2,7 +2,7 @@ package calebxzhou.craftcone.ui.screen
 
 import calebxzhou.craftcone.entity.ConeConnection
 import calebxzhou.craftcone.entity.ConeUser
-import calebxzhou.craftcone.net.ConeNetManager
+import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.coneNetThread
 import calebxzhou.craftcone.net.protocol.account.CheckPlayerExistC2SPacket
 import calebxzhou.craftcone.net.protocol.account.CheckPlayerExistS2CPacket
@@ -42,7 +42,7 @@ class ConeConnectScreen : LtScreen("输入服务器IP地址"), S2CResponsibleScr
         comment="连接中 $addr"
         coneNetThread {
             ConeConnection.connect(addr)
-            ConeNetManager.sendPacket(CheckPlayerExistC2SPacket(MC.user.profileId!!))
+            ConeNetSender.sendPacket(CheckPlayerExistC2SPacket(MC.user.profileId!!))
         }
     }
 

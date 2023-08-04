@@ -1,7 +1,9 @@
 package calebxzhou.craftcone.net.protocol.account
 
-import calebxzhou.craftcone.net.protocol.C2SPacket
+import calebxzhou.craftcone.net.protocol.BufferWritable
+import calebxzhou.craftcone.net.protocol.Packet
 import net.minecraft.network.FriendlyByteBuf
+import calebxzhou.craftcone.net.protocol.*
 import java.util.*
 
 /**
@@ -13,7 +15,7 @@ data class LoginC2SPacket(
     val pid: UUID,
     //密码
     val pwd: String,
-) : C2SPacket{
+) : Packet, BufferWritable {
 
     override fun write(buf: FriendlyByteBuf) {
         buf.writeUUID(pid)

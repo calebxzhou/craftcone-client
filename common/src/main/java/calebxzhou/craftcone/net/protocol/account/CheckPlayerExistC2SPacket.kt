@@ -1,6 +1,7 @@
 package calebxzhou.craftcone.net.protocol.account
 
-import calebxzhou.craftcone.net.protocol.C2SPacket
+import calebxzhou.craftcone.net.protocol.BufferWritable
+import calebxzhou.craftcone.net.protocol.Packet
 import net.minecraft.network.FriendlyByteBuf
 import java.util.*
 
@@ -10,7 +11,7 @@ import java.util.*
 //用户是否存在（已注册）
 data class CheckPlayerExistC2SPacket(
     val pid: UUID
-): C2SPacket{
+): Packet, BufferWritable{
     override fun write(buf: FriendlyByteBuf) {
         buf.writeUUID(pid)
     }

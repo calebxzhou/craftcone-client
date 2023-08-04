@@ -1,7 +1,7 @@
 package calebxzhou.craftcone.mixin;
 
 import calebxzhou.craftcone.misc.NeighborUpdateManager;
-import calebxzhou.craftcone.net.ConeNetManager;
+import calebxzhou.craftcone.net.ConeNetSender;
 import calebxzhou.craftcone.net.protocol.game.SetBlockC2CPacket;
 import calebxzhou.craftcone.utils.LevelUt;
 import net.minecraft.core.BlockPos;
@@ -34,7 +34,7 @@ public class mBlockItem {
         if(NeighborUpdateManager.has(blockPos)){
             return;
         }
-        ConeNetManager.sendPacket(new SetBlockC2CPacket(LevelUt.getDimIdByLevel(level),
+        ConeNetSender.sendPacket(new SetBlockC2CPacket(LevelUt.getDimIdByLevel(level),
                 blockPos.asLong(), Block.BLOCK_STATE_REGISTRY.getId(blockState2)));
     }
 }

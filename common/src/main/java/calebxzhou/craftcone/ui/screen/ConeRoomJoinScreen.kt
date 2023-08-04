@@ -1,7 +1,7 @@
 package calebxzhou.craftcone.ui.screen
 
 import calebxzhou.craftcone.misc.ConeRoomManager
-import calebxzhou.craftcone.net.ConeNetManager
+import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.protocol.room.PlayerJoinRoomC2SPacket
 import calebxzhou.craftcone.net.protocol.room.RoomInfoS2CPacket
 import calebxzhou.craftcone.ui.overlay.ConeDialog
@@ -42,14 +42,14 @@ class ConeRoomJoinScreen() : LtScreen("输入房间ID"),S2CResponsibleScreen<Roo
     }
 
     private fun onJoinRoom() {
-        ConeNetManager.sendPacket(PlayerJoinRoomC2SPacket(UUID.fromString(roomIdBox.value)))
+        ConeNetSender.sendPacket(PlayerJoinRoomC2SPacket(UUID.fromString(roomIdBox.value)))
 
     }
     override fun onResponse(packet: RoomInfoS2CPacket) {
-        if(blockStateAmount==0){
+        /*if(blockStateAmount==0){
             ConeRoomManager.initialize(roomIdBox.value)
             return
-        }
+        }*/
         if (blockStateAmount != packet.blockStateAmount) {
             ConeDialog.show(ConeDialogType.ERR,"方块状态数量不一致：您${blockStateAmount}个/房间${packet.blockStateAmount}个。检查Mod列表！")
             return
@@ -90,4 +90,7 @@ class ConeRoomJoinScreen() : LtScreen("输入房间ID"),S2CResponsibleScreen<Roo
     override fun shouldCloseOnEsc(): Boolean {
         return true
     }
+
+
+
 }

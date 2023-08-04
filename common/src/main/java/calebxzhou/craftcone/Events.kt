@@ -1,10 +1,11 @@
 package calebxzhou.craftcone
 
-import calebxzhou.craftcone.net.ConeNetManager
-import calebxzhou.craftcone.net.ConeNetManager.sendPacket
+import calebxzhou.craftcone.net.ConeNetSender
+import calebxzhou.craftcone.net.ConeNetSender.sendPacket
 import calebxzhou.craftcone.net.protocol.game.ChatC2CPacket
 import calebxzhou.craftcone.net.protocol.game.SetBlockC2CPacket
 import calebxzhou.craftcone.utils.LevelUt
+import calebxzhou.craftcone.utils.LevelUt.numDimKeyMap
 import calebxzhou.libertorch.MC
 import dev.architectury.event.EventResult
 import dev.architectury.event.events.common.BlockEvent
@@ -69,6 +70,7 @@ object Events{
                 Block.BLOCK_STATE_REGISTRY.getId(Blocks.AIR.defaultBlockState())
             )
         )
+
         return EventResult.pass()
     }
 
@@ -77,18 +79,18 @@ object Events{
     private fun onChat(player: ServerPlayer?, component: Component?): EventResult? {
         if(player==null || component==null)
             return EventResult.pass()
-        ConeNetManager.sendPacket(ChatC2CPacket(MC.user.name,component.string))
+        ConeNetSender.sendPacket(ChatC2CPacket(MC.user.name,component.string))
         return EventResult.pass()
     }
 
     //本地服务器启动时
     private fun onLocalServerStarted(server: MinecraftServer) {
         //打开地图时，每个维度编成数字
-        Cone.numDimKeyMap.clear()
+        numDimKeyMap.clear()
         server.levelKeys().forEach {
-            val number = Cone.numDimKeyMap.size
-            LOG.info("Dimension Number: $number $it")
-            Cone.numDimKeyMap += Pair(number,it)
+            val number = numDimKeyMap.size
+            logger.info("Dimension Number: $number $it")
+            numDimKeyMap += Pair(number,it)
         }
 
     }

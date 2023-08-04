@@ -1,6 +1,6 @@
 package calebxzhou.craftcone.mixin;
 
-import calebxzhou.craftcone.net.ConeNetManager;
+import calebxzhou.craftcone.net.ConeNetSender;
 import calebxzhou.craftcone.net.protocol.game.SetBlockC2CPacket;
 import calebxzhou.craftcone.utils.LevelUt;
 import net.minecraft.world.InteractionHand;
@@ -25,6 +25,6 @@ public class mBlockStateBase {
     private void onRightClickBlock(Level level, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult, CallbackInfoReturnable<InteractionResult> cir){
         var pos = blockHitResult.getBlockPos();
         var bState = level.getBlockState(pos);
-        ConeNetManager.sendPacket(new SetBlockC2CPacket(LevelUt.getDimIdByLevel(level),pos.asLong(), Block.BLOCK_STATE_REGISTRY.getId(bState)));
+        ConeNetSender.sendPacket(new SetBlockC2CPacket(LevelUt.getDimIdByLevel(level),pos.asLong(), Block.BLOCK_STATE_REGISTRY.getId(bState)));
     }
 }

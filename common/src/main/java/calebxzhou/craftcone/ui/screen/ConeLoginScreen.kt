@@ -1,7 +1,7 @@
 package calebxzhou.craftcone.ui.screen
 
 import calebxzhou.craftcone.entity.ConeUser
-import calebxzhou.craftcone.net.ConeNetManager
+import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.protocol.account.LoginC2SPacket
 import calebxzhou.craftcone.net.protocol.account.LoginS2CPacket
 import calebxzhou.craftcone.ui.overlay.ConeDialog
@@ -27,7 +27,7 @@ class ConeLoginScreen : LtScreen("输入密码"),S2CResponsibleScreen<LoginS2CPa
     }
 
     override fun onPressEnterKey() {
-        ConeNetManager.sendPacket(LoginC2SPacket(MC.user.profileId!!, pwdBox.value))
+        ConeNetSender.sendPacket(LoginC2SPacket(MC.user.profileId!!, pwdBox.value))
     }
 
     override fun render(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {
@@ -37,11 +37,11 @@ class ConeLoginScreen : LtScreen("输入密码"),S2CResponsibleScreen<LoginS2CPa
     }
 
     override fun onResponse(packet: LoginS2CPacket) {
-        if(packet.isSuccess){
+        if(packet.ok){
             ConeUser.now = ConeUser(MC.user.profileId!!,pwdBox.value, MC.user.name)
             MC.setScreen(ConeRoomJoinScreen())
         }else{
-            ConeDialog.show(ConeDialogType.ERR,packet.msg)
+            ConeDialog.show(ConeDialogType.ERR,packet.data)
         }
 
     }

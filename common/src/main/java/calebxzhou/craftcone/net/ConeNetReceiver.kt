@@ -1,8 +1,7 @@
 package calebxzhou.craftcone.net
 
-import calebxzhou.craftcone.LOG
+import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.entity.ConeConnection
-import calebxzhou.craftcone.net.protocol.ConePacketSet
 import calebxzhou.craftcone.ui.overlay.ConeDialog
 import calebxzhou.craftcone.ui.overlay.ConeDialogType
 import io.netty.channel.ChannelHandler.Sharable
@@ -15,7 +14,7 @@ import net.minecraft.network.FriendlyByteBuf
  * Created  on 2023-07-05,9:24.
  */
 @Sharable
-class ConeClientChannelHandler : SimpleChannelInboundHandler<DatagramPacket>() {
+class ConeNetReceiver : SimpleChannelInboundHandler<DatagramPacket>() {
 
 
     override fun channelInactive(ctx: ChannelHandlerContext) {
@@ -23,7 +22,7 @@ class ConeClientChannelHandler : SimpleChannelInboundHandler<DatagramPacket>() {
     }
 
     override fun exceptionCaught(ctx: ChannelHandlerContext?, cause: Throwable) {
-        LOG.error("连接错误：",cause)
+        logger.error("连接错误：",cause)
         ConeDialog.show(ConeDialogType.ERR,"连接错误。${cause.javaClass.name}:${cause.localizedMessage}")
         ConeConnection.disconnect()
     }

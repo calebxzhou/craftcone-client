@@ -1,6 +1,7 @@
 package calebxzhou.craftcone.net.protocol.room
 
-import calebxzhou.craftcone.net.protocol.C2SPacket
+import calebxzhou.craftcone.net.protocol.BufferWritable
+import calebxzhou.craftcone.net.protocol.Packet
 import net.minecraft.network.FriendlyByteBuf
 
 /**
@@ -8,17 +9,20 @@ import net.minecraft.network.FriendlyByteBuf
  */
 //玩家请求创建房间
 data class PlayerCreateRoomC2SPacket(
+    //房间名称
+    val rName:String,
     //是否创造模式
     val isCreative: Boolean,
     //mod加载器？Fabric：Forge
     val isFabric: Boolean,
     //方块状态数量
     val blockStateAmount: Int,
-): C2SPacket {
+): Packet, BufferWritable {
     override fun write(buf: FriendlyByteBuf) {
+        buf.writeUtf(rName)
         buf.writeBoolean(isCreative)
         buf.writeBoolean(isFabric)
-        buf.writeInt(blockStateAmount)
+        buf.writeVarInt(blockStateAmount)
     }
 
 
