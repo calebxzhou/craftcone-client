@@ -8,7 +8,7 @@ import net.minecraft.network.FriendlyByteBuf
  * Created  on 2023-07-17,17:16.
  */
 //保存单个方块的包（setBlock）
-data class SaveBlockC2SPacket(
+data class WriteBlockC2SPacket(
     //维度ID
     val dimId: Int,
     //方块位置

@@ -1,8 +1,8 @@
 package calebxzhou.craftcone.net.protocol.account
 
 import calebxzhou.craftcone.net.protocol.BufferReadable
-import calebxzhou.craftcone.net.protocol.ClientProcessable
 import calebxzhou.craftcone.net.protocol.Packet
+import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
 import calebxzhou.craftcone.net.protocol.ResultPacket
 import calebxzhou.craftcone.ui.screen.ConeLoginScreen
 import calebxzhou.libertorch.MC
@@ -17,7 +17,7 @@ data class LoginS2CPacket(
     override val ok: Boolean,
     //错误信息
     override val data: String,
-) : Packet, ClientProcessable,ResultPacket {
+) : Packet, RenderThreadProcessable,ResultPacket {
     companion object : BufferReadable<LoginS2CPacket>{
         override fun read(buf: FriendlyByteBuf): LoginS2CPacket {
             //for client

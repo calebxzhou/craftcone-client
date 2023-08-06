@@ -8,13 +8,11 @@
     "aCollectingNeighborUpdater",
     "aMultiNeighborUpdate",
     "mBlockItem",
+    "mBlockStateBase",
     "mChunkHolder",
+    "mChunkSerializer",
     "mCollectingNeighborUpdater",
-    "mLevel",
-    "mLevelChunk",
-    "mServerGamePacketListenerImpl",
-    "mServerLevel",
-    "mBlockStateBase"
+    "mLevel"
   ],
   "injectors": {
     "defaultRequire": 1

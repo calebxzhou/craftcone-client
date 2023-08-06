@@ -1,13 +1,13 @@
 package calebxzhou.craftcone.net
 
-import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.entity.ConeConnection
+import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.net.protocol.BufferWritable
 import calebxzhou.craftcone.ui.overlay.ConeDialog
 import calebxzhou.craftcone.ui.overlay.ConeDialogType
 import calebxzhou.libertorch.MC
 import calebxzhou.rdi.ui.RdiTitleScreen
-import io.netty.buffer.Unpooled
+import io.netty.buffer.PooledByteBufAllocator
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.DatagramPacket
 import net.minecraft.network.FriendlyByteBuf
@@ -25,7 +25,7 @@ object ConeNetSender {
 
     @JvmStatic
     fun sendPacket(packet: BufferWritable) {
-        val data = FriendlyByteBuf(Unpooled.buffer())
+        val data = FriendlyByteBuf(PooledByteBufAllocator.DEFAULT.buffer())
         val packetId = ConePacketSet.getPacketId(packet.javaClass) ?: let {
             logger.error("找不到$packet 对应的包ID")
             return
@@ -46,6 +46,7 @@ object ConeNetSender {
             MC.setScreen(RdiTitleScreen())
             return
         }
+        //data.clear()
     }
 
 }

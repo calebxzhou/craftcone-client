@@ -3,7 +3,7 @@ package calebxzhou.craftcone.net.protocol.game
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.BufferWritable
-import calebxzhou.craftcone.net.protocol.ClientProcessable
+import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
 import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.libertorch.MC
 import net.minecraft.network.FriendlyByteBuf
@@ -14,7 +14,7 @@ import net.minecraft.network.chat.Component
 data class ChatC2CPacket (
     val senderName: String,
     val content: String,
-): Packet,ClientProcessable,BufferWritable {
+): Packet,RenderThreadProcessable,BufferWritable {
 
 
     companion object : BufferReadable<ChatC2CPacket> {

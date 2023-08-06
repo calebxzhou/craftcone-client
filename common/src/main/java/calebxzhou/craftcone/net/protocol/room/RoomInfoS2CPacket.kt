@@ -1,8 +1,8 @@
 package calebxzhou.craftcone.net.protocol.room
 
 import calebxzhou.craftcone.net.protocol.BufferReadable
-import calebxzhou.craftcone.net.protocol.ClientProcessable
 import calebxzhou.craftcone.net.protocol.Packet
+import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
 import calebxzhou.craftcone.ui.screen.ConeRoomJoinScreen
 import calebxzhou.libertorch.MC
 import net.minecraft.network.FriendlyByteBuf
@@ -24,7 +24,7 @@ data class RoomInfoS2CPacket(
     val blockStateAmount: Int,
     //地图种子
     val seed: Long,
-):Packet,ClientProcessable{
+):Packet,RenderThreadProcessable{
     companion object : BufferReadable<RoomInfoS2CPacket>{
 
         override fun read(buf: FriendlyByteBuf): RoomInfoS2CPacket {

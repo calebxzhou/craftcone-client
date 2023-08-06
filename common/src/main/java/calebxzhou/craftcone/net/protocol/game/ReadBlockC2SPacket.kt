@@ -9,13 +9,13 @@ import net.minecraft.network.FriendlyByteBuf
 data class ReadBlockC2SPacket(
     //维度ID
     val dimId: Int,
-    //方块位置
-    val bpos: Long,
+    //区块位置 long
+    val chunkPos: Long,
 ) : Packet, BufferWritable{
 
     override fun write(buf: FriendlyByteBuf) {
         buf.writeVarInt(dimId)
-        buf.writeLong(bpos)
+        buf.writeLong(chunkPos)
     }
 
 }

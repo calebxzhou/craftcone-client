@@ -1,7 +1,7 @@
 package calebxzhou.craftcone.net
 
-import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.entity.ConeConnection
+import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.ui.overlay.ConeDialog
 import calebxzhou.craftcone.ui.overlay.ConeDialogType
 import io.netty.channel.ChannelHandler.Sharable
@@ -30,6 +30,6 @@ class ConeNetReceiver : SimpleChannelInboundHandler<DatagramPacket>() {
         //第一个byte
         val packetId = msg.content().readByte().toInt()
         val data = FriendlyByteBuf(msg.content())
-        ConePacketSet.createPacketAndProcess(packetId, data)
+        ConePacketSet.createAndProcess(packetId, data)
     }
 }

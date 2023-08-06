@@ -2,18 +2,27 @@ package calebxzhou.craftcone.net
 
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.net.protocol.BufferWritable
-import calebxzhou.craftcone.net.protocol.ClientProcessable
 import calebxzhou.craftcone.net.protocol.Packet
+import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
+import calebxzhou.craftcone.net.protocol.ServerThreadProcessable
 import calebxzhou.craftcone.net.protocol.account.*
 import calebxzhou.craftcone.net.protocol.game.*
 import calebxzhou.craftcone.net.protocol.room.*
 import calebxzhou.libertorch.MC
+import calebxzhou.libertorch.MCS
 import net.minecraft.network.FriendlyByteBuf
 
 /**
  * Created  on 2023-07-14,8:55.
  */
 object ConePacketSet {
+
+    //包writer/reader种类 [id]
+    private val packetTypes = arrayListOf<PacketType>()
+    //s2c读
+    private val packetIdReaders = linkedMapOf<Int,(FriendlyByteBuf) -> Packet>()
+    //c2s写
+    private val packetWriterClassIds = linkedMapOf<Class<out BufferWritable>,Int>()
     init {
         registerPacket(CheckPlayerExistC2SPacket::class.java)
         registerPacket(CheckPlayerExistS2CPacket::read)
@@ -27,7 +36,7 @@ object ConePacketSet {
         registerPacket(PlayerMoveC2CPacket::read)
         registerPacket(ReadBlockC2SPacket::class.java)
         registerPacket(ReadBlockS2CPacket::read)
-        registerPacket(SaveBlockC2SPacket::class.java)
+        registerPacket(WriteBlockC2SPacket::class.java)
         registerPacket(SetBlockC2CPacket::class.java)
         registerPacket(SetBlockC2CPacket::read)
         // registerPacket(SetBlockStateC2SPacket::class.java)
@@ -40,12 +49,7 @@ object ConePacketSet {
 
 
     }
-    //包writer/reader种类 [id]
-    private val packetTypes = arrayListOf<PacketType>()
-    //s2c读
-    private val packetIdReaders = linkedMapOf<Int,(FriendlyByteBuf) -> Packet>()
-    //c2s写
-    private val packetWriterClassIds = linkedMapOf<Class<out BufferWritable>,Int>()
+
     private fun registerPacket(reader: (FriendlyByteBuf) -> Packet){
         packetIdReaders += Pair (packetTypes.size,reader)
         packetTypes += PacketType.READ
@@ -79,8 +83,13 @@ object ConePacketSet {
 
     private fun processPacket(packet: Packet) {
         when(packet){
-            is ClientProcessable ->{
+            is RenderThreadProcessable ->{
                 MC.execute {
+                    packet.process()
+                }
+            }
+            is ServerThreadProcessable ->{
+                MCS.execute {
                     packet.process()
                 }
             }

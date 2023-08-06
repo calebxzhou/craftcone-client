@@ -3,8 +3,8 @@ package calebxzhou.craftcone.net.protocol.game
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.BufferWritable
-import calebxzhou.craftcone.net.protocol.ClientProcessable
 import calebxzhou.craftcone.net.protocol.Packet
+import calebxzhou.craftcone.net.protocol.ServerThreadProcessable
 import calebxzhou.craftcone.utils.LevelUt
 import calebxzhou.craftcone.utils.LevelUt.setBlockDefault
 import calebxzhou.libertorch.MCS
@@ -24,7 +24,7 @@ data class SetBlockC2CPacket(
     val bpos: Long,
     //状态
     val stateId: Int,
-) : Packet,ClientProcessable,BufferWritable {
+) : Packet, ServerThreadProcessable,BufferWritable {
 
 
     companion object :BufferReadable<SetBlockC2CPacket> {

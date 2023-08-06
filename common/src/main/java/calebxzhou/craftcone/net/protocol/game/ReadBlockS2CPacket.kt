@@ -2,8 +2,8 @@ package calebxzhou.craftcone.net.protocol.game
 
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.net.protocol.BufferReadable
-import calebxzhou.craftcone.net.protocol.ClientProcessable
 import calebxzhou.craftcone.net.protocol.Packet
+import calebxzhou.craftcone.net.protocol.ServerThreadProcessable
 import calebxzhou.craftcone.utils.LevelUt
 import calebxzhou.craftcone.utils.LevelUt.setBlockDefault
 import calebxzhou.craftcone.utils.getBlockStateById
@@ -20,7 +20,7 @@ data class ReadBlockS2CPacket(
     val bpos: Long,
     //状态ID
     val stateId: Int,
-) : Packet, ClientProcessable{
+) : Packet, ServerThreadProcessable{
     companion object : BufferReadable<ReadBlockS2CPacket> {
         override fun read(buf: FriendlyByteBuf): ReadBlockS2CPacket {
             return ReadBlockS2CPacket(buf.readVarInt(),buf.readLong(),buf.readVarInt())

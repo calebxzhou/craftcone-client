@@ -14,7 +14,7 @@ data class RegisterS2CPacket(
     override val ok: Boolean,
     //错误信息
     override val data: String,
-) : Packet, ClientProcessable, ResultPacket {
+) : Packet, RenderThreadProcessable, ResultPacket {
     companion object : BufferReadable <RegisterS2CPacket>{
         override fun read(buf: FriendlyByteBuf): RegisterS2CPacket {
             return RegisterS2CPacket(buf.readBoolean(),buf.readUtf())
