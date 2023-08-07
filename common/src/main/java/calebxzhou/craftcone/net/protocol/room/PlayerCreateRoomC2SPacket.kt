@@ -11,6 +11,8 @@ import net.minecraft.network.FriendlyByteBuf
 data class PlayerCreateRoomC2SPacket(
     //房间名称
     val rName:String,
+    //mc版本
+    val mcVersion : String,
     //是否创造模式
     val isCreative: Boolean,
     //mod加载器？Fabric：Forge
@@ -20,6 +22,7 @@ data class PlayerCreateRoomC2SPacket(
 ): Packet, BufferWritable {
     override fun write(buf: FriendlyByteBuf) {
         buf.writeUtf(rName)
+        buf.writeUtf(mcVersion)
         buf.writeBoolean(isCreative)
         buf.writeBoolean(isFabric)
         buf.writeVarInt(blockStateAmount)

@@ -4,6 +4,7 @@ import calebxzhou.craftcone.entity.ConeConnection
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.ui.overlay.ConeDialog
 import calebxzhou.craftcone.ui.overlay.ConeDialogType
+import calebxzhou.rdi.goRdiTitleScreen
 import io.netty.channel.ChannelHandler.Sharable
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
@@ -17,14 +18,11 @@ import net.minecraft.network.FriendlyByteBuf
 class ConeNetReceiver : SimpleChannelInboundHandler<DatagramPacket>() {
 
 
-    override fun channelInactive(ctx: ChannelHandlerContext) {
-        super.channelInactive(ctx)
-    }
-
     override fun exceptionCaught(ctx: ChannelHandlerContext?, cause: Throwable) {
         logger.error("连接错误：",cause)
-        ConeDialog.show(ConeDialogType.ERR,"连接错误。${cause.javaClass.name}:${cause.localizedMessage}")
         ConeConnection.disconnect()
+        goRdiTitleScreen()
+        ConeDialog.show(ConeDialogType.ERR,"连接错误。${cause.javaClass.name}:${cause.localizedMessage}")
     }
     override fun channelRead0(ctx: ChannelHandlerContext?, msg: DatagramPacket) {
         //第一个byte

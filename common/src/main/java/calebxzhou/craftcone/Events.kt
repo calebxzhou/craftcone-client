@@ -4,6 +4,7 @@ import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.ConeNetSender.sendPacket
 import calebxzhou.craftcone.net.protocol.game.ChatC2CPacket
 import calebxzhou.craftcone.net.protocol.game.SetBlockC2CPacket
+import calebxzhou.craftcone.net.protocol.room.PlayerLeaveRoomC2SPacket
 import calebxzhou.craftcone.utils.LevelUt
 import calebxzhou.craftcone.utils.LevelUt.numDimKeyMap
 import calebxzhou.libertorch.MC
@@ -27,32 +28,14 @@ import net.minecraft.world.level.block.state.BlockState
 object Events{
     fun register(){
         BlockEvent.BREAK.register(::onBreakBlock)
-        //PlayerEvent.PLAYER_JOIN.register(::onPlayerJoin)
-        //PlayerEvent.PLAYER_QUIT.register(::onPlayerQuit)
         ChatEvent.RECEIVED.register(::onChat )
         LifecycleEvent.SERVER_STARTED.register(::onLocalServerStarted)
-        LifecycleEvent.SERVER_STOPPING.register(::onLocalServerStopping)
     }
 
-
-
-   /* private fun onPlayerQuit(player: ServerPlayer) {
-        sendPacket(
-            ConePlayerQuitPacket(
-                player.uuid,
-                player.displayName.string
-            )
-        )
+    fun onClickQuitSaveButton() {
+        ConeNetSender.sendPacket(PlayerLeaveRoomC2SPacket())
     }
 
-    private fun onPlayerJoin(player: ServerPlayer) {
-        sendPacket(
-            ConePlayerJoinPacket(
-                player.uuid,
-                player.displayName.string
-            )
-        )
-    }*/
 
 
 
@@ -96,7 +79,4 @@ object Events{
     }
 
 
-    //本地服务器关闭时
-    private fun onLocalServerStopping(server: MinecraftServer?) {
-    }
 }

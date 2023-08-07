@@ -10,5 +10,5 @@ public fun coneNetThread(todo: ()->Unit){
     ConeNetThread.thPool.submit(todo)
 }
 object ConeNetThread {
-    val thPool = Executors.newFixedThreadPool(4,DefaultThreadFactory("ConeNetThreadPool"))
+    val thPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(),DefaultThreadFactory("ConeNetThreadPool"))
 }

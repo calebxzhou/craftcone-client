@@ -5,8 +5,7 @@ import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.net.protocol.BufferWritable
 import calebxzhou.craftcone.ui.overlay.ConeDialog
 import calebxzhou.craftcone.ui.overlay.ConeDialogType
-import calebxzhou.libertorch.MC
-import calebxzhou.rdi.ui.RdiTitleScreen
+import calebxzhou.rdi.goRdiTitleScreen
 import io.netty.buffer.PooledByteBufAllocator
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.DatagramPacket
@@ -34,16 +33,16 @@ object ConeNetSender {
         packet.write(data)
         //发走
         val address = ConeConnection.now?.address?:let {
-            ConeDialog.show(ConeDialogType.ERR,"没连接服务器就发包了")
+            ConeDialog.show(ConeDialogType.ERR,"连接服务器失败")
             ConeConnection.disconnect()
-            MC.setScreen(RdiTitleScreen())
+            goRdiTitleScreen()
             return
         }
         val udpPacket = DatagramPacket(data, address)
         ConeConnection.now?.channelFuture?.channel()?.writeAndFlush(udpPacket)?:let {
-            ConeDialog.show(ConeDialogType.ERR,"没连接服务器就发包了")
+            ConeDialog.show(ConeDialogType.ERR,"连接服务器失败")
             ConeConnection.disconnect()
-            MC.setScreen(RdiTitleScreen())
+            goRdiTitleScreen()
             return
         }
         //data.clear()

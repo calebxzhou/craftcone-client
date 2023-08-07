@@ -89,7 +89,7 @@ object ConePacketSet {
                 }
             }
             is ServerThreadProcessable ->{
-                MCS.execute {
+                MCS?.execute {
                     packet.process()
                 }
             }

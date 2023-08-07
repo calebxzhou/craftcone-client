@@ -46,6 +46,7 @@ class ConeRoomJoinScreen() : LtScreen("输入房间ID"),S2CResponsibleScreen<Roo
 
     }
     override fun onResponse(packet: RoomInfoS2CPacket) {
+
         /*if(blockStateAmount==0){
             ConeRoomManager.initialize(roomIdBox.value)
             return

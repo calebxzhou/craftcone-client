@@ -43,7 +43,7 @@ data class SetBlockC2CPacket(
         val level = LevelUt.getLevelByDimId(this.levelId)
         val bpos = BlockPos.of(this.bpos)
         val state = Block.BLOCK_STATE_REGISTRY.byId(this.stateId)
-        MCS.getLevel(level.dimension())?.setBlockDefault(
+        MCS?.getLevel(level.dimension())?.setBlockDefault(
             bpos, state ?: run {
                 logger.warn("无效的方块状态，将使用空气代替")
                 Blocks.AIR.defaultBlockState()

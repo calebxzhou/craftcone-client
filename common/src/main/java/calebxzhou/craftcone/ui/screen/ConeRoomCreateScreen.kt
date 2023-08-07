@@ -13,6 +13,7 @@ import calebxzhou.libertorch.MC
 import calebxzhou.libertorch.mc.gui.LtScreen
 import com.mojang.blaze3d.vertex.PoseStack
 import dev.architectury.platform.Platform
+import net.minecraft.SharedConstants
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
@@ -41,7 +42,8 @@ class ConeRoomCreateScreen(val prevScreen: Screen): LtScreen("填写房间信息
     }
 
     private fun onSubmit(button: Button) {
-        ConeNetSender.sendPacket(PlayerCreateRoomC2SPacket(rNameBox.value,isCreative,isFabric, blockStateAmount))
+        ConeNetSender.sendPacket(
+            PlayerCreateRoomC2SPacket(rNameBox.value,SharedConstants.VERSION_STRING,isCreative,isFabric, blockStateAmount))
     }
 
 

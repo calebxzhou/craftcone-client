@@ -10,7 +10,5 @@ val MC: Minecraft
     get() = Minecraft.getInstance() ?: run{
         throw IllegalStateException("Minecraft Not Start !")
     }
-val MCS: IntegratedServer
-    get() = Minecraft.getInstance().singleplayerServer ?: run{
-        throw IllegalStateException("Minecraft Integrated Server NOT Start !")
-    }
+val MCS: IntegratedServer?
+    get() = Minecraft.getInstance().singleplayerServer
