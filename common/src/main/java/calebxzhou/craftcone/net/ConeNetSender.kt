@@ -1,15 +1,10 @@
 package calebxzhou.craftcone.net
 
-import calebxzhou.craftcone.entity.ConeConnection
-import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.net.protocol.BufferWritable
 import calebxzhou.craftcone.ui.overlay.ConeDialog
 import calebxzhou.craftcone.ui.overlay.ConeDialogType
 import calebxzhou.rdi.goRdiTitleScreen
-import io.netty.buffer.PooledByteBufAllocator
 import io.netty.channel.nio.NioEventLoopGroup
-import io.netty.channel.socket.DatagramPacket
-import net.minecraft.network.FriendlyByteBuf
 
 
 /**
@@ -24,28 +19,13 @@ object ConeNetSender {
 
     @JvmStatic
     fun sendPacket(packet: BufferWritable) {
-        val data = FriendlyByteBuf(PooledByteBufAllocator.DEFAULT.buffer())
-        val packetId = ConePacketSet.getPacketId(packet.javaClass) ?: let {
-            logger.error("找不到$packet 对应的包ID")
-            return
-        }
-        data.writeByte(packetId)
-        packet.write(data)
         //发走
-        val address = ConeConnection.now?.address?:let {
+        ConeConnection.now?.channelFuture?.channel()?.writeAndFlush(packet)?:let {
             ConeDialog.show(ConeDialogType.ERR,"连接服务器失败")
             ConeConnection.disconnect()
             goRdiTitleScreen()
             return
         }
-        val udpPacket = DatagramPacket(data, address)
-        ConeConnection.now?.channelFuture?.channel()?.writeAndFlush(udpPacket)?:let {
-            ConeDialog.show(ConeDialogType.ERR,"连接服务器失败")
-            ConeConnection.disconnect()
-            goRdiTitleScreen()
-            return
-        }
-        //data.clear()
     }
 
 }

@@ -81,7 +81,18 @@ object ConePacketSet {
 
     }
 
-    private fun processPacket(packet: Packet) {
+    fun createPacket(packetId: Int,data: FriendlyByteBuf): Packet? {
+        val type = packetTypes.getOrNull(packetId)?:let {
+            logger.error { "找不到ID$packetId 的包" }
+            return null
+        }
+        return packetIdReaders[packetId] ?.invoke(data)?:let{
+            logger.error { "找不到ID$packetId 的包" }
+            null
+        }
+
+    }
+    fun processPacket(packet: Packet) {
         when(packet){
             is RenderThreadProcessable ->{
                 MC.execute {

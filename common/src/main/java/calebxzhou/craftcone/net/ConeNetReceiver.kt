@@ -1,21 +1,19 @@
 package calebxzhou.craftcone.net
 
-import calebxzhou.craftcone.entity.ConeConnection
 import calebxzhou.craftcone.logger
+import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.ui.overlay.ConeDialog
 import calebxzhou.craftcone.ui.overlay.ConeDialogType
 import calebxzhou.rdi.goRdiTitleScreen
 import io.netty.channel.ChannelHandler.Sharable
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
-import io.netty.channel.socket.DatagramPacket
-import net.minecraft.network.FriendlyByteBuf
 
 /**
  * Created  on 2023-07-05,9:24.
  */
 @Sharable
-class ConeNetReceiver : SimpleChannelInboundHandler<DatagramPacket>() {
+class ConeNetReceiver : SimpleChannelInboundHandler<Packet>() {
 
 
     override fun exceptionCaught(ctx: ChannelHandlerContext?, cause: Throwable) {
@@ -24,10 +22,11 @@ class ConeNetReceiver : SimpleChannelInboundHandler<DatagramPacket>() {
         goRdiTitleScreen()
         ConeDialog.show(ConeDialogType.ERR,"连接错误。${cause.javaClass.name}:${cause.localizedMessage}")
     }
-    override fun channelRead0(ctx: ChannelHandlerContext?, msg: DatagramPacket) {
+    override fun channelRead0(ctx: ChannelHandlerContext?, msg: Packet) {
         //第一个byte
-        val packetId = msg.content().readByte().toInt()
+        /*val packetId = msg.content().readByte().toInt()
         val data = FriendlyByteBuf(msg.content())
-        ConePacketSet.createAndProcess(packetId, data)
+        ConePacketSet.createAndProcess(packetId, data)*/
+        ConePacketSet.processPacket(msg)
     }
 }

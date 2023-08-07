@@ -1,8 +1,6 @@
-package calebxzhou.craftcone.entity
+package calebxzhou.craftcone.net
 
 import calebxzhou.craftcone.logger
-import calebxzhou.craftcone.net.ConeNetReceiver
-import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.protocol.room.PlayerLeaveRoomC2SPacket
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.ChannelFuture
@@ -18,9 +16,9 @@ data class ConeConnection(
     val channelFuture: ChannelFuture,
     val channelHandler: ConeNetReceiver,
     val address: InetSocketAddress
-){
-    companion object{
-        var now:ConeConnection? = null
+) {
+    companion object {
+        var now: ConeConnection? = null
         fun connect(address: InetSocketAddress) {
             logger.info("连接到$address")
             val handler = ConeNetReceiver()
@@ -30,6 +28,8 @@ data class ConeConnection(
                     .handler(object : ChannelInitializer<DatagramChannel>() {
                         override fun initChannel(ch: DatagramChannel) {
                             ch.pipeline()
+                                .addLast(ConeNetEncoder())
+                                .addLast(ConeNetDecoder())
                                 .addLast(handler)
                         }
 
@@ -40,12 +40,13 @@ data class ConeConnection(
             )
             logger.info("连接完成 $address")
         }
-        fun disconnect(){
+
+        fun disconnect() {
             logger.info("断开连接")
-            if(now != null)
+            if (now != null)
                 ConeNetSender.sendPacket(PlayerLeaveRoomC2SPacket())
             now?.channelFuture?.cancel(true)
-            now=null
+            now = null
         }
     }
 }

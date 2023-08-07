@@ -1,6 +1,6 @@
 package calebxzhou.craftcone.ui.screen
 
-import calebxzhou.craftcone.entity.ConeConnection
+import calebxzhou.craftcone.net.ConeConnection
 import calebxzhou.craftcone.entity.ConeUser
 import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.coneNetThread
