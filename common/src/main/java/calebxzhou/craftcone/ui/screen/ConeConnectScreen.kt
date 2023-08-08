@@ -1,9 +1,8 @@
 package calebxzhou.craftcone.ui.screen
 
-import calebxzhou.craftcone.net.ConeConnection
 import calebxzhou.craftcone.entity.ConeUser
+import calebxzhou.craftcone.net.ConeConnection
 import calebxzhou.craftcone.net.ConeNetSender
-import calebxzhou.craftcone.net.coneNetThread
 import calebxzhou.craftcone.net.protocol.account.CheckPlayerExistC2SPacket
 import calebxzhou.craftcone.net.protocol.account.CheckPlayerExistS2CPacket
 import calebxzhou.libertorch.MC
@@ -40,10 +39,8 @@ class ConeConnectScreen : LtScreen("输入服务器IP地址"), S2CResponsibleScr
 
         val addr = InetSocketAddress(ip, port)
         comment="连接中 $addr"
-        coneNetThread {
             ConeConnection.connect(addr)
             ConeNetSender.sendPacket(CheckPlayerExistC2SPacket(MC.user.profileId!!))
-        }
     }
 
     override fun render(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {

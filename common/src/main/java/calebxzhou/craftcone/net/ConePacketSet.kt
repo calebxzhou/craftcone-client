@@ -40,6 +40,7 @@ object ConePacketSet {
         registerPacket(SetBlockC2CPacket::class.java)
         registerPacket(SetBlockC2CPacket::read)
         // registerPacket(SetBlockStateC2SPacket::class.java)
+        registerPacket(SysChatMsgS2CPacket::read)
 
         registerPacket(PlayerCreateRoomC2SPacket::class.java)
         registerPacket(PlayerCreateRoomS2CPacket::read)
@@ -82,10 +83,6 @@ object ConePacketSet {
     }
 
     fun createPacket(packetId: Int,data: FriendlyByteBuf): Packet? {
-        val type = packetTypes.getOrNull(packetId)?:let {
-            logger.error { "找不到ID$packetId 的包" }
-            return null
-        }
         return packetIdReaders[packetId] ?.invoke(data)?:let{
             logger.error { "找不到ID$packetId 的包" }
             null

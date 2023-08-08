@@ -9,10 +9,12 @@ import calebxzhou.craftcone.utils.LevelUt
 import calebxzhou.craftcone.utils.LevelUt.numDimKeyMap
 import calebxzhou.libertorch.MC
 import dev.architectury.event.EventResult
+import dev.architectury.event.events.client.ClientPlayerEvent
 import dev.architectury.event.events.common.BlockEvent
 import dev.architectury.event.events.common.ChatEvent
 import dev.architectury.event.events.common.LifecycleEvent
 import dev.architectury.utils.value.IntValue
+import net.minecraft.client.player.LocalPlayer
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.server.MinecraftServer
@@ -30,11 +32,13 @@ object Events{
         BlockEvent.BREAK.register(::onBreakBlock)
         ChatEvent.RECEIVED.register(::onChat )
         LifecycleEvent.SERVER_STARTED.register(::onLocalServerStarted)
+        ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(::onClientPlayerQuit)
     }
 
-    fun onClickQuitSaveButton() {
+    private fun onClientPlayerQuit(localPlayer: LocalPlayer?) {
         ConeNetSender.sendPacket(PlayerLeaveRoomC2SPacket())
     }
+
 
 
 
