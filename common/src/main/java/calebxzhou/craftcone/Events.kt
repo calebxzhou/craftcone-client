@@ -1,5 +1,6 @@
 package calebxzhou.craftcone
 
+import calebxzhou.craftcone.command.ConeRefreshChunkCommand
 import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.ConeNetSender.sendPacket
 import calebxzhou.craftcone.net.protocol.game.ChatC2CPacket
@@ -8,17 +9,25 @@ import calebxzhou.craftcone.net.protocol.room.PlayerLeaveRoomC2SPacket
 import calebxzhou.craftcone.utils.LevelUt
 import calebxzhou.craftcone.utils.LevelUt.numDimKeyMap
 import calebxzhou.libertorch.MC
+import calebxzhou.libertorch.MCS
+import com.mojang.brigadier.CommandDispatcher
 import dev.architectury.event.EventResult
 import dev.architectury.event.events.client.ClientPlayerEvent
 import dev.architectury.event.events.common.BlockEvent
 import dev.architectury.event.events.common.ChatEvent
+import dev.architectury.event.events.common.CommandRegistrationEvent
 import dev.architectury.event.events.common.LifecycleEvent
 import dev.architectury.utils.value.IntValue
 import net.minecraft.client.player.LocalPlayer
+import net.minecraft.commands.CommandBuildContext
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.Commands
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.util.HttpUtil
+import net.minecraft.world.level.GameType
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
@@ -31,13 +40,34 @@ object Events{
     fun register(){
         BlockEvent.BREAK.register(::onBreakBlock)
         ChatEvent.RECEIVED.register(::onChat )
+        ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(::onClientPlayerJoin)
         LifecycleEvent.SERVER_STARTED.register(::onLocalServerStarted)
-        ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(::onClientPlayerQuit)
+        LifecycleEvent.SERVER_STOPPING.register(::onLocalServerStopping)
+        CommandRegistrationEvent.EVENT.register(::onRegisterCommand)
     }
 
-    private fun onClientPlayerQuit(localPlayer: LocalPlayer?) {
+    private fun onRegisterCommand(
+        dispatcher: CommandDispatcher<CommandSourceStack>,
+        context: CommandBuildContext,
+        selection: Commands.CommandSelection
+    ) {
+        ConeRefreshChunkCommand.register(dispatcher)
+    }
+
+    private fun onClientPlayerJoin(localPlayer: LocalPlayer) {
+        val gameType = MC.gameMode?.playerMode ?: GameType.SURVIVAL
+        MCS?.publishServer(
+            gameType,
+            gameType == GameType.CREATIVE,
+            HttpUtil.getAvailablePort())?:let {
+                logger.error { "启动局域网模式失败" }
+        }
+    }
+
+    private fun onLocalServerStopping(minecraftServer: MinecraftServer?) {
         ConeNetSender.sendPacket(PlayerLeaveRoomC2SPacket())
     }
+
 
 
 
@@ -79,7 +109,6 @@ object Events{
             logger.info("Dimension Number: $number $it")
             numDimKeyMap += Pair(number,it)
         }
-
     }
 
 

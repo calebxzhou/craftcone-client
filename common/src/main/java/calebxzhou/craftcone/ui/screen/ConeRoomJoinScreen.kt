@@ -1,6 +1,6 @@
 package calebxzhou.craftcone.ui.screen
 
-import calebxzhou.craftcone.misc.ConeRoomManager
+import calebxzhou.craftcone.misc.Room
 import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.protocol.room.PlayerJoinRoomC2SPacket
 import calebxzhou.craftcone.net.protocol.room.RoomInfoS2CPacket
@@ -55,8 +55,8 @@ class ConeRoomJoinScreen() : LtScreen("输入房间ID"),S2CResponsibleScreen<Roo
             ConeDialog.show(ConeDialogType.ERR,"方块状态数量不一致：您${blockStateAmount}个/房间${packet.blockStateAmount}个。检查Mod列表！")
             return
         }
-        ConeRoomManager.now = packet
-        ConeRoomManager.loadRoom(roomIdBox.value,packet.isCreative,packet.seed)
+        Room.now = packet
+        Room.loadRoom(roomIdBox.value,packet.isCreative,packet.seed)
 
     }
 

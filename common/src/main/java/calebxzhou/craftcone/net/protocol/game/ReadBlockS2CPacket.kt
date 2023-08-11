@@ -7,6 +7,7 @@ import calebxzhou.craftcone.net.protocol.ServerThreadProcessable
 import calebxzhou.craftcone.utils.LevelUt
 import calebxzhou.craftcone.utils.LevelUt.setBlockDefault
 import calebxzhou.craftcone.utils.getBlockStateById
+import net.minecraft.client.server.IntegratedServer
 import net.minecraft.core.BlockPos
 import net.minecraft.network.FriendlyByteBuf
 
@@ -30,7 +31,7 @@ data class ReadBlockS2CPacket(
 
 
 
-    override fun process() {
+    override fun process(server: IntegratedServer) {
         val state = getBlockStateById(stateId)?:let{
             logger.warn("找不到状态ID$stateId 对应的状态")
             return

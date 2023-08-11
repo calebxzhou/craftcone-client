@@ -45,7 +45,9 @@ object ConePacketSet {
         registerPacket(PlayerCreateRoomC2SPacket::class.java)
         registerPacket(PlayerCreateRoomS2CPacket::read)
         registerPacket(PlayerJoinRoomC2SPacket::class.java)
+        registerPacket(PlayerJoinRoomS2CPacket::read)
         registerPacket(PlayerLeaveRoomC2SPacket::class.java)
+        registerPacket(PlayerLeaveRoomS2CPacket::read)
         registerPacket(RoomInfoS2CPacket::read)
 
 
@@ -98,7 +100,9 @@ object ConePacketSet {
             }
             is ServerThreadProcessable ->{
                 MCS?.execute {
-                    packet.process()
+                    packet.process(MCS!!)
+                }?:let {
+                    logger.error{"收到了mcs处理包，但是mcs未启动"}
                 }
             }
         }
