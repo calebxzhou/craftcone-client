@@ -14,13 +14,13 @@ import net.minecraft.network.chat.Component
 /**
  * Created  on 2023-07-06,8:48.
  */
-data class PlayerJoinRoomS2CPacket(
+data class PlayerJoinedRoomS2CPacket(
     val pid: Int,
     val pName: String
 ) : Packet, ServerThreadProcessable{
-    companion object : BufferReadable<PlayerJoinRoomS2CPacket>{
-        override fun read(buf: FriendlyByteBuf): PlayerJoinRoomS2CPacket {
-            return PlayerJoinRoomS2CPacket(buf.readVarInt(),buf.readUtf())
+    companion object : BufferReadable<PlayerJoinedRoomS2CPacket>{
+        override fun read(buf: FriendlyByteBuf): PlayerJoinedRoomS2CPacket {
+            return PlayerJoinedRoomS2CPacket(buf.readVarInt(),buf.readUtf())
         }
 
     }

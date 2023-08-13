@@ -12,10 +12,10 @@ abstract class ConeOkCancelIntInputScreen(prevScreen: Screen, screenTitle: Strin
 ) {
 
     val intValue
-        get() = value.toInt()
+        get() = inputValue.toInt()
 
     override fun tick() {
-        okBtn.visible = value.matches(Consts.regexInt)
+        okBtn.visible = inputValue.matches(Consts.regexInt)
         super.tick()
     }
 }

@@ -14,12 +14,12 @@ import net.minecraft.network.chat.Component
 /**
  * Created  on 2023-08-11,11:50.
  */
-data class PlayerLeaveRoomS2CPacket(
+data class PlayerLeftRoomS2CPacket(
     val pid: Int
 ): Packet,ServerThreadProcessable {
-    companion object :BufferReadable<PlayerLeaveRoomS2CPacket>{
-        override fun read(buf: FriendlyByteBuf): PlayerLeaveRoomS2CPacket {
-            return PlayerLeaveRoomS2CPacket(buf.readVarInt())
+    companion object :BufferReadable<PlayerLeftRoomS2CPacket>{
+        override fun read(buf: FriendlyByteBuf): PlayerLeftRoomS2CPacket {
+            return PlayerLeftRoomS2CPacket(buf.readVarInt())
         }
 
     }

@@ -13,11 +13,11 @@ import java.net.InetSocketAddress
 class ConeConnectScreen(val titleScreen: Screen) : ConeOkCancelInputScreen(titleScreen,"输入服务器IP地址") {
     init {
         if (ConePlayer.now != null && ConeConnection.now != null) {
-            MC.setScreen(ConeRoomJoinScreen(titleScreen))
+            MC.setScreen(ConeRoomSelectScreen(titleScreen))
         }
     }
     override fun onSubmit() {
-        val ip = value.replace("：", ":")
+        val ip = inputValue.replace("：", ":")
         //端口号
         var port = Consts.DefaultPort
         if (ip.contains(":")) {

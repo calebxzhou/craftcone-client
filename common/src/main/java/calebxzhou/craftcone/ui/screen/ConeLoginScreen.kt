@@ -17,14 +17,14 @@ import net.minecraft.client.gui.screens.Screen
 class ConeLoginScreen(val uid:Int,prevSc: Screen) : ConeOkCancelInputScreen(prevSc,"输入密码"),S2CResponsibleScreen<LoginS2CPacket> {
 
     override fun onSubmit() {
-        ConeNetSender.sendPacket(LoginC2SPacket(uid, value))
+        ConeNetSender.sendPacket(LoginC2SPacket(uid, inputValue))
     }
     override fun onResponse(packet: LoginS2CPacket) {
         if(packet.ok){
-            val player = ConePlayer(value.toInt(), Mc.playerName)
+            val player = ConePlayer(inputValue.toInt(), Mc.playerName)
             ConePlayer.now = player
             logger.info { "$player 登录成功" }
-            MC.setScreen(ConeRoomJoinScreen(this))
+            MC.setScreen(ConeRoomSelectScreen(this))
         }else{
             ConeDialog.show(ConeDialogType.ERR,packet.data)
         }

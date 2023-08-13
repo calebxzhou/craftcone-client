@@ -1,7 +1,6 @@
 package calebxzhou.craftcone.mc.mixin;
 
 import calebxzhou.craftcone.ui.screen.ConeConnectScreen;
-import calebxzhou.craftcone.ui.screen.ConeRoomJoinScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;

@@ -8,7 +8,7 @@ import net.minecraft.client.gui.screens.Screen
  */
 abstract class ConeOkCancelInputScreen(prevScreen: Screen, screenTitle: String) : ConeOkCancelScreen(prevScreen, screenTitle) {
     protected lateinit var editBox: ConeEditBox
-    var value: String
+    var inputValue: String
         set(str) {
             editBox.value = str
         }

@@ -16,12 +16,12 @@ import net.minecraft.client.gui.screens.TitleScreen
 class ConeRegisterScreen(prevSc: Screen) : ConeOkCancelInputScreen(prevSc,"注册${Mc.playerName}·请设置密码"), S2CResponsibleScreen<RegisterS2CPacket> {
 
     override fun onSubmit() {
-        ConeNetSender.sendPacket(RegisterC2SPacket(Mc.playerName,value))
+        ConeNetSender.sendPacket(RegisterC2SPacket(Mc.playerName,inputValue))
     }
 
     override fun onResponse(packet: RegisterS2CPacket) {
         if (packet.ok) {
-            MC.setScreen(ConeLoginScreen(TitleScreen()))
+            MC.setScreen(ConeUidScreen(TitleScreen()))
             ConeDialog.show(ConeDialogType.INFO, "注册成功，请牢记你的UID：${packet.data}")
         } else {
             ConeDialog.show(ConeDialogType.ERR, packet.data)
