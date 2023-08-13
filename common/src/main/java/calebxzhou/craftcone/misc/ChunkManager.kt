@@ -15,6 +15,6 @@ object ChunkManager {
     fun onRead(level: Level, chunkPos: ChunkPos) {
         if(!MC.isLocalServer)
             return
-            ConeNetSender.sendPacket(ReadBlockC2SPacket(LevelUt.getDimIdByLevel(level),chunkPos.toLong()))
+        ConeNetSender.sendPacket(ReadBlockC2SPacket(LevelUt.getDimIdByLevel(level),chunkPos.toLong()))
     }
 }

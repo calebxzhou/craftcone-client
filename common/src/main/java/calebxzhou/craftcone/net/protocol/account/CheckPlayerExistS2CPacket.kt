@@ -3,8 +3,8 @@ package calebxzhou.craftcone.net.protocol.account
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
-import calebxzhou.craftcone.ui.screen.ConeConnectScreen
-import calebxzhou.libertorch.MC
+import calebxzhou.craftcone.ui.screen.ConeUidScreen
+import calebxzhou.craftcone.utils.screenNow
 import net.minecraft.network.FriendlyByteBuf
 
 /**
@@ -21,9 +21,8 @@ data class CheckPlayerExistS2CPacket(
     }
 
     override fun process() {
-        val screen = MC.screen
-        if(screen is ConeConnectScreen){
-            screen.onResponse(this)
+        if(screenNow is ConeUidScreen){
+            screenNow.onResponse(this)
         }
 
 

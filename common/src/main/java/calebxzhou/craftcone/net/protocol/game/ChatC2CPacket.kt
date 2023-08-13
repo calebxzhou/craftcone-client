@@ -1,13 +1,12 @@
 package calebxzhou.craftcone.net.protocol.game
 
 import calebxzhou.craftcone.logger
+import calebxzhou.craftcone.mc.Chat
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.BufferWritable
-import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
 import calebxzhou.craftcone.net.protocol.Packet
-import calebxzhou.libertorch.MC
+import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
 import net.minecraft.network.FriendlyByteBuf
-import net.minecraft.network.chat.Component
 /**
  * Created  on 2023-07-06,8:48.
  */
@@ -26,7 +25,7 @@ data class ChatC2CPacket (
     override fun process() {
         val str = "<$senderName> $content"
         logger.info(str)
-        MC.gui.chat.addMessage(Component.literal(str))
+        Chat.addMsg(str)
     }
 
     override fun write(buf: FriendlyByteBuf) {

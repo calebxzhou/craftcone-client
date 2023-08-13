@@ -5,7 +5,7 @@ import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
 import calebxzhou.craftcone.net.protocol.ResultPacket
 import calebxzhou.craftcone.ui.screen.ConeLoginScreen
-import calebxzhou.libertorch.MC
+import calebxzhou.craftcone.utils.screenNow
 import net.minecraft.network.FriendlyByteBuf
 
 /**
@@ -27,9 +27,8 @@ data class LoginS2CPacket(
     }
 
     override fun process() {
-        val screen = MC.screen
-        if(screen is ConeLoginScreen){
-            screen.onResponse(this)
+        if(screenNow is ConeLoginScreen){
+            screenNow.onResponse(this)
         }
     }
 

@@ -1,5 +1,6 @@
 package calebxzhou.craftcone.net
 
+import calebxzhou.craftcone.entity.Room
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.net.protocol.BufferWritable
 import calebxzhou.craftcone.net.protocol.Packet
@@ -24,6 +25,8 @@ object ConePacketSet {
     //c2s写
     private val packetWriterClassIds = linkedMapOf<Class<out BufferWritable>,Int>()
     init {
+        registerPacket(Room::read)
+
         registerPacket(CheckPlayerExistC2SPacket::class.java)
         registerPacket(CheckPlayerExistS2CPacket::read)
         registerPacket(LoginC2SPacket::class.java)
@@ -48,7 +51,7 @@ object ConePacketSet {
         registerPacket(PlayerJoinRoomS2CPacket::read)
         registerPacket(PlayerLeaveRoomC2SPacket::class.java)
         registerPacket(PlayerLeaveRoomS2CPacket::read)
-        registerPacket(RoomInfoS2CPacket::read)
+
 
 
     }

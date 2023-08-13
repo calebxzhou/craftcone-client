@@ -1,4 +1,4 @@
-package calebxzhou.craftcone.mixin;
+package calebxzhou.craftcone.mc.mixin;
 
 import net.minecraft.world.level.redstone.CollectingNeighborUpdater;
 import org.spongepowered.asm.mixin.Mixin;

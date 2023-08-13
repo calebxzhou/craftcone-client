@@ -1,4 +1,4 @@
-package calebxzhou.craftcone.mixin;
+package calebxzhou.craftcone.mc.mixin;
 
 import calebxzhou.craftcone.misc.NeighborUpdateManager;
 import calebxzhou.craftcone.net.ConeNetSender;

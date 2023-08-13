@@ -9,9 +9,13 @@ import java.util.*
  * Created  on 2023-08-11,12:09.
  */
 data class ConePlayer(
-    val id:UUID,val name:String
+    val id:Int,val name:String
 ){
+    companion object{
+        //当前登录玩家
+        var now :ConePlayer ?=null
+    }
     fun getServerPlayer (server:MinecraftServer): ServerPlayer {
-        return ServerPlayer(server,server.overworld(), GameProfile(id,name),null)
+        return ServerPlayer(server,server.overworld(), GameProfile(UUID.randomUUID(),name),null)
     }
 }

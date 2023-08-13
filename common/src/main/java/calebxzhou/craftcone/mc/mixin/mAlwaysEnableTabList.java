@@ -1,4 +1,4 @@
-package calebxzhou.craftcone.mixin;
+package calebxzhou.craftcone.mc.mixin;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;

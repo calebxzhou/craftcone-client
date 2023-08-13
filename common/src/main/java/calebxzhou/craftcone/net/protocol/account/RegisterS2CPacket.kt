@@ -1,8 +1,11 @@
 package calebxzhou.craftcone.net.protocol.account
 
-import calebxzhou.craftcone.net.protocol.*
+import calebxzhou.craftcone.net.protocol.BufferReadable
+import calebxzhou.craftcone.net.protocol.Packet
+import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
+import calebxzhou.craftcone.net.protocol.ResultPacket
 import calebxzhou.craftcone.ui.screen.ConeRegisterScreen
-import calebxzhou.libertorch.MC
+import calebxzhou.craftcone.utils.screenNow
 import net.minecraft.network.FriendlyByteBuf
 
 /**
@@ -22,10 +25,8 @@ data class RegisterS2CPacket(
 
     }
     override fun process() {
-
-        val screen = MC.screen
-        if(screen is ConeRegisterScreen){
-            screen.onResponse(this)
+        if(screenNow is ConeRegisterScreen){
+            screenNow.onResponse(this)
         }
     }
 

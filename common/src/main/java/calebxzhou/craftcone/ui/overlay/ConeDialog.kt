@@ -17,7 +17,9 @@ enum class ConeDialogType(val color: LtColor) {
     WARN(DefaultColors.LightYellow.color),
     ERR(DefaultColors.LightRed.color)
 }
-
+fun coneDialog(type: ConeDialogType, msg:()->String){
+    ConeDialog.show(type,msg.invoke())
+}
 class ConeDialog private constructor(val type: ConeDialogType, val msg: String) : Overlay() {
     companion object {
         fun show(type: ConeDialogType, msg: String) {

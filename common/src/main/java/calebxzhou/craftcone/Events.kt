@@ -1,11 +1,11 @@
 package calebxzhou.craftcone
 
 import calebxzhou.craftcone.command.ConeRefreshChunkCommand
+import calebxzhou.craftcone.entity.Room
 import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.ConeNetSender.sendPacket
 import calebxzhou.craftcone.net.protocol.game.ChatC2CPacket
 import calebxzhou.craftcone.net.protocol.game.SetBlockC2CPacket
-import calebxzhou.craftcone.net.protocol.room.PlayerLeaveRoomC2SPacket
 import calebxzhou.craftcone.utils.LevelUt
 import calebxzhou.craftcone.utils.LevelUt.numDimKeyMap
 import calebxzhou.libertorch.MC
@@ -65,7 +65,8 @@ object Events{
     }
 
     private fun onLocalServerStopping(minecraftServer: MinecraftServer?) {
-        ConeNetSender.sendPacket(PlayerLeaveRoomC2SPacket())
+        logger.info { "本地服务器正在停止" }
+        Room.unload()
     }
 
 

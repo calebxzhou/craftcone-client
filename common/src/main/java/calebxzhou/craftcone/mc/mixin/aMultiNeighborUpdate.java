@@ -1,4 +1,4 @@
-package calebxzhou.craftcone.mixin;
+package calebxzhou.craftcone.mc.mixin;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.redstone.CollectingNeighborUpdater;

@@ -1,7 +1,7 @@
 package calebxzhou.craftcone.misc
 
 import calebxzhou.craftcone.logger
-import calebxzhou.craftcone.mixin.aMultiNeighborUpdate
+import calebxzhou.craftcone.mc.mixin.aMultiNeighborUpdate
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.redstone.CollectingNeighborUpdater
 import net.minecraft.world.level.redstone.CollectingNeighborUpdater.ShapeUpdate

@@ -23,10 +23,6 @@ class ConeNetReceiver : SimpleChannelInboundHandler<Packet>() {
         ConeDialog.show(ConeDialogType.ERR,"连接错误。${cause.javaClass.name}:${cause.localizedMessage}")
     }
     override fun channelRead0(ctx: ChannelHandlerContext?, msg: Packet) {
-        //第一个byte
-        /*val packetId = msg.content().readByte().toInt()
-        val data = FriendlyByteBuf(msg.content())
-        ConePacketSet.createAndProcess(packetId, data)*/
         ConePacketSet.processPacket(msg)
     }
 }

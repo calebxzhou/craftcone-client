@@ -1,4 +1,4 @@
-package calebxzhou.craftcone.mixin;
+package calebxzhou.craftcone.mc.mixin;
 
 import calebxzhou.craftcone.net.ConeNetSender;
 import calebxzhou.craftcone.net.protocol.game.WriteBlockC2SPacket;

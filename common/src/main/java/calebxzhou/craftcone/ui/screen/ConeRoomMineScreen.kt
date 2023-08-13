@@ -1,7 +1,6 @@
 package calebxzhou.craftcone.ui.screen
 
 import calebxzhou.libertorch.MC
-import calebxzhou.libertorch.mc.gui.LtScreen
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.screens.Screen
@@ -10,7 +9,7 @@ import net.minecraft.network.chat.Component
 /**
  * Created  on 2023-06-20,10:00.
  */
-class ConeRoomMyScreen(val prevScreen: Screen) : LtScreen("我的房间（可创建5个）") {
+class ConeRoomMineScreen(val prevScreen: Screen) : ConeScreen("我的房间（可创建5个）") {
     private lateinit var joinBtn: Button
     private lateinit var delBtn: Button
     override fun init() {

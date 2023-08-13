@@ -1,4 +1,4 @@
-package calebxzhou.libertorch.mc.gui
+package calebxzhou.craftcone.ui
 
 import calebxzhou.libertorch.ui.DefaultColors
 import calebxzhou.libertorch.ui.LtColor
@@ -6,7 +6,7 @@ import calebxzhou.libertorch.ui.LtColor
 /**
  * Created  on 2023-04-09,10:34.
  */
-data class LtTheme(
+data class ConeTheme(
     //背景颜色
     val bgColor: LtColor,
     //字体颜色（启用/停用）
@@ -22,7 +22,7 @@ data class LtTheme(
     val tooltipOutlineColor: LtColor
 ){
     companion object{
-        var now: LtTheme = LtTheme(
+        var now: ConeTheme = ConeTheme(
             DefaultColors.PineGreen.color,
             DefaultColors.White.color,
             DefaultColors.Gray.color,
