@@ -1,9 +1,9 @@
 package calebxzhou.craftcone.ui.screen
 
+import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.ui.ConeTheme
-import calebxzhou.libertorch.MC
-import calebxzhou.libertorch.ui.DefaultColors
-import calebxzhou.libertorch.util.Gl
+import calebxzhou.craftcone.ui.DefaultColors
+import calebxzhou.craftcone.utils.Gl
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.*
 import com.mojang.math.Matrix4f
@@ -25,16 +25,19 @@ abstract class ConeScreen(
     var screenTitle: String
 ) : Screen(Component.literal(screenTitle)) {
     //window handle
-    val hwnd = MC.window.window
+    val hwnd = Mc.hwnd
     //字体颜色
     val fontColor
         get() = ConeTheme.now.fontActiveColor.opaque
-
+    val w
+        get() = Mc.windowWidth
+    val h
+        get() =  Mc.windowHeight
     override fun render(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {
         renderBg()
         drawCenteredString(
             poseStack,
-            font, screenTitle, width / 2, 17, fontColor
+            font, screenTitle, w / 2, 10, fontColor
         )
         doRender(poseStack,mouseX,mouseY,partialTick)
         super.render(poseStack, mouseX, mouseY, partialTick)

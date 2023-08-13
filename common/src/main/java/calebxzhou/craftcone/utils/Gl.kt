@@ -1,6 +1,6 @@
-package calebxzhou.libertorch.util
+package calebxzhou.craftcone.utils
 
-import calebxzhou.libertorch.ui.LtColor
+import calebxzhou.craftcone.ui.ConeColor
 import com.mojang.blaze3d.platform.GlStateManager
 import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.Minecraft
@@ -19,7 +19,7 @@ import java.nio.IntBuffer
  */
 object Gl {
     @JvmStatic
-    fun clearColor(color : LtColor){
+    fun clearColor(color : ConeColor){
         clearColor(color.redF, color.greenF  , color.blueF  ,1f)
     }
     @JvmStatic

@@ -1,27 +1,18 @@
 package calebxzhou.craftcone.entity
 
 import calebxzhou.craftcone.logger
+import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
+import calebxzhou.craftcone.net.protocol.room.PlayerJoinRoomC2SPacket
 import calebxzhou.craftcone.net.protocol.room.PlayerLeaveRoomC2SPacket
 import calebxzhou.craftcone.ui.overlay.ConeDialogType
 import calebxzhou.craftcone.ui.overlay.coneDialog
 import calebxzhou.craftcone.ui.screen.ConeRoomInfoScreen
-import calebxzhou.craftcone.ui.screen.ConeRoomSelectScreen
 import calebxzhou.craftcone.utils.blockStateAmount
-import calebxzhou.craftcone.utils.screenNow
-import calebxzhou.libertorch.MC
-import net.minecraft.client.gui.screens.TitleScreen
-import net.minecraft.core.RegistryAccess
 import net.minecraft.network.FriendlyByteBuf
-import net.minecraft.world.Difficulty
-import net.minecraft.world.level.DataPackConfig
-import net.minecraft.world.level.GameRules
-import net.minecraft.world.level.GameType
-import net.minecraft.world.level.LevelSettings
-import net.minecraft.world.level.levelgen.presets.WorldPresets
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -79,23 +70,13 @@ data class Room(
                 }
                 return
             }
+            ConeNetSender.sendPacket(PlayerJoinRoomC2SPacket(room.id))
             now = room
-            val levelName = "${MC.user.name}-${room.id}"
-            if(MC.levelSource.levelExists(levelName)){
-                MC.createWorldOpenFlows().loadLevel(ConeRoomSelectScreen(TitleScreen()),levelName)
+            val levelName = "${Mc.playerName}-${room.id}"
+            if(Mc.hasLevel(levelName)){
+                Mc.loadLevel(levelName)
             }else{
-                val registry = RegistryAccess.builtinCopy().freeze()
-                val levelSettings = LevelSettings (
-                    levelName,
-                    if(room.isCreative) GameType.CREATIVE else GameType.SURVIVAL,
-                    false,
-                    Difficulty.HARD,
-                    room.isCreative,
-                    GameRules(), DataPackConfig.DEFAULT)
-                val worldPresets = WorldPresets.createNormalWorldFromPreset(registry,room.seed)
-                MC.createWorldOpenFlows().createFreshLevel(levelName,
-                    levelSettings, registry,worldPresets
-                )
+               Mc.createLevel(levelName,room.isCreative,room.seed)
             }
         }
         //卸载房间
@@ -111,9 +92,7 @@ data class Room(
     }
     //从服务器收到房间信息
     override fun process() {
-        if(screenNow is ConeRoomInfoScreen){
-            screenNow.onResponse(this)
-        }
+        (Mc.screen as ConeRoomInfoScreen).onResponse(this)
     }
     override fun toString(): String {
         return "$name($id)"

@@ -8,7 +8,6 @@ import calebxzhou.craftcone.net.protocol.account.LoginC2SPacket
 import calebxzhou.craftcone.net.protocol.account.LoginS2CPacket
 import calebxzhou.craftcone.ui.overlay.ConeDialog
 import calebxzhou.craftcone.ui.overlay.ConeDialogType
-import calebxzhou.libertorch.MC
 import net.minecraft.client.gui.screens.Screen
 
 /**
@@ -24,7 +23,7 @@ class ConeLoginScreen(val uid:Int,prevSc: Screen) : ConeOkCancelInputScreen(prev
             val player = ConePlayer(inputValue.toInt(), Mc.playerName)
             ConePlayer.now = player
             logger.info { "$player 登录成功" }
-            MC.setScreen(ConeRoomSelectScreen(this))
+            Mc.screen= ConeRoomSelectScreen(this)
         }else{
             ConeDialog.show(ConeDialogType.ERR,packet.data)
         }

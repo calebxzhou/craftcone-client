@@ -1,7 +1,7 @@
 package calebxzhou.craftcone.net.protocol.game
 
 import calebxzhou.craftcone.logger
-import calebxzhou.craftcone.mc.Chat
+import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.BufferWritable
 import calebxzhou.craftcone.net.protocol.Packet
@@ -25,7 +25,7 @@ data class ChatC2CPacket (
     override fun process() {
         val str = "<$senderName> $content"
         logger.info(str)
-        Chat.addMsg(str)
+        Mc.InGame.addChatMsg(str)
     }
 
     override fun write(buf: FriendlyByteBuf) {

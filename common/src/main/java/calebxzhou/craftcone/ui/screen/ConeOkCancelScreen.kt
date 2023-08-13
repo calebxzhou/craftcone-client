@@ -12,13 +12,9 @@ abstract class ConeOkCancelScreen(
     //前画面
     val prevScreen: Screen,
     screenTitle: String) : ConeScreen(screenTitle) {
-    protected lateinit var okBtn : ConeButton
-    protected lateinit var cancelBtn : ConeButton
-
+    val okBtn = ConeButton(0,h-20,100,"确定"){onSubmit()}
+    val cancelBtn = ConeButton(w-100,h-20,100,"取消"){onClose()}
     override fun init() {
-        okBtn = ConeButton(width / 2-50,height-20,80,"确定"){onSubmit()}
-        cancelBtn = ConeButton(width/2+50,height-20,80,"取消"){onClose()}
-
         addRenderableWidget(okBtn)
         addRenderableWidget(cancelBtn)
     }
@@ -35,7 +31,7 @@ abstract class ConeOkCancelScreen(
 
         super.tick()
     }
-    private fun onPressEnterKey() {
+    open fun onPressEnterKey() {
         if(okBtn.visible)
             onSubmit()
     }

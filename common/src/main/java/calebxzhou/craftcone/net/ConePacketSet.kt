@@ -2,6 +2,7 @@ package calebxzhou.craftcone.net
 
 import calebxzhou.craftcone.entity.Room
 import calebxzhou.craftcone.logger
+import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.protocol.BufferWritable
 import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
@@ -9,8 +10,6 @@ import calebxzhou.craftcone.net.protocol.ServerThreadProcessable
 import calebxzhou.craftcone.net.protocol.account.*
 import calebxzhou.craftcone.net.protocol.game.*
 import calebxzhou.craftcone.net.protocol.room.*
-import calebxzhou.libertorch.MC
-import calebxzhou.libertorch.MCS
 import net.minecraft.network.FriendlyByteBuf
 
 /**
@@ -48,6 +47,8 @@ object ConePacketSet {
         registerPacket(GetRoomInfoC2SPacket::class.java)
         registerPacket(PlayerCreateRoomC2SPacket::class.java)
         registerPacket(PlayerCreateRoomS2CPacket::read)
+        registerPacket(PlayerDeleteRoomC2SPacket::class.java)
+        registerPacket(PlayerDeleteRoomS2CPacket::read)
         registerPacket(PlayerJoinRoomC2SPacket::class.java)
         registerPacket(PlayerJoinedRoomS2CPacket::read)
         registerPacket(PlayerLeaveRoomC2SPacket::class.java)
@@ -66,27 +67,6 @@ object ConePacketSet {
         packetTypes += PacketType.WRITE
     }
 
-    //服务端传入包 客户端这边创建+处理
-    fun createAndProcess(packetId: Int, data: FriendlyByteBuf){
-        val type = packetTypes.getOrNull(packetId)?:let {
-            logger.error { "找不到ID$packetId 的包" }
-            return
-        }
-        when(type){
-            PacketType.READ ->{
-                val packet = packetIdReaders[packetId] ?.invoke(data)?:let{
-                    logger.error { "找不到ID$packetId 的包" }
-                    return
-                }
-                processPacket(packet)
-            }
-            else -> {
-                logger.error { "服务端只能传入c2s包 ID$packetId 不是s2c包" }
-                return
-            }
-        }
-
-    }
 
     fun createPacket(packetId: Int,data: FriendlyByteBuf): Packet? {
         return packetIdReaders[packetId] ?.invoke(data)?:let{
@@ -98,15 +78,13 @@ object ConePacketSet {
     fun processPacket(packet: Packet) {
         when(packet){
             is RenderThreadProcessable ->{
-                MC.execute {
+                Mc.renderThread {
                     packet.process()
                 }
             }
             is ServerThreadProcessable ->{
-                MCS?.execute {
-                    packet.process(MCS!!)
-                }?:let {
-                    logger.error{"收到了mcs处理包，但是mcs未启动"}
+                Mc.InGame.logicThread {
+                    packet.process(it)
                 }
             }
         }

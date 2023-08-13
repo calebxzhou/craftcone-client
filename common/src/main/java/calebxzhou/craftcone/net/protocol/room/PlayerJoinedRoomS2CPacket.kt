@@ -2,7 +2,7 @@ package calebxzhou.craftcone.net.protocol.room
 
 import calebxzhou.craftcone.entity.ConePlayer
 import calebxzhou.craftcone.entity.Room
-import calebxzhou.craftcone.mc.Chat
+import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.net.protocol.ServerThreadProcessable
@@ -26,7 +26,7 @@ data class PlayerJoinedRoomS2CPacket(
     }
 
     override fun process(server: IntegratedServer) {
-        Chat.addMsg(Component.literal("$pName 加入了房间").withStyle(ChatFormatting.YELLOW))
+        Mc.InGame.addChatMsg(Component.literal("$pName 加入了房间").withStyle(ChatFormatting.YELLOW))
         Room.now?.addPlayer(ConePlayer(pid,pName))
     }
 }

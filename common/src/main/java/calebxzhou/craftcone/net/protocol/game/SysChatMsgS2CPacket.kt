@@ -1,10 +1,10 @@
 package calebxzhou.craftcone.net.protocol.game
 
 import calebxzhou.craftcone.logger
+import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
-import calebxzhou.libertorch.MC
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.chat.Component
 
@@ -22,7 +22,7 @@ data class SysChatMsgS2CPacket(
     }
 
     override fun process() {
-        MC.gui.chat.addMessage(Component.literal(msg))
+        Mc.InGame.addChatMsg(Component.literal(msg))
         logger.info("系统消息 $msg")
     }
 

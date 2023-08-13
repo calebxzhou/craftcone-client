@@ -6,7 +6,6 @@ import calebxzhou.craftcone.net.protocol.account.RegisterC2SPacket
 import calebxzhou.craftcone.net.protocol.account.RegisterS2CPacket
 import calebxzhou.craftcone.ui.overlay.ConeDialog
 import calebxzhou.craftcone.ui.overlay.ConeDialogType
-import calebxzhou.libertorch.MC
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.TitleScreen
 
@@ -21,7 +20,7 @@ class ConeRegisterScreen(prevSc: Screen) : ConeOkCancelInputScreen(prevSc,"注�
 
     override fun onResponse(packet: RegisterS2CPacket) {
         if (packet.ok) {
-            MC.setScreen(ConeUidScreen(TitleScreen()))
+            Mc.screen=(ConeUidScreen(TitleScreen()))
             ConeDialog.show(ConeDialogType.INFO, "注册成功，请牢记你的UID：${packet.data}")
         } else {
             ConeDialog.show(ConeDialogType.ERR, packet.data)

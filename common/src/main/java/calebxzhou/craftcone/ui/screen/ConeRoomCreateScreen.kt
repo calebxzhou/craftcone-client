@@ -8,11 +8,10 @@ import calebxzhou.craftcone.ui.components.ConeButton
 import calebxzhou.craftcone.ui.overlay.ConeDialog
 import calebxzhou.craftcone.ui.overlay.ConeDialogType
 import calebxzhou.craftcone.utils.blockStateAmount
-import calebxzhou.libertorch.MC
 import com.mojang.blaze3d.vertex.PoseStack
 import dev.architectury.platform.Platform
 import net.minecraft.SharedConstants
-import net.minecraft.client.gui.components.Button
+import net.minecraft.client.gui.GuiComponent
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 
@@ -20,15 +19,14 @@ import net.minecraft.network.chat.Component
  * Created  on 2023-07-24,22:43.
  */
 class ConeRoomCreateScreen(prevSc: Screen): ConeOkCancelInputScreen(prevSc,"创建房间 填写房间名称"),S2CResponsibleScreen<PlayerCreateRoomS2CPacket> {
-    private lateinit var gameModeBtn :Button
+    private val gameModeBtn: ConeButton = ConeButton(w/2,40,80,"游戏模式：生存") { onChangeGameMode() }
     private val modAmount = Platform.getMods().size
     private val isFabric = Platform.isFabric()
     private var isCreative = false
     override fun init() {
-        gameModeBtn = ConeButton(250,40,80,"游戏模式：生存") { onChangeGameMode() }
+        super.init()
         inputValue = "${Mc.playerName}的房间"
         addRenderableWidget(gameModeBtn)
-        super.init()
     }
 
     override fun onSubmit() {
@@ -37,9 +35,9 @@ class ConeRoomCreateScreen(prevSc: Screen): ConeOkCancelInputScreen(prevSc,"创�
     }
 
     override fun doRender(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {
-        font.draw(poseStack,
-            "${if(isFabric)"Fabric" else "Forge"}mod数量$modAmount，方块状态数量$blockStateAmount",
-            50f,80f,fontColor)
+        GuiComponent.drawCenteredString(poseStack,font,
+            "你安装了${if(isFabric)"Fabric" else "Forge"} Mod$modAmount 个，方块状态$blockStateAmount 个。",
+            width/2,100,fontColor)
     }
 
     private fun onChangeGameMode() = if(!isCreative){
@@ -54,7 +52,7 @@ class ConeRoomCreateScreen(prevSc: Screen): ConeOkCancelInputScreen(prevSc,"创�
         if(packet.ok){
             val rid = packet.data
             ConeDialog.show(ConeDialogType.OK,"成功！请牢记房间ID：${rid}（已自动复制。建议截图保存）")
-            MC.keyboardHandler.clipboard =  rid
+            Mc.copyClipboard(rid)
             onClose()
         }else{
             ConeDialog.show(ConeDialogType.ERR,packet.data)

@@ -1,25 +1,22 @@
 package calebxzhou.craftcone.ui
 
-import calebxzhou.libertorch.ui.DefaultColors
-import calebxzhou.libertorch.ui.LtColor
-
 /**
  * Created  on 2023-04-09,10:34.
  */
 data class ConeTheme(
     //背景颜色
-    val bgColor: LtColor,
+    val bgColor: ConeColor,
     //字体颜色（启用/停用）
-    val fontActiveColor: LtColor,
-    val fontInactiveColor: LtColor,
+    val fontActiveColor: ConeColor,
+    val fontInactiveColor: ConeColor,
     //组件外框颜色
-    val widgetOutlineColor: LtColor,
+    val widgetOutlineColor: ConeColor,
     //滑块颜色
-    val sliderHandleColor: LtColor,
+    val sliderHandleColor: ConeColor,
     //提示框背景色
-    val tooltipBgColor: LtColor,
+    val tooltipBgColor: ConeColor,
     //提示框外框色
-    val tooltipOutlineColor: LtColor
+    val tooltipOutlineColor: ConeColor
 ){
     companion object{
         var now: ConeTheme = ConeTheme(

@@ -15,7 +15,7 @@ abstract class ConeOkCancelIntInputScreen(prevScreen: Screen, screenTitle: Strin
         get() = inputValue.toInt()
 
     override fun tick() {
-        okBtn.visible = inputValue.matches(Consts.regexInt)
         super.tick()
+        okBtn.visible = inputValue.matches(Consts.regexInt)
     }
 }

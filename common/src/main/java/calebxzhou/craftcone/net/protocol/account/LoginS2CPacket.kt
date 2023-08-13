@@ -1,11 +1,11 @@
 package calebxzhou.craftcone.net.protocol.account
 
+import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
 import calebxzhou.craftcone.net.protocol.ResultPacket
 import calebxzhou.craftcone.ui.screen.ConeLoginScreen
-import calebxzhou.craftcone.utils.screenNow
 import net.minecraft.network.FriendlyByteBuf
 
 /**
@@ -27,9 +27,7 @@ data class LoginS2CPacket(
     }
 
     override fun process() {
-        if(screenNow is ConeLoginScreen){
-            screenNow.onResponse(this)
-        }
+        (Mc.screen as? ConeLoginScreen)?.onResponse(this)
     }
 
 

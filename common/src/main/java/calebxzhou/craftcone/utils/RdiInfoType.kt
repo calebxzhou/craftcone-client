@@ -1,7 +1,7 @@
-package calebxzhou.libertorch.util
+package calebxzhou.craftcone.utils
 
-import calebxzhou.libertorch.ui.DefaultColors
-import calebxzhou.libertorch.ui.LtColor
+import calebxzhou.craftcone.ui.ConeColor
+import calebxzhou.craftcone.ui.DefaultColors
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 
@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component
  */
 
 //消息提示类型
-enum class RdiInfoType(val id:Byte, val title:String,val toastColor: LtColor,val chatPrefixColor: ChatFormatting) {
+enum class RdiInfoType(val id:Byte, val title:String, val toastColor: ConeColor, val chatPrefixColor: ChatFormatting) {
     No(
         -1,
         "",
@@ -49,6 +49,6 @@ enum class RdiInfoType(val id:Byte, val title:String,val toastColor: LtColor,val
     companion object {
         //id取类型
         private val map = RdiInfoType.values().associateBy { it.id }
-        operator fun get(value: Byte) = map[value]?:Ok
+        operator fun get(value: Byte) = map[value]?: Ok
     }
 }

@@ -1,7 +1,7 @@
 package calebxzhou.craftcone.utils
 
 import calebxzhou.craftcone.logger
-import calebxzhou.libertorch.MC
+import calebxzhou.craftcone.mc.Mc
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
@@ -30,13 +30,13 @@ object LevelUt {
     //根据维度编号取维度
     @JvmStatic
     fun getLevelByDimId(dimId : Int) : ServerLevel {
-        val dim = numDimKeyMap[dimId]?:run {
+        val dim: ResourceKey<Level> = numDimKeyMap[dimId]?:run {
             //Cone.numDimKeyMap.forEach { (k, v) -> LOG.error("$k $v") }
             logger.warn("找不到编号为${dimId}的维度。")
             Level.OVERWORLD
         }
 
-        val level = MC.singleplayerServer?.getLevel(dim) ?:run {
+        val level = Mc.InGame.getLevel(dim) ?:run {
             throw IllegalStateException("处理数据包时，未在游玩状态！")
         }
         return level

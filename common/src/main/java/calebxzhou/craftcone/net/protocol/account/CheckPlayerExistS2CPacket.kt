@@ -1,10 +1,10 @@
 package calebxzhou.craftcone.net.protocol.account
 
+import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
 import calebxzhou.craftcone.ui.screen.ConeUidScreen
-import calebxzhou.craftcone.utils.screenNow
 import net.minecraft.network.FriendlyByteBuf
 
 /**
@@ -21,11 +21,7 @@ data class CheckPlayerExistS2CPacket(
     }
 
     override fun process() {
-        if(screenNow is ConeUidScreen){
-            screenNow.onResponse(this)
-        }
-
-
+        (Mc.screen as ConeUidScreen).onResponse(this)
     }
 
 }

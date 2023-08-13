@@ -16,7 +16,7 @@ class ConeUidScreen(prevScreen: Screen) : ConeOkCancelIntInputScreen(prevScreen,
 
     override fun onResponse(packet: CheckPlayerExistS2CPacket) {
         if(packet.exists){
-            Mc.screen = ConeLoginScreen(this)
+            Mc.screen = ConeLoginScreen(intValue,this)
         }else{
             Mc.screen = ConeRegisterScreen(this)
         }

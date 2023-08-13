@@ -14,7 +14,9 @@ import net.minecraft.client.gui.screens.Screen
  */
 class ConeRoomInfoScreen(prevScreen: Screen, private val rid: Int) :ConeOkCancelScreen(prevScreen, "房间$rid 的信息"), S2CResponsibleScreen<Room> {
     var room :Room?=null
-    init {
+
+    override fun init() {
+        super.init()
         ConeNetSender.sendPacket(GetRoomInfoC2SPacket(rid))
     }
 
@@ -22,6 +24,10 @@ class ConeRoomInfoScreen(prevScreen: Screen, private val rid: Int) :ConeOkCancel
         okBtn.visible= room!=null
 
         super.tick()
+    }
+
+    override fun onPressEnterKey() {
+
     }
 
 
@@ -32,6 +38,8 @@ class ConeRoomInfoScreen(prevScreen: Screen, private val rid: Int) :ConeOkCancel
             GuiComponent.drawCenteredString(poseStack,font,"模式：${if(room.isCreative)"创造" else "生存"}",width/2,20*3,fontColor)
             GuiComponent.drawCenteredString(poseStack,font,"创建时间：${room.createTimeStr}",width/2,20*4,fontColor)
             GuiComponent.drawCenteredString(poseStack,font,"mod加载器：${if(room.isFabric)"Fabric" else "Forge "}",width/2,20*5,fontColor)
+        }?:let {
+            GuiComponent.drawCenteredString(poseStack,font,"没有收到这个房间的信息。",width/2,20*5,fontColor)
         }
     }
     override fun onSubmit() {

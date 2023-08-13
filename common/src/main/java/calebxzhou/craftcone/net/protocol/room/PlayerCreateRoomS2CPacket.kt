@@ -1,10 +1,10 @@
 package calebxzhou.craftcone.net.protocol.room
 
+import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
 import calebxzhou.craftcone.ui.screen.ConeRoomCreateScreen
-import calebxzhou.craftcone.utils.screenNow
 import net.minecraft.network.FriendlyByteBuf
 
 /**
@@ -21,9 +21,7 @@ data class PlayerCreateRoomS2CPacket(
 
     }
     override fun process() {
-        if(screenNow is ConeRoomCreateScreen){
-            screenNow.onResponse(this)
-        }
+        (Mc.screen as ConeRoomCreateScreen).onResponse(this)
     }
 
 }

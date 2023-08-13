@@ -1,10 +1,10 @@
-package calebxzhou.libertorch.ui
+package calebxzhou.craftcone.ui
 
 /**
  * Created  on 2023-04-09,10:55.
  */
 //颜色 hex=16进制色值
-data class LtColor(val hex: Int){
+data class ConeColor(val hex: Int){
     //红色 0~255
     val red
         get() = hex shr 16 and 0xFF

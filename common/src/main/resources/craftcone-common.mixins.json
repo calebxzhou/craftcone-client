@@ -3,6 +3,7 @@
   "package": "calebxzhou.craftcone.mc.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "aGui",
     "mAlwaysEnableTabList",
     "mTitleScreen"
   ],
@@ -14,6 +15,7 @@
     "mChunkHolder",
     "mChunkSerializer",
     "mCollectingNeighborUpdater",
+    "mGui",
     "mLevel"
   ],
   "injectors": {

@@ -2,14 +2,13 @@ package calebxzhou.craftcone
 
 import calebxzhou.craftcone.command.ConeRefreshChunkCommand
 import calebxzhou.craftcone.entity.Room
+import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.ConeNetSender.sendPacket
 import calebxzhou.craftcone.net.protocol.game.ChatC2CPacket
 import calebxzhou.craftcone.net.protocol.game.SetBlockC2CPacket
 import calebxzhou.craftcone.utils.LevelUt
 import calebxzhou.craftcone.utils.LevelUt.numDimKeyMap
-import calebxzhou.libertorch.MC
-import calebxzhou.libertorch.MCS
 import com.mojang.brigadier.CommandDispatcher
 import dev.architectury.event.EventResult
 import dev.architectury.event.events.client.ClientPlayerEvent
@@ -26,8 +25,6 @@ import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.util.HttpUtil
-import net.minecraft.world.level.GameType
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
@@ -55,13 +52,7 @@ object Events{
     }
 
     private fun onClientPlayerJoin(localPlayer: LocalPlayer) {
-        val gameType = MC.gameMode?.playerMode ?: GameType.SURVIVAL
-        MCS?.publishServer(
-            gameType,
-            gameType == GameType.CREATIVE,
-            HttpUtil.getAvailablePort())?:let {
-                logger.error { "启动局域网模式失败" }
-        }
+        Mc.InGame.startLanShare(localPlayer.isCreative)
     }
 
     private fun onLocalServerStopping(minecraftServer: MinecraftServer?) {
@@ -97,7 +88,7 @@ object Events{
     private fun onChat(player: ServerPlayer?, component: Component?): EventResult? {
         if(player==null || component==null)
             return EventResult.pass()
-        ConeNetSender.sendPacket(ChatC2CPacket(MC.user.name,component.string))
+        ConeNetSender.sendPacket(ChatC2CPacket(Mc.playerName,component.string))
         return EventResult.pass()
     }
 

@@ -2,8 +2,8 @@ package calebxzhou.craftcone.ui.screen
 
 import calebxzhou.craftcone.Consts
 import calebxzhou.craftcone.entity.ConePlayer
+import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.ConeConnection
-import calebxzhou.libertorch.MC
 import net.minecraft.client.gui.screens.Screen
 import java.net.InetSocketAddress
 
@@ -12,8 +12,17 @@ import java.net.InetSocketAddress
  */
 class ConeConnectScreen(val titleScreen: Screen) : ConeOkCancelInputScreen(titleScreen,"输入服务器IP地址") {
     init {
-        if (ConePlayer.now != null && ConeConnection.now != null) {
-            MC.setScreen(ConeRoomSelectScreen(titleScreen))
+            if (ConePlayer.now != null && ConeConnection.now != null) {
+                Mc.screen = ConeRoomSelectScreen(titleScreen)
+            }
+    }
+
+    override fun init() {
+        super.init()
+        val addr = System.getProperty("craftcone.server")
+        if(addr.isNotBlank()){
+            inputValue = addr
+            onSubmit()
         }
     }
     override fun onSubmit() {
@@ -26,7 +35,7 @@ class ConeConnectScreen(val titleScreen: Screen) : ConeOkCancelInputScreen(title
         val addr = InetSocketAddress(ip, port)
         screenTitle = "连接中 $addr"
         ConeConnection.connect(addr)
-        MC.setScreen(ConeUidScreen(titleScreen))
+        Mc.screen = ConeUidScreen(titleScreen)
     }
 
 
