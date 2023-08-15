@@ -2,10 +2,9 @@ package calebxzhou.craftcone.net.protocol.general
 
 import calebxzhou.craftcone.net.ConeConnection
 import calebxzhou.craftcone.net.protocol.BufferReadable
-import calebxzhou.craftcone.net.protocol.MsgLevel
 import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
-import calebxzhou.craftcone.ui.overlay.coneDialog
+import calebxzhou.craftcone.ui.coneErr
 import net.minecraft.network.FriendlyByteBuf
 
 /**
@@ -20,7 +19,7 @@ class DisconnectS2CPacket:Packet,RenderThreadProcessable {
     }
     override fun process() {
         ConeConnection.disconnect()
-        coneDialog(MsgLevel.Info){"被服务器断开连接"}
+        coneErr("被服务器断开连接")
 
     }
 }

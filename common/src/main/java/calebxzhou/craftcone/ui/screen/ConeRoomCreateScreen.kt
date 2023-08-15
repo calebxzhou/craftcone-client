@@ -2,22 +2,24 @@ package calebxzhou.craftcone.ui.screen
 
 import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.ConeNetSender
+import calebxzhou.craftcone.net.protocol.MsgLevel
+import calebxzhou.craftcone.net.protocol.MsgType
 import calebxzhou.craftcone.net.protocol.room.CreateRoomC2SPacket
 import calebxzhou.craftcone.ui.components.ConeButton
-import calebxzhou.craftcone.ui.overlay.ConeDialog
-import calebxzhou.craftcone.ui.overlay.ConeDialogType
+import calebxzhou.craftcone.ui.coneMsg
 import calebxzhou.craftcone.utils.blockStateAmount
 import com.mojang.blaze3d.vertex.PoseStack
 import dev.architectury.platform.Platform
 import net.minecraft.SharedConstants
 import net.minecraft.client.gui.GuiComponent
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.chat.Component
 
 /**
  * Created  on 2023-07-24,22:43.
  */
-class ConeRoomCreateScreen(prevSc: Screen): ConeOkCancelInputScreen(prevSc,"创建房间 填写房间名称"),OkResponseScreen<PlayerCreateRoomS2CPacket> {
+class ConeRoomCreateScreen(prevSc: Screen): ConeOkCancelInputScreen(prevSc,"创建房间 填写房间名称"),OkResponseScreen {
     private val gameModeBtn: ConeButton = ConeButton(w/2,40,80,"游戏模式：生存") { onChangeGameMode() }
     private val modAmount = Platform.getMods().size
     private val isFabric = Platform.isFabric()
@@ -47,15 +49,10 @@ class ConeRoomCreateScreen(prevSc: Screen): ConeOkCancelInputScreen(prevSc,"创�
         isCreative=false
     }
 
-    override fun onOk(packet: PlayerCreateRoomS2CPacket) {
-        if(packet.ok){
-            val rid = packet.data
-            ConeDialog.show(ConeDialogType.OK,"成功！请牢记房间ID：${rid}（已自动复制。建议截图保存）")
-            Mc.copyClipboard(rid)
+    override fun onOk(data: FriendlyByteBuf) {
+            val rid = data.readVarInt()
+            coneMsg(MsgType.Dialog,MsgLevel.Ok,"成功创建房间ID=${rid}（请牢记此ID。已自动复制）")
+            Mc.copyClipboard(rid.toString())
             onClose()
-        }else{
-            ConeDialog.show(ConeDialogType.ERR,packet.data)
-        }
-
     }
 }

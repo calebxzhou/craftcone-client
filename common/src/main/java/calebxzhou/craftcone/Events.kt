@@ -1,7 +1,7 @@
 package calebxzhou.craftcone
 
 import calebxzhou.craftcone.command.ConeRefreshChunkCommand
-import calebxzhou.craftcone.entity.Room
+import calebxzhou.craftcone.entity.ConeRoom
 import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.mc.Mcl
 import calebxzhou.craftcone.net.ConeNetSender
@@ -58,7 +58,7 @@ object Events{
 
     private fun onLocalServerStopping(minecraftServer: MinecraftServer?) {
         logger.info { "本地服务器正在停止" }
-        Room.unload()
+        ConeRoom.unload()
     }
 
 

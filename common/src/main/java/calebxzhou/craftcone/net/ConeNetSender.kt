@@ -1,8 +1,9 @@
 package calebxzhou.craftcone.net
 
 import calebxzhou.craftcone.net.protocol.BufferWritable
-import calebxzhou.craftcone.ui.overlay.ConeDialog
-import calebxzhou.craftcone.ui.overlay.ConeDialogType
+import calebxzhou.craftcone.net.protocol.MsgLevel
+import calebxzhou.craftcone.net.protocol.MsgType
+import calebxzhou.craftcone.ui.coneMsg
 import io.netty.channel.nio.NioEventLoopGroup
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +25,7 @@ object ConeNetSender {
     fun sendPacket(packet: BufferWritable) {
         senderScope.launch {
             ConeConnection.now?.channelFuture?.channel()?.writeAndFlush(packet)?:let {
-                ConeDialog.show(ConeDialogType.ERR,"连接服务器失败")
+                coneMsg(MsgType.Dialog,MsgLevel.Err,"连接服务器失败")
                 ConeConnection.disconnect()
             }
         }

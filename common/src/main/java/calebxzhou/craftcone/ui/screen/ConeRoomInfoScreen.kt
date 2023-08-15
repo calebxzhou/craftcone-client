@@ -1,13 +1,13 @@
 package calebxzhou.craftcone.ui.screen
 
-import calebxzhou.craftcone.entity.Room
+import calebxzhou.craftcone.entity.ConeRoom
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.screens.Screen
 
 /**
  * Created  on 2023-08-13,15:21.
  */
-class ConeRoomInfoScreen(prevScreen: Screen, private val room: Room) :
+class ConeRoomInfoScreen(prevScreen: Screen, private val room: ConeRoom) :
     ConeOkCancelScreen(prevScreen, "房间 $room 的信息") {
 
     override fun doRender(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {
@@ -33,7 +33,7 @@ class ConeRoomInfoScreen(prevScreen: Screen, private val room: Room) :
     }
 
     override fun onSubmit() {
-        Room.loadAndJoin(room)
+        ConeRoom.loadAndJoin(room)
     }
 
     override fun onPressEnterKey() {

@@ -6,7 +6,7 @@ import net.minecraft.network.FriendlyByteBuf
 /**
  * Created  on 2023-07-17,17:16.
  */
-data class ReadBlockC2SPacket(
+data class BlockStateIdC2SPacket(
     //维度ID
     val dimId: Int,
     //区块位置 long

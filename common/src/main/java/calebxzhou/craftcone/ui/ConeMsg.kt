@@ -18,3 +18,6 @@ fun coneMsg(type: MsgType,level: MsgLevel,msg:String){
         MsgType.Toast -> Mc.addToast(ConeToast(level,msg))
     }
 }
+fun coneErr(msg: String){
+    coneMsg(MsgType.Dialog,MsgLevel.Err,msg)
+}

@@ -14,7 +14,7 @@ import net.minecraft.network.FriendlyByteBuf
 /**
  * Created  on 2023-07-17,17:16.
  */
-data class ReadBlockS2CPacket(
+data class BlockStateIdS2CPacket(
     //维度ID
     val dimId: Int,
     //方块位置
@@ -22,9 +22,9 @@ data class ReadBlockS2CPacket(
     //状态ID
     val stateId: Int,
 ) : Packet, ServerThreadProcessable{
-    companion object : BufferReadable<ReadBlockS2CPacket> {
-        override fun read(buf: FriendlyByteBuf): ReadBlockS2CPacket {
-            return ReadBlockS2CPacket(buf.readVarInt(),buf.readLong(),buf.readVarInt())
+    companion object : BufferReadable<BlockStateIdS2CPacket> {
+        override fun read(buf: FriendlyByteBuf): BlockStateIdS2CPacket {
+            return BlockStateIdS2CPacket(buf.readVarInt(),buf.readLong(),buf.readVarInt())
         }
 
     }

@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter
 /**
  * Created  on 2023-08-11,12:11.
  */
-data class Room(
+data class ConeRoom(
     //房间ID
     val id: Int,
     //房间名
@@ -42,11 +42,11 @@ data class Room(
     val players = hashMapOf<Int, ConePlayer>()
 
 
-    companion object : BufferReadable<Room>{
-        var now: Room? = null
+    companion object : BufferReadable<ConeRoom>{
+        var now: ConeRoom? = null
         //从服务器收到房间信息
-        override fun read(buf: FriendlyByteBuf): Room {
-            return Room(
+        override fun read(buf: FriendlyByteBuf): ConeRoom {
+            return ConeRoom(
                 buf.readVarInt(),
                 buf.readUtf(),
                 buf.readVarInt(),
@@ -60,7 +60,7 @@ data class Room(
         }
 
         //载入房间
-        fun loadAndJoin(room: Room) {
+        fun loadAndJoin(room: ConeRoom) {
             if (blockStateAmount != room.blockStateAmount) {
                 coneMsg(MsgType.Dialog,MsgLevel.Err,"方块状态数量不一致：您${blockStateAmount}个/房间${room.blockStateAmount}个。检查Mod列表！")
                 return

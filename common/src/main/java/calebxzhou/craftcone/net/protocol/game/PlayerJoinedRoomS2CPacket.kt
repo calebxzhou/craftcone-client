@@ -1,7 +1,7 @@
-package calebxzhou.craftcone.net.protocol.room
+package calebxzhou.craftcone.net.protocol.game
 
 import calebxzhou.craftcone.entity.ConePlayer
-import calebxzhou.craftcone.entity.Room
+import calebxzhou.craftcone.entity.ConeRoom
 import calebxzhou.craftcone.net.protocol.*
 import calebxzhou.craftcone.ui.coneMsg
 import net.minecraft.client.server.IntegratedServer
@@ -21,7 +21,7 @@ data class PlayerJoinedRoomS2CPacket(
 
     }
 
-    override fun process(server: IntegratedServer, room: Room) {
+    override fun process(server: IntegratedServer, room: ConeRoom) {
         coneMsg(MsgType.Chat,MsgLevel.Info,"$pName 加入了房间")
         room.addPlayer(ConePlayer(pid,pName))
     }

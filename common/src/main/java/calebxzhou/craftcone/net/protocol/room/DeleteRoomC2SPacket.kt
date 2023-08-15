@@ -10,7 +10,6 @@ import net.minecraft.network.FriendlyByteBuf
 data class DeleteRoomC2SPacket(
     val rid:Int
 ): Packet,BufferWritable{
-
     override fun write(buf: FriendlyByteBuf) {
         buf.writeVarInt(rid)
     }

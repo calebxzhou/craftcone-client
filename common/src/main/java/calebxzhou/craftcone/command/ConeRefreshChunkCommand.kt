@@ -1,8 +1,9 @@
 package calebxzhou.craftcone.command
 
 import calebxzhou.craftcone.logger
+import calebxzhou.craftcone.mc.Mcl
 import calebxzhou.craftcone.net.ConeNetSender
-import calebxzhou.craftcone.net.protocol.game.ReadBlockC2SPacket
+import calebxzhou.craftcone.net.protocol.game.BlockStateIdC2SPacket
 import calebxzhou.craftcone.utils.LevelUt
 import com.mojang.brigadier.CommandDispatcher
 import net.minecraft.commands.CommandSourceStack
@@ -26,7 +27,7 @@ object ConeRefreshChunkCommand {
                    val info = "刷新区块中 $x,$z"
                    Mcl.actionBarMsg = Component.literal(info)
                    logger.info { info }
-                   ConeNetSender.sendPacket(ReadBlockC2SPacket(LevelUt.getDimIdByLevel(Mcl.level?:let {
+                   ConeNetSender.sendPacket(BlockStateIdC2SPacket(LevelUt.getDimIdByLevel(Mcl.level?:let {
                        logger.error { "当前游玩的存档为空" }
                        return@executes 1
                    }), cpos.toLong()))

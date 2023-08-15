@@ -1,6 +1,6 @@
 package calebxzhou.craftcone.net.protocol
 
-import calebxzhou.craftcone.entity.Room
+import calebxzhou.craftcone.entity.ConeRoom
 import net.minecraft.client.server.IntegratedServer
 
 
@@ -9,5 +9,5 @@ import net.minecraft.client.server.IntegratedServer
  */
 interface InRoomProcessable:Packet {
     //处理数据
-    fun process(server: IntegratedServer,room: Room)
+    fun process(server: IntegratedServer,room: ConeRoom)
 }

@@ -1,6 +1,6 @@
 package calebxzhou.craftcone.net
 
-import calebxzhou.craftcone.entity.Room
+import calebxzhou.craftcone.entity.ConeRoom
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.mc.Mcl
@@ -24,7 +24,7 @@ object ConePacketSet {
     //c2s写
     private val packetWriterClassIds = linkedMapOf<Class<out BufferWritable>,Int>()
     init {
-        registerPacket(Room::read)
+        registerPacket(ConeRoom::read)
         registerPacket(SysMsgS2CPacket::read)
 
         registerPacket(LoginC2SPacket::class.java)
@@ -32,9 +32,8 @@ object ConePacketSet {
         registerPacket(PlayerChatC2SPacket::class.java)
         registerPacket(PlayerMoveC2CPacket::class.java)
         registerPacket(PlayerMoveC2CPacket::read)
-        registerPacket(ReadBlockC2SPacket::class.java)
-        registerPacket(ReadBlockS2CPacket::read)
-        registerPacket(WriteBlockC2SPacket::class.java)
+        registerPacket(BlockStateIdC2SPacket::class.java)
+        registerPacket(BlockStateIdS2CPacket::read)
         registerPacket(SetBlockC2CPacket::class.java)
         registerPacket(SetBlockC2CPacket::read)
         // registerPacket(SetBlockStateC2SPacket::class.java)
@@ -82,7 +81,7 @@ object ConePacketSet {
             }
             is InRoomProcessable ->{
                 Mcl.logicThread {
-                    packet.process(it,Room.now?:let {
+                    packet.process(it,ConeRoom.now?:let {
                         logger.warn { "收到了房间内数据包，但是没有在房间内！" }
                         return@logicThread
                     })

@@ -9,6 +9,7 @@ import net.minecraft.network.FriendlyByteBuf
  */
 //玩家请求加入房间
 data class JoinRoomC2SPacket(
+    //room id
     val rid: Int
 ): Packet, BufferWritable {
     override fun write(buf: FriendlyByteBuf) {

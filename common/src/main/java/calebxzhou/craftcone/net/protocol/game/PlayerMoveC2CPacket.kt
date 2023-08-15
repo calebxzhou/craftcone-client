@@ -1,6 +1,6 @@
 package calebxzhou.craftcone.net.protocol.game
 
-import calebxzhou.craftcone.entity.Room
+import calebxzhou.craftcone.entity.ConeRoom
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.BufferWritable
@@ -28,7 +28,7 @@ data class PlayerMoveC2CPacket(
     }
 
     override fun process(server: IntegratedServer) {
-        val player = Room.now?.players?.get(pid)?.getServerPlayer(server) ?:let {
+        val player = ConeRoom.now?.players?.get(pid)?.getServerPlayer(server) ?:let {
             logger.warn { "当前没有游玩房间 或者找不到玩家$pid 就收到了玩家移动包" }
             return
         }
