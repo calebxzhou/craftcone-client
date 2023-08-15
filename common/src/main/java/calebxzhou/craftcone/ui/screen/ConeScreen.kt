@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.*
 import com.mojang.math.Matrix4f
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiComponent
+import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.renderer.GameRenderer
@@ -16,28 +17,29 @@ import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.entity.ItemRenderer
 import net.minecraft.network.chat.Component
 
+//字体颜色
+val textColor
+    get() = ConeTheme.now.fontActiveColor.opaque
+
 /**
  * Created  on 2023-03-01,16:23.
  */
-
 abstract class ConeScreen(
     //窗体标题
     var screenTitle: String
 ) : Screen(Component.literal(screenTitle)) {
     //window handle
     val hwnd = Mc.hwnd
-    //字体颜色
-    val fontColor
-        get() = ConeTheme.now.fontActiveColor.opaque
     val w
         get() = Mc.windowWidth
     val h
         get() =  Mc.windowHeight
+    private val widgets = arrayListOf<AbstractWidget>()
     override fun render(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {
         renderBg()
         drawCenteredString(
             poseStack,
-            font, screenTitle, w / 2, 10, fontColor
+            font, screenTitle, w / 2, 10, textColor
         )
         doRender(poseStack,mouseX,mouseY,partialTick)
         super.render(poseStack, mouseX, mouseY, partialTick)
@@ -45,6 +47,13 @@ abstract class ConeScreen(
 
     open fun doRender(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float){}
 
+    override fun init() {
+        super.init()
+        widgets.forEach{ addRenderableWidget( it ) }
+    }
+    fun registerWidget(widget: AbstractWidget){
+        widgets += widget
+    }
     companion object{
         @JvmStatic
         fun renderBg(

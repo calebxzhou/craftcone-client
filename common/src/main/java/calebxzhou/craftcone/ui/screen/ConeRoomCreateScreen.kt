@@ -2,8 +2,7 @@ package calebxzhou.craftcone.ui.screen
 
 import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.ConeNetSender
-import calebxzhou.craftcone.net.protocol.room.PlayerCreateRoomC2SPacket
-import calebxzhou.craftcone.net.protocol.room.PlayerCreateRoomS2CPacket
+import calebxzhou.craftcone.net.protocol.room.CreateRoomC2SPacket
 import calebxzhou.craftcone.ui.components.ConeButton
 import calebxzhou.craftcone.ui.overlay.ConeDialog
 import calebxzhou.craftcone.ui.overlay.ConeDialogType
@@ -18,7 +17,7 @@ import net.minecraft.network.chat.Component
 /**
  * Created  on 2023-07-24,22:43.
  */
-class ConeRoomCreateScreen(prevSc: Screen): ConeOkCancelInputScreen(prevSc,"创建房间 填写房间名称"),S2CResponsibleScreen<PlayerCreateRoomS2CPacket> {
+class ConeRoomCreateScreen(prevSc: Screen): ConeOkCancelInputScreen(prevSc,"创建房间 填写房间名称"),OkResponseScreen<PlayerCreateRoomS2CPacket> {
     private val gameModeBtn: ConeButton = ConeButton(w/2,40,80,"游戏模式：生存") { onChangeGameMode() }
     private val modAmount = Platform.getMods().size
     private val isFabric = Platform.isFabric()
@@ -31,13 +30,13 @@ class ConeRoomCreateScreen(prevSc: Screen): ConeOkCancelInputScreen(prevSc,"创�
 
     override fun onSubmit() {
         ConeNetSender.sendPacket(
-            PlayerCreateRoomC2SPacket(inputValue,SharedConstants.VERSION_STRING,isCreative,isFabric, blockStateAmount))
+            CreateRoomC2SPacket(inputValue,SharedConstants.VERSION_STRING,isCreative,isFabric, blockStateAmount))
     }
 
     override fun doRender(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {
         GuiComponent.drawCenteredString(poseStack,font,
             "你安装了${if(isFabric)"Fabric" else "Forge"} Mod$modAmount 个，方块状态$blockStateAmount 个。",
-            width/2,100,fontColor)
+            width/2,100,textColor)
     }
 
     private fun onChangeGameMode() = if(!isCreative){
@@ -48,7 +47,7 @@ class ConeRoomCreateScreen(prevSc: Screen): ConeOkCancelInputScreen(prevSc,"创�
         isCreative=false
     }
 
-    override fun onResponse(packet: PlayerCreateRoomS2CPacket) {
+    override fun onOk(packet: PlayerCreateRoomS2CPacket) {
         if(packet.ok){
             val rid = packet.data
             ConeDialog.show(ConeDialogType.OK,"成功！请牢记房间ID：${rid}（已自动复制。建议截图保存）")

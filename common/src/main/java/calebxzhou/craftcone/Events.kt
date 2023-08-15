@@ -3,9 +3,10 @@ package calebxzhou.craftcone
 import calebxzhou.craftcone.command.ConeRefreshChunkCommand
 import calebxzhou.craftcone.entity.Room
 import calebxzhou.craftcone.mc.Mc
+import calebxzhou.craftcone.mc.Mcl
 import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.ConeNetSender.sendPacket
-import calebxzhou.craftcone.net.protocol.game.ChatC2CPacket
+import calebxzhou.craftcone.net.protocol.game.PlayerChatC2SPacket
 import calebxzhou.craftcone.net.protocol.game.SetBlockC2CPacket
 import calebxzhou.craftcone.utils.LevelUt
 import calebxzhou.craftcone.utils.LevelUt.numDimKeyMap
@@ -52,7 +53,7 @@ object Events{
     }
 
     private fun onClientPlayerJoin(localPlayer: LocalPlayer) {
-        Mc.InGame.startLanShare(localPlayer.isCreative)
+        Mcl.startLanShare(localPlayer.isCreative)
     }
 
     private fun onLocalServerStopping(minecraftServer: MinecraftServer?) {
@@ -88,7 +89,7 @@ object Events{
     private fun onChat(player: ServerPlayer?, component: Component?): EventResult? {
         if(player==null || component==null)
             return EventResult.pass()
-        ConeNetSender.sendPacket(ChatC2CPacket(Mc.playerName,component.string))
+        ConeNetSender.sendPacket(PlayerChatC2SPacket(Mc.playerName,component.string))
         return EventResult.pass()
     }
 

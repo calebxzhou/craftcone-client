@@ -1,7 +1,6 @@
 package calebxzhou.craftcone.net
 
 import calebxzhou.craftcone.logger
-import calebxzhou.craftcone.net.protocol.room.PlayerLeaveRoomC2SPacket
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.ChannelFuture
 import io.netty.channel.ChannelInitializer
@@ -43,8 +42,6 @@ data class ConeConnection(
 
         fun disconnect() {
             logger.info("断开连接")
-            if (now != null)
-                ConeNetSender.sendPacket(PlayerLeaveRoomC2SPacket())
             now?.channelFuture?.cancel(true)
             now = null
         }

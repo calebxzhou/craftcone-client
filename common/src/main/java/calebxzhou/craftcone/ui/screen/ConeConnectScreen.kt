@@ -10,21 +10,22 @@ import java.net.InetSocketAddress
 /**
  * Created  on 2023-06-19,21:47.
  */
-class ConeConnectScreen(val titleScreen: Screen) : ConeOkCancelInputScreen(titleScreen,"输入服务器IP地址") {
+class ConeConnectScreen(val titleScreen: Screen) : ConeOkCancelInputScreen(titleScreen, "输入服务器IP地址") {
     init {
-            if (ConePlayer.now != null && ConeConnection.now != null) {
-                Mc.screen = ConeRoomSelectScreen(titleScreen)
-            }
+        if (ConePlayer.now != null && ConeConnection.now != null) {
+            Mc.screen = ConeRoomSelectScreen(titleScreen)
+        }
     }
 
     override fun init() {
         super.init()
         val addr = System.getProperty("craftcone.server")
-        if(addr.isNotBlank()){
+        if (addr.isNotBlank()) {
             inputValue = addr
             onSubmit()
         }
     }
+
     override fun onSubmit() {
         val ip = inputValue.replace("：", ":")
         //端口号
@@ -35,7 +36,7 @@ class ConeConnectScreen(val titleScreen: Screen) : ConeOkCancelInputScreen(title
         val addr = InetSocketAddress(ip, port)
         screenTitle = "连接中 $addr"
         ConeConnection.connect(addr)
-        Mc.screen = ConeUidScreen(titleScreen)
+        Mc.screen = ConeLoginScreen(titleScreen)
     }
 
 

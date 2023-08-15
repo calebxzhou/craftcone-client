@@ -7,7 +7,7 @@ import net.minecraft.network.FriendlyByteBuf
 /**
  * Created  on 2023-08-12,9:57.
  */
-data class PlayerDeleteRoomC2SPacket(
+data class DeleteRoomC2SPacket(
     val rid:Int
 ): Packet,BufferWritable{
 

@@ -1,7 +1,7 @@
 package calebxzhou.craftcone.utils
 
 import calebxzhou.craftcone.logger
-import calebxzhou.craftcone.mc.Mc
+import calebxzhou.craftcone.mc.Mcl
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
@@ -36,7 +36,7 @@ object LevelUt {
             Level.OVERWORLD
         }
 
-        val level = Mc.InGame.getLevel(dim) ?:run {
+        val level = Mcl.getLevel(dim) ?:run {
             throw IllegalStateException("处理数据包时，未在游玩状态！")
         }
         return level

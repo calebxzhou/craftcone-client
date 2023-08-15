@@ -1,7 +1,5 @@
 package calebxzhou.craftcone.ui
 
-import calebxzhou.craftcone.ui.ConeColor
-
 /**
  * 默认调色盘
  * Created  on 2023-03-12,13:12.

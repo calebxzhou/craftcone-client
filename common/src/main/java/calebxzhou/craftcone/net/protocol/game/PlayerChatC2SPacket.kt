@@ -1,4 +1,4 @@
-package calebxzhou.craftcone.net.protocol.room
+package calebxzhou.craftcone.net.protocol.game
 
 import calebxzhou.craftcone.net.protocol.BufferWritable
 import calebxzhou.craftcone.net.protocol.Packet
@@ -7,12 +7,14 @@ import net.minecraft.network.FriendlyByteBuf
 /**
  * Created  on 2023-07-06,8:48.
  */
-//玩家请求加入房间
-data class PlayerJoinRoomC2SPacket(
-    val rid: Int
-): Packet, BufferWritable {
+data class PlayerChatC2SPacket (
+    val senderName: String,
+    val content: String,
+): Packet,BufferWritable {
+
     override fun write(buf: FriendlyByteBuf) {
-        buf.writeVarInt(rid)
+        buf.writeUtf(senderName)
+        buf.writeUtf(content)
     }
 
 

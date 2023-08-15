@@ -1,7 +1,7 @@
 package calebxzhou.craftcone.ui.overlay
 
 import calebxzhou.craftcone.mc.Mc
-import calebxzhou.craftcone.ui.ConeColor
+import calebxzhou.craftcone.net.protocol.MsgLevel
 import calebxzhou.craftcone.ui.DefaultColors
 import com.mojang.blaze3d.platform.InputConstants
 import com.mojang.blaze3d.vertex.PoseStack
@@ -10,18 +10,9 @@ import net.minecraft.client.gui.screens.Overlay
 /**
  * Created  on 2023-07-23,22:05.
  */
-enum class ConeDialogType(val color: ConeColor, i: Int) {
-    INFO(DefaultColors.KleinBlue.color,0),
-    OK(DefaultColors.OliveGreen.color,1),
-    WARN(DefaultColors.LightYellow.color,2),
-    ERR(DefaultColors.LightRed.color,3)
-}
-fun coneDialog(type: ConeDialogType, msg:()->String){
-    ConeDialog.show(type,msg.invoke())
-}
-class ConeDialog private constructor(val type: ConeDialogType, val msg: String) : Overlay() {
+class ConeDialog private constructor(val type: MsgLevel, val msg: String) : Overlay() {
     companion object {
-        fun show(type: ConeDialogType, msg: String) {
+        fun show(type: MsgLevel, msg: String) {
             Mc.overlay = ConeDialog(type, msg)
         }
     }

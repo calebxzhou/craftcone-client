@@ -3,7 +3,6 @@ package calebxzhou.craftcone.mc.mixin;
 import calebxzhou.craftcone.ui.components.ConeButton;
 import calebxzhou.craftcone.ui.screen.ConeConnectScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;

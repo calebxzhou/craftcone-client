@@ -3,15 +3,13 @@ package calebxzhou.craftcone.entity
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.ConeNetSender
-import calebxzhou.craftcone.net.protocol.BufferReadable
-import calebxzhou.craftcone.net.protocol.Packet
-import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
-import calebxzhou.craftcone.net.protocol.room.PlayerJoinRoomC2SPacket
-import calebxzhou.craftcone.net.protocol.room.PlayerLeaveRoomC2SPacket
-import calebxzhou.craftcone.ui.overlay.ConeDialogType
-import calebxzhou.craftcone.ui.overlay.coneDialog
+import calebxzhou.craftcone.net.protocol.*
+import calebxzhou.craftcone.net.protocol.room.JoinRoomC2SPacket
+import calebxzhou.craftcone.net.protocol.room.LeaveRoomC2SPacket
+import calebxzhou.craftcone.ui.coneMsg
 import calebxzhou.craftcone.ui.screen.ConeRoomInfoScreen
 import calebxzhou.craftcone.utils.blockStateAmount
+import net.minecraft.client.gui.screens.TitleScreen
 import net.minecraft.network.FriendlyByteBuf
 import java.time.Instant
 import java.time.LocalDateTime
@@ -62,15 +60,14 @@ data class Room(
         }
 
         //载入房间
-        fun load(room: Room) {
-            logger.info{ "载入房间中 $room" }
+        fun loadAndJoin(room: Room) {
             if (blockStateAmount != room.blockStateAmount) {
-                coneDialog(ConeDialogType.ERR){
-                    "方块状态数量不一致：您${blockStateAmount}个/房间${room.blockStateAmount}个。检查Mod列表！"
-                }
+                coneMsg(MsgType.Dialog,MsgLevel.Err,"方块状态数量不一致：您${blockStateAmount}个/房间${room.blockStateAmount}个。检查Mod列表！")
                 return
             }
-            ConeNetSender.sendPacket(PlayerJoinRoomC2SPacket(room.id))
+            coneMsg(MsgType.Toast,MsgLevel.Info,"开始载入房间 $room")
+            logger.info{ "载入房间中 $room" }
+            ConeNetSender.sendPacket(JoinRoomC2SPacket(room.id))
             now = room
             val levelName = "${Mc.playerName}-${room.id}"
             if(Mc.hasLevel(levelName)){
@@ -86,16 +83,17 @@ data class Room(
                 return
             }
             logger.info { "正在卸载房间" }
-            ConeNetSender.sendPacket(PlayerLeaveRoomC2SPacket())
+            ConeNetSender.sendPacket(LeaveRoomC2SPacket())
             now = null
         }
     }
-    //从服务器收到房间信息
+
     override fun process() {
-        (Mc.screen as ConeRoomInfoScreen).onResponse(this)
+        Mc.screen = ConeRoomInfoScreen(Mc.screen?:TitleScreen(),this)
     }
+
     override fun toString(): String {
-        return "$name($id)"
+        return "$name(ID=$id)"
     }
 
     fun addPlayer(player: ConePlayer) {

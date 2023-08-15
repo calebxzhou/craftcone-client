@@ -3,12 +3,12 @@ package calebxzhou.craftcone.net
 import calebxzhou.craftcone.entity.Room
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.mc.Mc
-import calebxzhou.craftcone.net.protocol.BufferWritable
-import calebxzhou.craftcone.net.protocol.Packet
-import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
-import calebxzhou.craftcone.net.protocol.ServerThreadProcessable
-import calebxzhou.craftcone.net.protocol.account.*
+import calebxzhou.craftcone.mc.Mcl
+import calebxzhou.craftcone.net.protocol.*
+import calebxzhou.craftcone.net.protocol.account.LoginC2SPacket
+import calebxzhou.craftcone.net.protocol.account.RegisterC2SPacket
 import calebxzhou.craftcone.net.protocol.game.*
+import calebxzhou.craftcone.net.protocol.general.SysMsgS2CPacket
 import calebxzhou.craftcone.net.protocol.room.*
 import net.minecraft.network.FriendlyByteBuf
 
@@ -25,15 +25,11 @@ object ConePacketSet {
     private val packetWriterClassIds = linkedMapOf<Class<out BufferWritable>,Int>()
     init {
         registerPacket(Room::read)
+        registerPacket(SysMsgS2CPacket::read)
 
-        registerPacket(CheckPlayerExistC2SPacket::class.java)
-        registerPacket(CheckPlayerExistS2CPacket::read)
         registerPacket(LoginC2SPacket::class.java)
-        registerPacket(LoginS2CPacket::read)
         registerPacket(RegisterC2SPacket::class.java)
-        registerPacket(RegisterS2CPacket::read)
-        registerPacket(ChatC2CPacket::class.java)
-        registerPacket(ChatC2CPacket::read)
+        registerPacket(PlayerChatC2SPacket::class.java)
         registerPacket(PlayerMoveC2CPacket::class.java)
         registerPacket(PlayerMoveC2CPacket::read)
         registerPacket(ReadBlockC2SPacket::class.java)
@@ -42,16 +38,13 @@ object ConePacketSet {
         registerPacket(SetBlockC2CPacket::class.java)
         registerPacket(SetBlockC2CPacket::read)
         // registerPacket(SetBlockStateC2SPacket::class.java)
-        registerPacket(SysChatMsgS2CPacket::read)
 
-        registerPacket(GetRoomInfoC2SPacket::class.java)
-        registerPacket(PlayerCreateRoomC2SPacket::class.java)
-        registerPacket(PlayerCreateRoomS2CPacket::read)
-        registerPacket(PlayerDeleteRoomC2SPacket::class.java)
-        registerPacket(PlayerDeleteRoomS2CPacket::read)
-        registerPacket(PlayerJoinRoomC2SPacket::class.java)
+        registerPacket(RoomInfoC2SPacket::class.java)
+        registerPacket(CreateRoomC2SPacket::class.java)
+        registerPacket(DeleteRoomC2SPacket::class.java)
+        registerPacket(JoinRoomC2SPacket::class.java)
         registerPacket(PlayerJoinedRoomS2CPacket::read)
-        registerPacket(PlayerLeaveRoomC2SPacket::class.java)
+        registerPacket(LeaveRoomC2SPacket::class.java)
         registerPacket(PlayerLeftRoomS2CPacket::read)
 
 
@@ -83,8 +76,16 @@ object ConePacketSet {
                 }
             }
             is ServerThreadProcessable ->{
-                Mc.InGame.logicThread {
+                Mcl.logicThread {
                     packet.process(it)
+                }
+            }
+            is InRoomProcessable ->{
+                Mcl.logicThread {
+                    packet.process(it,Room.now?:let {
+                        logger.warn { "收到了房间内数据包，但是没有在房间内！" }
+                        return@logicThread
+                    })
                 }
             }
         }

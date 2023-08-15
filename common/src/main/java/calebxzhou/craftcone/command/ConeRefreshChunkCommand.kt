@@ -1,7 +1,6 @@
 package calebxzhou.craftcone.command
 
 import calebxzhou.craftcone.logger
-import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.protocol.game.ReadBlockC2SPacket
 import calebxzhou.craftcone.utils.LevelUt
@@ -17,7 +16,7 @@ import net.minecraft.world.level.ChunkPos
 object ConeRefreshChunkCommand {
     fun register(dispatcher:CommandDispatcher<CommandSourceStack> ){
         dispatcher.register(Commands.literal("cone-refresh-chunk").executes {
-            val chunkPosNow = Mc.InGame.player?.chunkPosition()?:let {
+            val chunkPosNow = Mcl.player?.chunkPosition()?:let {
                 logger.error { "玩家为空时就请求载入区块了" }
                 return@executes 1
             }
@@ -25,15 +24,15 @@ object ConeRefreshChunkCommand {
                for(z in chunkPosNow.z - 16 .. chunkPosNow.z + 16){
                    val cpos = ChunkPos(x, z)
                    val info = "刷新区块中 $x,$z"
-                   Mc.InGame.actionBarMsg = Component.literal(info)
+                   Mcl.actionBarMsg = Component.literal(info)
                    logger.info { info }
-                   ConeNetSender.sendPacket(ReadBlockC2SPacket(LevelUt.getDimIdByLevel(Mc.InGame.level?:let {
+                   ConeNetSender.sendPacket(ReadBlockC2SPacket(LevelUt.getDimIdByLevel(Mcl.level?:let {
                        logger.error { "当前游玩的存档为空" }
                        return@executes 1
                    }), cpos.toLong()))
                }
             }
-            Mc.InGame.actionBarMsg = Component.literal("刷新区块完成")
+            Mcl.actionBarMsg = Component.literal("刷新区块完成")
             return@executes 1
         })
     }

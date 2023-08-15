@@ -1,17 +1,14 @@
 package calebxzhou.craftcone.mc
 
-import calebxzhou.craftcone.logger
-import calebxzhou.craftcone.mc.mixin.aGui
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.components.toasts.Toast
 import net.minecraft.client.gui.screens.TitleScreen
-import net.minecraft.client.server.IntegratedServer
 import net.minecraft.core.RegistryAccess
-import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceKey
-import net.minecraft.server.level.ServerLevel
-import net.minecraft.util.HttpUtil
 import net.minecraft.world.Difficulty
-import net.minecraft.world.level.*
+import net.minecraft.world.level.DataPackConfig
+import net.minecraft.world.level.GameRules
+import net.minecraft.world.level.GameType
+import net.minecraft.world.level.LevelSettings
 import net.minecraft.world.level.levelgen.presets.WorldPresets
 
 /**
@@ -41,6 +38,12 @@ object Mc {
     fun renderThread(todo: ()->Unit){
         MC.execute(todo)
     }
+    fun goTitleScreen(){
+        screen = TitleScreen()
+    }
+    fun addToast(toast: Toast){
+        MC.toasts.addToast(toast)
+    }
     fun hasLevel(levelName:String): Boolean {
         return MC.levelSource.levelExists(levelName)
     }
@@ -66,45 +69,5 @@ object Mc {
         MC.createWorldOpenFlows().createFreshLevel(levelName,
             levelSettings, registry,worldPresets
         )
-    }
-    object InGame{
-        private val MCS: IntegratedServer?
-            get() = Minecraft.getInstance().singleplayerServer?.also {
-                logger.warn { "本地服务器未启动！" }
-            }
-
-        val gameMode
-            get() = MC.gameMode?.playerMode
-        var actionBarMsg
-            get() = (MC.gui as aGui).overlayMessageString
-            set(value) = MC.gui.setOverlayMessage(value,false)
-        val player
-            get() = MC.player
-        val level
-            get() = MC.level
-        fun logicThread(todo: (IntegratedServer) -> Unit){
-            MCS?.let {
-                it.execute{
-                    todo.invoke(it)
-                }
-            }
-        }
-        fun getLevel(dim: ResourceKey<Level>): ServerLevel? {
-            return MCS?.getLevel(dim)
-        }
-        fun startLanShare(isCreative: Boolean){
-            MCS?.publishServer(
-                if(isCreative)GameType.CREATIVE else GameType.SURVIVAL,
-                isCreative,
-                HttpUtil.getAvailablePort())?:let {
-                logger.error { "启动局域网模式失败" }
-            }
-        }
-        fun addChatMsg(msg:String){
-            addChatMsg(Component.literal(msg))
-        }
-        fun addChatMsg(component: Component){
-            Mc.InGame.addChatMsg(component)
-        }
     }
 }

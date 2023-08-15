@@ -2,7 +2,7 @@ package calebxzhou.craftcone.net.protocol.room
 
 import calebxzhou.craftcone.entity.Room
 import calebxzhou.craftcone.logger
-import calebxzhou.craftcone.mc.Mc
+import calebxzhou.craftcone.mc.Mcl
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.net.protocol.ServerThreadProcessable
@@ -28,7 +28,7 @@ data class PlayerLeftRoomS2CPacket(
             logger.error { "收到了玩家 $pid 的离开房间包 但是没找到此玩家" }
             return
         }
-        Mc.InGame.addChatMsg(Component.literal("${player.name} 离开了房间").withStyle(ChatFormatting.YELLOW))
+        Mcl.addChatMsg(Component.literal("${player.name} 离开了房间").withStyle(ChatFormatting.YELLOW))
         Room.now?.players!!.remove(pid)
     }
 

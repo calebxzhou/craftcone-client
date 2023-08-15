@@ -2,14 +2,10 @@ package calebxzhou.craftcone.net.protocol.room
 
 import calebxzhou.craftcone.entity.ConePlayer
 import calebxzhou.craftcone.entity.Room
-import calebxzhou.craftcone.mc.Mc
-import calebxzhou.craftcone.net.protocol.BufferReadable
-import calebxzhou.craftcone.net.protocol.Packet
-import calebxzhou.craftcone.net.protocol.ServerThreadProcessable
-import net.minecraft.ChatFormatting
+import calebxzhou.craftcone.net.protocol.*
+import calebxzhou.craftcone.ui.coneMsg
 import net.minecraft.client.server.IntegratedServer
 import net.minecraft.network.FriendlyByteBuf
-import net.minecraft.network.chat.Component
 
 /**
  * Created  on 2023-07-06,8:48.
@@ -17,7 +13,7 @@ import net.minecraft.network.chat.Component
 data class PlayerJoinedRoomS2CPacket(
     val pid: Int,
     val pName: String
-) : Packet, ServerThreadProcessable{
+) : Packet, InRoomProcessable{
     companion object : BufferReadable<PlayerJoinedRoomS2CPacket>{
         override fun read(buf: FriendlyByteBuf): PlayerJoinedRoomS2CPacket {
             return PlayerJoinedRoomS2CPacket(buf.readVarInt(),buf.readUtf())
@@ -25,8 +21,8 @@ data class PlayerJoinedRoomS2CPacket(
 
     }
 
-    override fun process(server: IntegratedServer) {
-        Mc.InGame.addChatMsg(Component.literal("$pName 加入了房间").withStyle(ChatFormatting.YELLOW))
-        Room.now?.addPlayer(ConePlayer(pid,pName))
+    override fun process(server: IntegratedServer, room: Room) {
+        coneMsg(MsgType.Chat,MsgLevel.Info,"$pName 加入了房间")
+        room.addPlayer(ConePlayer(pid,pName))
     }
 }
