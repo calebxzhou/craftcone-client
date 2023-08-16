@@ -4,12 +4,10 @@ import calebxzhou.craftcone.command.ConeRefreshChunkCommand
 import calebxzhou.craftcone.entity.ConeRoom
 import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.mc.Mcl
-import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.ConeNetSender.sendPacket
-import calebxzhou.craftcone.net.protocol.game.PlayerChatC2SPacket
-import calebxzhou.craftcone.net.protocol.game.SetBlockC2CPacket
+import calebxzhou.craftcone.net.protocol.game.SendChatMsgPacket
+import calebxzhou.craftcone.net.protocol.game.SetBlockPacket
 import calebxzhou.craftcone.utils.LevelUt
-import calebxzhou.craftcone.utils.LevelUt.numDimKeyMap
 import com.mojang.brigadier.CommandDispatcher
 import dev.architectury.event.EventResult
 import dev.architectury.event.events.client.ClientPlayerEvent
@@ -25,6 +23,7 @@ import net.minecraft.commands.Commands
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.server.MinecraftServer
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
@@ -39,9 +38,15 @@ object Events{
         BlockEvent.BREAK.register(::onBreakBlock)
         ChatEvent.RECEIVED.register(::onChat )
         ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(::onClientPlayerJoin)
+        LifecycleEvent.SERVER_LEVEL_LOAD.register(::onLevelLoad)
         LifecycleEvent.SERVER_STARTED.register(::onLocalServerStarted)
         LifecycleEvent.SERVER_STOPPING.register(::onLocalServerStopping)
         CommandRegistrationEvent.EVENT.register(::onRegisterCommand)
+    }
+
+    private fun onLevelLoad(level: ServerLevel) {
+        logger.info { "正在载入level $level" }
+        ConeRoom.now?.addDimension(level)
     }
 
     private fun onRegisterCommand(
@@ -60,12 +65,6 @@ object Events{
         logger.info { "本地服务器正在停止" }
         ConeRoom.unload()
     }
-
-
-
-
-
-
     private fun onBreakBlock(
         level: Level,
         blockPos: BlockPos,
@@ -73,8 +72,9 @@ object Events{
         serverPlayer: ServerPlayer?,
         intValue: IntValue?
     ): EventResult? {
+        //TODO
         sendPacket(
-            SetBlockC2CPacket(
+            SetBlockPacket(
                 LevelUt.getDimIdByLevel(level),
                 blockPos.asLong(),
                 Block.BLOCK_STATE_REGISTRY.getId(Blocks.AIR.defaultBlockState())
@@ -85,23 +85,17 @@ object Events{
     }
 
 
-    //广播包：本地服务器接收到聊天信息时
+    //玩家发聊天消息时
     private fun onChat(player: ServerPlayer?, component: Component?): EventResult? {
         if(player==null || component==null)
             return EventResult.pass()
-        ConeNetSender.sendPacket(PlayerChatC2SPacket(Mc.playerName,component.string))
+        sendPacket(SendChatMsgPacket(Mc.playerName,component.string))
         return EventResult.pass()
     }
 
     //本地服务器启动时
     private fun onLocalServerStarted(server: MinecraftServer) {
-        //打开地图时，每个维度编成数字
-        numDimKeyMap.clear()
-        server.levelKeys().forEach {
-            val number = numDimKeyMap.size
-            logger.info("Dimension Number: $number $it")
-            numDimKeyMap += Pair(number,it)
-        }
+
     }
 
 

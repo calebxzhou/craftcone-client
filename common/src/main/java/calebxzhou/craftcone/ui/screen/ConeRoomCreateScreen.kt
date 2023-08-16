@@ -4,7 +4,7 @@ import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.protocol.MsgLevel
 import calebxzhou.craftcone.net.protocol.MsgType
-import calebxzhou.craftcone.net.protocol.room.CreateRoomC2SPacket
+import calebxzhou.craftcone.net.protocol.room.CreateRoomPacket
 import calebxzhou.craftcone.ui.components.ConeButton
 import calebxzhou.craftcone.ui.coneMsg
 import calebxzhou.craftcone.utils.blockStateAmount
@@ -32,7 +32,7 @@ class ConeRoomCreateScreen(prevSc: Screen): ConeOkCancelInputScreen(prevSc,"åˆ›å
 
     override fun onSubmit() {
         ConeNetSender.sendPacket(
-            CreateRoomC2SPacket(inputValue,SharedConstants.VERSION_STRING,isCreative,isFabric, blockStateAmount))
+            CreateRoomPacket(inputValue,SharedConstants.VERSION_STRING,isCreative,isFabric, blockStateAmount))
     }
 
     override fun doRender(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {

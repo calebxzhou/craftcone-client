@@ -7,14 +7,14 @@ import net.minecraft.network.FriendlyByteBuf
 /**
  * Created  on 2023-08-13,20:50.
  */
-data class SysMsgS2CPacket(
+data class SysMsgPacket(
     val type:MsgType,
     val lvl: MsgLevel,
     val msg:String
 ): Packet,RenderThreadProcessable {
-    companion object:BufferReadable<SysMsgS2CPacket>{
-        override fun read(buf: FriendlyByteBuf): SysMsgS2CPacket {
-            return SysMsgS2CPacket(MsgType[buf.readVarInt()],MsgLevel[buf.readVarInt()],buf.readUtf())
+    companion object:BufferReadable<SysMsgPacket>{
+        override fun read(buf: FriendlyByteBuf): SysMsgPacket {
+            return SysMsgPacket(MsgType[buf.readVarInt()],MsgLevel[buf.readVarInt()],buf.readUtf())
         }
 
     }

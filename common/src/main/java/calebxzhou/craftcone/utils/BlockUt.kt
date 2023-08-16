@@ -3,20 +3,13 @@ package calebxzhou.craftcone.utils
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockState
 
 /**
  * Created  on 2023-08-01,19:52.
  */
 
-val blockStates
-    get() = Block.BLOCK_STATE_REGISTRY
-val blockStateAmount
-    get() = Block.BLOCK_STATE_REGISTRY.size()
-fun getBlockStateById(id:  Int): BlockState? {
-    return blockStates.byId(id)
-}
+
 fun chunkForEachBlock(level: Level,chunkPos: ChunkPos, doFor: (BlockPos, BlockState)->Unit){
     val x: Int = chunkPos.x shl 4
     val z: Int = chunkPos.z shl 4

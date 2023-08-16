@@ -5,10 +5,10 @@ import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.mc.Mcl
 import calebxzhou.craftcone.net.protocol.*
-import calebxzhou.craftcone.net.protocol.account.LoginC2SPacket
-import calebxzhou.craftcone.net.protocol.account.RegisterC2SPacket
+import calebxzhou.craftcone.net.protocol.account.LoginPacket
+import calebxzhou.craftcone.net.protocol.account.RegisterPacket
 import calebxzhou.craftcone.net.protocol.game.*
-import calebxzhou.craftcone.net.protocol.general.SysMsgS2CPacket
+import calebxzhou.craftcone.net.protocol.general.SysMsgPacket
 import calebxzhou.craftcone.net.protocol.room.*
 import net.minecraft.network.FriendlyByteBuf
 
@@ -25,26 +25,26 @@ object ConePacketSet {
     private val packetWriterClassIds = linkedMapOf<Class<out BufferWritable>,Int>()
     init {
         registerPacket(ConeRoom::read)
-        registerPacket(SysMsgS2CPacket::read)
+        registerPacket(SysMsgPacket::read)
 
-        registerPacket(LoginC2SPacket::class.java)
-        registerPacket(RegisterC2SPacket::class.java)
-        registerPacket(PlayerChatC2SPacket::class.java)
+        registerPacket(LoginPacket::class.java)
+        registerPacket(RegisterPacket::class.java)
+        registerPacket(SendChatMsgPacket::class.java)
         registerPacket(PlayerMoveC2CPacket::class.java)
         registerPacket(PlayerMoveC2CPacket::read)
-        registerPacket(BlockStateIdC2SPacket::class.java)
-        registerPacket(BlockStateIdS2CPacket::read)
-        registerPacket(SetBlockC2CPacket::class.java)
-        registerPacket(SetBlockC2CPacket::read)
+        registerPacket(GetChunkPacket::class.java)
+        registerPacket(BlockDataPacket::read)
+        registerPacket(SetBlockPacket::class.java)
+        registerPacket(SetBlockPacket::read)
         // registerPacket(SetBlockStateC2SPacket::class.java)
 
-        registerPacket(RoomInfoC2SPacket::class.java)
-        registerPacket(CreateRoomC2SPacket::class.java)
-        registerPacket(DeleteRoomC2SPacket::class.java)
-        registerPacket(JoinRoomC2SPacket::class.java)
-        registerPacket(PlayerJoinedRoomS2CPacket::read)
-        registerPacket(LeaveRoomC2SPacket::class.java)
-        registerPacket(PlayerLeftRoomS2CPacket::read)
+        registerPacket(GetRoomPacket::class.java)
+        registerPacket(CreateRoomPacket::class.java)
+        registerPacket(DelRoomPacket::class.java)
+        registerPacket(JoinRoomPacket::class.java)
+        registerPacket(PlayerJoinedRoomPacket::read)
+        registerPacket(LeaveRoomPacket::class.java)
+        registerPacket(PlayerLeftRoomPacket::read)
 
 
 

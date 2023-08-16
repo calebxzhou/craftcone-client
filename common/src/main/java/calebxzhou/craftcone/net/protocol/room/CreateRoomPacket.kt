@@ -8,7 +8,7 @@ import net.minecraft.network.FriendlyByteBuf
  * Created  on 2023-07-06,8:48.
  */
 //玩家请求创建房间
-data class CreateRoomC2SPacket(
+data class CreateRoomPacket(
     //房间名称
     val rName:String,
     //mc版本

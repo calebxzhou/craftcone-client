@@ -2,7 +2,7 @@ package calebxzhou.craftcone.misc
 
 import calebxzhou.craftcone.entity.ConeRoom
 import calebxzhou.craftcone.net.ConeNetSender
-import calebxzhou.craftcone.net.protocol.game.BlockStateIdC2SPacket
+import calebxzhou.craftcone.net.protocol.game.GetChunkPacket
 import calebxzhou.craftcone.utils.LevelUt
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.Level
@@ -15,6 +15,6 @@ object ChunkManager {
     fun onRead(level: Level, chunkPos: ChunkPos) {
         if(ConeRoom.now == null)
             return
-        ConeNetSender.sendPacket(BlockStateIdC2SPacket(LevelUt.getDimIdByLevel(level),chunkPos.toLong()))
+        ConeNetSender.sendPacket(GetChunkPacket(LevelUt.getDimIdByLevel(level),chunkPos.toLong()))
     }
 }

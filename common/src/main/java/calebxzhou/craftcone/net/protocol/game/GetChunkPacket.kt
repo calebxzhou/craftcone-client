@@ -3,19 +3,19 @@ package calebxzhou.craftcone.net.protocol.game
 import calebxzhou.craftcone.net.protocol.BufferWritable
 import calebxzhou.craftcone.net.protocol.Packet
 import net.minecraft.network.FriendlyByteBuf
-
 /**
- * Created  on 2023-07-06,8:48.
+ * Created  on 2023-07-17,17:16.
  */
-data class PlayerChatC2SPacket (
-    val senderName: String,
-    val content: String,
-): Packet,BufferWritable {
+data class GetChunkPacket(
+    //维度ID
+    val dimId: Int,
+    //区块位置 long
+    val chunkPos: Long,
+) : Packet, BufferWritable{
 
     override fun write(buf: FriendlyByteBuf) {
-        buf.writeUtf(senderName)
-        buf.writeUtf(content)
+        buf.writeVarInt(dimId)
+        buf.writeLong(chunkPos)
     }
-
 
 }

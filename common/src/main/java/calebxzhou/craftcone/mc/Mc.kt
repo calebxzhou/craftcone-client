@@ -9,6 +9,8 @@ import net.minecraft.world.level.DataPackConfig
 import net.minecraft.world.level.GameRules
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.LevelSettings
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.levelgen.presets.WorldPresets
 
 /**
@@ -35,6 +37,13 @@ object Mc {
     var overlay
         set(value) {MC.overlay = value}
         get() = MC.overlay
+    val blockStates
+        get() = Block.BLOCK_STATE_REGISTRY
+    val blockStateAmount
+        get() = Block.BLOCK_STATE_REGISTRY.size()
+    fun getBlockStateById(id:  Int): BlockState? {
+        return blockStates.byId(id)
+    }
     fun renderThread(todo: ()->Unit){
         MC.execute(todo)
     }

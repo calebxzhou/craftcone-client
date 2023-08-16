@@ -7,7 +7,8 @@ import net.minecraft.network.FriendlyByteBuf
 /**
  * Created  on 2023-08-13,15:24.
  */
-data class RoomInfoC2SPacket(
+//获取房间信息
+data class GetRoomPacket(
     val rid:Int
 ) : Packet,BufferWritable{
     override fun write(buf: FriendlyByteBuf) {

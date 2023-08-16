@@ -5,12 +5,14 @@ import calebxzhou.craftcone.net.protocol.Packet
 import net.minecraft.network.FriendlyByteBuf
 
 /**
- * Created  on 2023-07-06,8:48.
+ * Created  on 2023-08-12,9:57.
  */
-//玩家离开房间（不包含数据）
-class LeaveRoomC2SPacket  : Packet, BufferWritable {
+//删除房间
+data class DelRoomPacket(
+    val rid:Int
+): Packet,BufferWritable{
     override fun write(buf: FriendlyByteBuf) {
+        buf.writeVarInt(rid)
     }
-
 
 }

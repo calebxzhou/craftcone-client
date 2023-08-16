@@ -10,12 +10,12 @@ import net.minecraft.network.FriendlyByteBuf
 /**
  * Created  on 2023-08-11,11:50.
  */
-data class PlayerLeftRoomS2CPacket(
+data class PlayerLeftRoomPacket(
     val pid: Int
 ): Packet,InRoomProcessable {
-    companion object :BufferReadable<PlayerLeftRoomS2CPacket>{
-        override fun read(buf: FriendlyByteBuf): PlayerLeftRoomS2CPacket {
-            return PlayerLeftRoomS2CPacket(buf.readVarInt())
+    companion object :BufferReadable<PlayerLeftRoomPacket>{
+        override fun read(buf: FriendlyByteBuf): PlayerLeftRoomPacket {
+            return PlayerLeftRoomPacket(buf.readVarInt())
         }
 
     }
@@ -25,7 +25,7 @@ data class PlayerLeftRoomS2CPacket(
             return
         }
         coneMsg(MsgType.Chat,MsgLevel.Info, "${player.name} 离开了房间" )
-        room.players -= pid
+        room.removePlayer(pid)
     }
 
 }

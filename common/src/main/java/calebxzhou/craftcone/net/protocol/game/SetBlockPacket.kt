@@ -1,11 +1,11 @@
 package calebxzhou.craftcone.net.protocol.game
 
+import calebxzhou.craftcone.entity.ConeRoom
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.BufferWritable
+import calebxzhou.craftcone.net.protocol.InRoomProcessable
 import calebxzhou.craftcone.net.protocol.Packet
-import calebxzhou.craftcone.net.protocol.ServerThreadProcessable
-import calebxzhou.craftcone.utils.LevelUt
 import calebxzhou.craftcone.utils.LevelUt.setBlockDefault
 import net.minecraft.client.server.IntegratedServer
 import net.minecraft.core.BlockPos
@@ -17,21 +17,21 @@ import net.minecraft.world.level.block.Blocks
  * Created  on 2023-06-29,20:46.
  */
 //c2c 设置单个方块的包（玩家破坏+放置）
-data class SetBlockC2CPacket(
+data class SetBlockPacket(
     //维度ID
     val levelId: Int,
     //方块位置
     val bpos: Long,
     //状态
     val stateId: Int,
-) : Packet, ServerThreadProcessable,BufferWritable {
+) : Packet, InRoomProcessable,BufferWritable {
 
 
-    companion object :BufferReadable<SetBlockC2CPacket> {
+    companion object :BufferReadable<SetBlockPacket> {
 
         //从buf读
-        override fun read(buf: FriendlyByteBuf): SetBlockC2CPacket {
-            return SetBlockC2CPacket(
+        override fun read(buf: FriendlyByteBuf): SetBlockPacket {
+            return SetBlockPacket(
                 buf.readByte().toInt(),
                 buf.readLong(),
                 buf.readVarInt(),
@@ -39,8 +39,8 @@ data class SetBlockC2CPacket(
         }
     }
 
-    override fun process(server: IntegratedServer) {
-        val level = LevelUt.getLevelByDimId(this.levelId)
+    override fun process(server: IntegratedServer, room: ConeRoom) {
+        val level = room.getLevelByDimId(this.levelId)
         val bpos = BlockPos.of(this.bpos)
         val state = Block.BLOCK_STATE_REGISTRY.byId(this.stateId)
         server.getLevel(level.dimension())?.setBlockDefault(
