@@ -6,8 +6,6 @@ import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.mc.Mcl
 import calebxzhou.craftcone.net.ConeNetSender.sendPacket
 import calebxzhou.craftcone.net.protocol.game.SendChatMsgPacket
-import calebxzhou.craftcone.net.protocol.game.SetBlockPacket
-import calebxzhou.craftcone.utils.LevelUt
 import com.mojang.brigadier.CommandDispatcher
 import dev.architectury.event.EventResult
 import dev.architectury.event.events.client.ClientPlayerEvent
@@ -26,8 +24,6 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
 
 /**
@@ -72,15 +68,7 @@ object Events{
         serverPlayer: ServerPlayer?,
         intValue: IntValue?
     ): EventResult? {
-        //TODO
-        sendPacket(
-            SetBlockPacket(
-                LevelUt.getDimIdByLevel(level),
-                blockPos.asLong(),
-                Block.BLOCK_STATE_REGISTRY.getId(Blocks.AIR.defaultBlockState())
-            )
-        )
-
+        ConeRoom.now?.onBreakBlock(level,blockPos)
         return EventResult.pass()
     }
 

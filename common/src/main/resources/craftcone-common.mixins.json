@@ -10,12 +10,10 @@
   "mixins": [
     "aCollectingNeighborUpdater",
     "aMultiNeighborUpdate",
-    "mBlockItem",
-    "mBlockStateBase",
-    "mChunkHolder",
+    "mPlayerPlaceBlock",
+    "mPlayerChangeBlockState",
     "mChunkSerializer",
     "mCollectingNeighborUpdater",
-    "mGui",
     "mLevel"
   ],
   "injectors": {

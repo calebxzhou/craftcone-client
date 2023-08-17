@@ -1,5 +1,7 @@
 package calebxzhou.craftcone.mc.mixin;
 
+import calebxzhou.craftcone.entity.ConeChunkPos;
+import calebxzhou.craftcone.entity.ConeRoom;
 import calebxzhou.craftcone.misc.ChunkManager;
 import net.minecraft.client.multiplayer.ClientChunkCache;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -17,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -28,12 +31,9 @@ public class mChunkSerializer {
     @Shadow @Final
     ClientLevel level;
 
-    @Shadow @Final
-    static Logger LOGGER;
-
     // on read
     @Inject(method = "replaceWithPacketData" , at = @At(value = "RETURN",ordinal = 1))
-    private void onRead(int i, int j, FriendlyByteBuf friendlyByteBuf, CompoundTag compoundTag, Consumer<ClientboundLevelChunkPacketData.BlockEntityTagOutput> consumer, CallbackInfoReturnable<@Nullable LevelChunk> cir){
-        ChunkManager.onRead(level,new ChunkPos(i,j));
+    private void onRead(int cx, int cz, FriendlyByteBuf friendlyByteBuf, CompoundTag compoundTag, Consumer<ClientboundLevelChunkPacketData.BlockEntityTagOutput> consumer, CallbackInfoReturnable<@Nullable LevelChunk> cir){
+        Objects.requireNonNull(ConeRoom.getNow()).onReadChunkData(level,new ConeChunkPos(cx,cz));
     }
 }

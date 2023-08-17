@@ -1,5 +1,6 @@
 package calebxzhou.craftcone.mc.mixin;
 
+import calebxzhou.craftcone.entity.ConeRoom;
 import calebxzhou.craftcone.net.ConeNetSender;
 import calebxzhou.craftcone.net.protocol.game.SetBlockPacket;
 import calebxzhou.craftcone.utils.LevelUt;
@@ -15,16 +16,17 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Objects;
+
 /**
  * Created  on 2023-07-15,23:39.
  */
 @Mixin(BlockBehaviour.BlockStateBase.class)
-public class mBlockStateBase {
-    //广播包：右键点击完方块，就更新它的状态
+public class mPlayerChangeBlockState {
+    //右键点击完方块，就发出它的新状态
     @Inject(method = "use",at=@At(value = "RETURN"))
     private void onRightClickBlock(Level level, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult, CallbackInfoReturnable<InteractionResult> cir){
-        var pos = blockHitResult.getBlockPos();
-        var bState = level.getBlockState(pos);
-        ConeNetSender.sendPacket(new SetBlockPacket(LevelUt.getDimIdByLevel(level),pos.asLong(), Block.BLOCK_STATE_REGISTRY.getId(bState)));
+        Objects.requireNonNull(ConeRoom.getNow()).onRightClickBlock(level,blockHitResult.getBlockPos());
+        //
     }
 }
