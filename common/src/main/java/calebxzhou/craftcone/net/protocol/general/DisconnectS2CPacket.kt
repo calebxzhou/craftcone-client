@@ -10,10 +10,10 @@ import net.minecraft.network.FriendlyByteBuf
 /**
  * Created  on 2023-08-15,8:53.
  */
-class DisconnectByServerPacket:Packet,RenderThreadProcessable {
-    companion object : BufferReadable<DisconnectByServerPacket>{
-        override fun read(buf: FriendlyByteBuf): DisconnectByServerPacket {
-            return DisconnectByServerPacket()
+class DisconnectS2CPacket:Packet,RenderThreadProcessable {
+    companion object : BufferReadable<DisconnectS2CPacket>{
+        override fun read(buf: FriendlyByteBuf): DisconnectS2CPacket {
+            return DisconnectS2CPacket()
         }
 
     }

@@ -8,9 +8,9 @@ import calebxzhou.craftcone.net.protocol.*
 import calebxzhou.craftcone.net.protocol.account.LoginC2SPacket
 import calebxzhou.craftcone.net.protocol.account.RegisterC2SPacket
 import calebxzhou.craftcone.net.protocol.game.*
-import calebxzhou.craftcone.net.protocol.general.DisconnectByServerPacket
-import calebxzhou.craftcone.net.protocol.general.OkResponsePacket
-import calebxzhou.craftcone.net.protocol.general.SysMsgPacket
+import calebxzhou.craftcone.net.protocol.general.DisconnectS2CPacket
+import calebxzhou.craftcone.net.protocol.general.OkDataS2CPacket
+import calebxzhou.craftcone.net.protocol.general.SysMsgS2CPacket
 import calebxzhou.craftcone.net.protocol.room.*
 import net.minecraft.network.FriendlyByteBuf
 
@@ -27,14 +27,15 @@ object ConePacketSet {
     private val packetWriterClassIds = linkedMapOf<Class<out BufferWritable>,Int>()
     init {
         registerPacket(ConeRoom::read)
-        registerPacket(DisconnectByServerPacket::read)
-        registerPacket(OkResponsePacket::read)
-        registerPacket(SysMsgPacket::read)
+        registerPacket(DisconnectS2CPacket::read)
+        registerPacket(OkDataS2CPacket::read)
+        registerPacket(SysMsgS2CPacket::read)
 
         registerPacket(LoginC2SPacket::class.java)
         registerPacket(RegisterC2SPacket::class.java)
 
-        registerPacket(BlockDataS2CPacket::read)
+        registerPacket(BlockDataC2CPacket::read)
+        registerPacket(BlockDataC2CPacket::class.java)
         registerPacket(GetChunkC2SPacket::class.java)
         registerPacket(MovePlayerWpC2SPacket::class.java)
         registerPacket(MovePlayerXyzC2SPacket::class.java)

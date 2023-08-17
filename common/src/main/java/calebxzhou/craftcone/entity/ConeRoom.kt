@@ -5,6 +5,7 @@ import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.mc.Mcl
 import calebxzhou.craftcone.net.ConeNetSender.sendPacket
 import calebxzhou.craftcone.net.protocol.*
+import calebxzhou.craftcone.net.protocol.game.BlockDataC2CPacket
 import calebxzhou.craftcone.net.protocol.game.GetChunkC2SPacket
 import calebxzhou.craftcone.net.protocol.room.JoinRoomC2SPacket
 import calebxzhou.craftcone.net.protocol.room.LeaveRoomC2SPacket
@@ -166,7 +167,7 @@ data class ConeRoom(
     //当玩家破坏方块
     fun onPlayerBreakBlock(level: Level, blockPos: BlockPos) {
         sendPacket(
-            SetBlockPacket(
+            BlockDataC2CPacket(
                 getDimIdByLevel(level),
                 blockPos.asLong(),
                 blockStateOfId(Blocks.AIR.defaultBlockState())
@@ -177,7 +178,7 @@ data class ConeRoom(
     //当玩家右键点击方块
     fun onRightClickBlock(level: Level, pos: BlockPos) {
         sendPacket(
-            SetBlockPacket(
+            BlockDataC2CPacket(
                 getDimIdByLevel(level),
                 pos.asLong(),
                 blockStateOfId(level.getBlockState(pos))
@@ -199,7 +200,7 @@ data class ConeRoom(
 
     fun onPlayerPlaceBlock(level: Level, blockPos: BlockPos) {
         sendPacket(
-            SetBlockPacket(
+            BlockDataC2CPacket(
                 getDimIdByLevel(level),
                 blockPos.asLong(), blockStateOfId(level.getBlockState(blockPos))
             )
@@ -208,7 +209,7 @@ data class ConeRoom(
 
     fun onSetBlock(level: Level, blockPos: BlockPos, blockState: BlockState) {
         sendPacket(
-            SetBlockPacket(
+            BlockDataC2CPacket(
                 getDimIdByLevel(level),
                 blockPos.asLong(),
                 blockStateOfId(blockState)

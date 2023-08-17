@@ -11,12 +11,13 @@ import calebxzhou.craftcone.utils.LevelUt.setBlockDefault
 import net.minecraft.client.server.IntegratedServer
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.TagParser
 import net.minecraft.network.FriendlyByteBuf
 
 /**
  * Created  on 2023-07-17,17:16.
  */
-data class BlockDataS2CPacket(
+data class BlockDataC2CPacket(
     //维度ID
     val dimId: Int,
     //方块位置
@@ -24,14 +25,14 @@ data class BlockDataS2CPacket(
     //状态ID
     val stateId: Int,
     //NBT额外数据(没有就null)
-    val tag: CompoundTag?
+    val tag: CompoundTag? = null
 ) : Packet, InRoomProcessable, BufferWritable {
-    companion object : BufferReadable<BlockDataS2CPacket> {
-        override fun read(buf: FriendlyByteBuf) = BlockDataS2CPacket(
+    companion object : BufferReadable<BlockDataC2CPacket> {
+        override fun read(buf: FriendlyByteBuf) = BlockDataC2CPacket(
             buf.readVarInt(),
             buf.readLong(),
             buf.readVarInt(),
-            buf.readNbt()
+            TagParser.parseTag(buf.readUtf())
         )
 
     }
@@ -54,7 +55,7 @@ data class BlockDataS2CPacket(
         buf.writeVarInt(dimId)
         buf.writeLong(bpos)
         buf.writeVarInt(stateId)
-        buf.writeNbt(tag)
+        buf.writeUtf(tag?.asString?:"")
     }
 
 

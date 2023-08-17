@@ -10,10 +10,10 @@ import net.minecraft.network.FriendlyByteBuf
 /**
  * Created  on 2023-08-15,8:47.
  */
-data class OkResponsePacket(val data:FriendlyByteBuf): Packet,RenderThreadProcessable {
-    companion object : BufferReadable<OkResponsePacket>{
-        override fun read(buf: FriendlyByteBuf): OkResponsePacket {
-            return OkResponsePacket(buf)
+data class OkDataS2CPacket(val data:FriendlyByteBuf): Packet,RenderThreadProcessable {
+    companion object : BufferReadable<OkDataS2CPacket>{
+        override fun read(buf: FriendlyByteBuf): OkDataS2CPacket {
+            return OkDataS2CPacket(buf)
         }
 
     }

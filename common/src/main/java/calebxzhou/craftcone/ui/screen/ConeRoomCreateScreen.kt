@@ -1,13 +1,13 @@
 package calebxzhou.craftcone.ui.screen
 
 import calebxzhou.craftcone.mc.Mc
+import calebxzhou.craftcone.mc.Mc.blockStateAmount
 import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.protocol.MsgLevel
 import calebxzhou.craftcone.net.protocol.MsgType
 import calebxzhou.craftcone.net.protocol.room.CreateRoomC2SPacket
 import calebxzhou.craftcone.ui.components.ConeButton
 import calebxzhou.craftcone.ui.coneMsg
-import calebxzhou.craftcone.utils.blockStateAmount
 import com.mojang.blaze3d.vertex.PoseStack
 import dev.architectury.platform.Platform
 import net.minecraft.SharedConstants

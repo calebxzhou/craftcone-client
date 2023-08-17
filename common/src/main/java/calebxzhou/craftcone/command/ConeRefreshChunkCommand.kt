@@ -1,5 +1,6 @@
 package calebxzhou.craftcone.command
 
+import calebxzhou.craftcone.entity.ConeChunkPos
 import calebxzhou.craftcone.entity.ConeRoom
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.mc.Mcl
@@ -9,7 +10,6 @@ import com.mojang.brigadier.CommandDispatcher
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
 import net.minecraft.network.chat.Component
-import net.minecraft.world.level.ChunkPos
 
 /**
  * Created  on 2023-08-10,21:46.
@@ -23,7 +23,7 @@ object ConeRefreshChunkCommand {
             }
             for (x in chunkPosNow.x-16 .. chunkPosNow.x + 16){
                for(z in chunkPosNow.z - 16 .. chunkPosNow.z + 16){
-                   val cpos = ChunkPos(x, z)
+                   val cpos = ConeChunkPos(x, z)
                    val info = "刷新区块中 $x,$z"
                    Mcl.actionBarMsg = Component.literal(info)
                    logger.info { info }
@@ -31,7 +31,7 @@ object ConeRefreshChunkCommand {
                        val packet = GetChunkC2SPacket(it.getDimIdByLevel(Mcl.level ?: let {
                            logger.error { "当前游玩的存档为空" }
                            return@executes 1
-                       }), cpos.toLong())
+                       }), cpos)
                        ConeNetSender.sendPacket(packet)
                    }
 
