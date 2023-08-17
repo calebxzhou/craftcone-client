@@ -5,21 +5,21 @@ import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.mc.Mcl
 import calebxzhou.craftcone.net.ConeNetSender.sendPacket
 import calebxzhou.craftcone.net.protocol.*
-import calebxzhou.craftcone.net.protocol.game.GetChunkPacket
-import calebxzhou.craftcone.net.protocol.game.SetBlockPacket
-import calebxzhou.craftcone.net.protocol.room.JoinRoomPacket
-import calebxzhou.craftcone.net.protocol.room.LeaveRoomPacket
+import calebxzhou.craftcone.net.protocol.game.GetChunkC2SPacket
+import calebxzhou.craftcone.net.protocol.room.JoinRoomC2SPacket
+import calebxzhou.craftcone.net.protocol.room.LeaveRoomC2SPacket
 import calebxzhou.craftcone.ui.coneErr
 import calebxzhou.craftcone.ui.coneMsg
 import calebxzhou.craftcone.ui.screen.ConeRoomInfoScreen
+import calebxzhou.craftcone.utils.blockStateOfId
 import net.minecraft.client.gui.screens.TitleScreen
 import net.minecraft.core.BlockPos
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.state.BlockState
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -49,7 +49,7 @@ data class ConeRoom(
     val createTime: Long,
 ) : Packet, RenderThreadProcessable {
     //玩家列表
-    val players = hashMapOf<Int, ConePlayer>()
+    private val players = hashMapOf<Int, ConePlayer>()
 
     //维度ID以及对应res key
     private val dimIdKeys = hashMapOf<Int, ResourceKey<Level>>()
@@ -88,7 +88,7 @@ data class ConeRoom(
             }
             coneMsg(MsgType.Toast, MsgLevel.Info, "开始载入房间 $room")
             logger.info { "载入房间中 $room" }
-            sendPacket(JoinRoomPacket(room.id))
+            sendPacket(JoinRoomC2SPacket(room.id))
             now = room
             val levelName = "${Mc.playerName}-${room.id}"
             if (Mc.hasLevel(levelName)) {
@@ -105,7 +105,7 @@ data class ConeRoom(
                 return
             }
             logger.info { "正在卸载房间" }
-            sendPacket(LeaveRoomPacket())
+            sendPacket(LeaveRoomC2SPacket())
             now = null
         }
     }
@@ -124,6 +124,9 @@ data class ConeRoom(
 
     fun removePlayer(id: Int) {
         players -= id
+    }
+    fun getPlayer(id:Int): ConePlayer? {
+        return players[id]
     }
 
     val createTimeStr: String
@@ -145,7 +148,7 @@ data class ConeRoom(
     fun getLevelByDimId(dimId: Int): ServerLevel {
         val dim: ResourceKey<Level> = dimIdKeys[dimId] ?: run {
             //Cone.numDimKeyMap.forEach { (k, v) -> LOG.error("$k $v") }
-            logger.warn("找不到编号为${dimId}的维度。")
+            logger.warn("找不到编号为${dimId}的维度。默认为主世界！")
             Level.OVERWORLD
         }
 
@@ -161,12 +164,12 @@ data class ConeRoom(
     }
 
     //当玩家破坏方块
-    fun onBreakBlock(level: Level, blockPos: BlockPos) {
+    fun onPlayerBreakBlock(level: Level, blockPos: BlockPos) {
         sendPacket(
             SetBlockPacket(
                 getDimIdByLevel(level),
                 blockPos.asLong(),
-                Block.BLOCK_STATE_REGISTRY.getId(Blocks.AIR.defaultBlockState())
+                blockStateOfId(Blocks.AIR.defaultBlockState())
             )
         )
     }
@@ -177,7 +180,7 @@ data class ConeRoom(
             SetBlockPacket(
                 getDimIdByLevel(level),
                 pos.asLong(),
-                Block.BLOCK_STATE_REGISTRY.getId(level.getBlockState(pos))
+                blockStateOfId(level.getBlockState(pos))
             )
         );
     }
@@ -190,15 +193,25 @@ data class ConeRoom(
     //当客户端读取区块数据时
     fun onReadChunkData(level: Level, chunkPos: ConeChunkPos) {
         if (isSavedChunk(level, chunkPos)) {
-            sendPacket(GetChunkPacket(getDimIdByLevel(level), chunkPos))
+            sendPacket(GetChunkC2SPacket(getDimIdByLevel(level), chunkPos))
         }
     }
 
-    fun onPlaceBlock(level: Level, blockPos: BlockPos) {
+    fun onPlayerPlaceBlock(level: Level, blockPos: BlockPos) {
         sendPacket(
             SetBlockPacket(
                 getDimIdByLevel(level),
-                blockPos.asLong(), Block.BLOCK_STATE_REGISTRY.getId(level.getBlockState(blockPos))
+                blockPos.asLong(), blockStateOfId(level.getBlockState(blockPos))
+            )
+        )
+    }
+
+    fun onSetBlock(level: Level, blockPos: BlockPos, blockState: BlockState) {
+        sendPacket(
+            SetBlockPacket(
+                getDimIdByLevel(level),
+                blockPos.asLong(),
+                blockStateOfId(blockState)
             )
         )
     }

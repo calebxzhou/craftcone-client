@@ -5,7 +5,7 @@ import calebxzhou.craftcone.entity.ConeRoom
 import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.mc.Mcl
 import calebxzhou.craftcone.net.ConeNetSender.sendPacket
-import calebxzhou.craftcone.net.protocol.game.SendChatMsgPacket
+import calebxzhou.craftcone.net.protocol.game.SendChatMsgC2SPacket
 import com.mojang.brigadier.CommandDispatcher
 import dev.architectury.event.EventResult
 import dev.architectury.event.events.client.ClientPlayerEvent
@@ -68,7 +68,7 @@ object Events{
         serverPlayer: ServerPlayer?,
         intValue: IntValue?
     ): EventResult? {
-        ConeRoom.now?.onBreakBlock(level,blockPos)
+        ConeRoom.now?.onPlayerBreakBlock(level,blockPos)
         return EventResult.pass()
     }
 
@@ -77,7 +77,7 @@ object Events{
     private fun onChat(player: ServerPlayer?, component: Component?): EventResult? {
         if(player==null || component==null)
             return EventResult.pass()
-        sendPacket(SendChatMsgPacket(Mc.playerName,component.string))
+        sendPacket(SendChatMsgC2SPacket(Mc.playerName,component.string))
         return EventResult.pass()
     }
 

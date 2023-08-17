@@ -4,7 +4,7 @@ import calebxzhou.craftcone.entity.ConePlayer
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.ConeNetSender
-import calebxzhou.craftcone.net.protocol.account.LoginPacket
+import calebxzhou.craftcone.net.protocol.account.LoginC2SPacket
 import calebxzhou.craftcone.ui.components.ConeButton
 import calebxzhou.craftcone.ui.components.ConeEditBox
 import net.minecraft.client.gui.screens.Screen
@@ -18,7 +18,7 @@ class ConeLoginScreen(prevSc: Screen) : ConeOkCancelIntInputScreen(prevSc, "输�
     private val regBtn = ConeButton(w / 2 - 50, h - 20, 100, "注册") { Mc.screen = ConeRegisterScreen(this) }.also { registerWidget(it) }
 
     override fun onSubmit() {
-        ConeNetSender.sendPacket(LoginPacket(intValue, pwdBox.value))
+        ConeNetSender.sendPacket(LoginC2SPacket(intValue, pwdBox.value))
     }
 
     override fun onOk(data: FriendlyByteBuf) {

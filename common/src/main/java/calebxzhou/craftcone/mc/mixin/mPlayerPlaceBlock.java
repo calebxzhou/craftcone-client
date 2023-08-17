@@ -2,16 +2,11 @@ package calebxzhou.craftcone.mc.mixin;
 
 import calebxzhou.craftcone.entity.ConeRoom;
 import calebxzhou.craftcone.misc.NeighborUpdateManager;
-import calebxzhou.craftcone.net.ConeNetSender;
-import calebxzhou.craftcone.net.protocol.game.SetBlockPacket;
-import calebxzhou.craftcone.utils.LevelUt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -34,6 +29,6 @@ public class mPlayerPlaceBlock {
         if(NeighborUpdateManager.has(blockPos)){
             return;
         }
-        Objects.requireNonNull(ConeRoom.getNow()).onPlaceBlock(level,blockPos);
+        Objects.requireNonNull(ConeRoom.getNow()).onPlayerPlaceBlock(level,blockPos);
     }
 }

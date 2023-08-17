@@ -8,10 +8,11 @@ import net.minecraft.ChatFormatting
  * Created  on 2023-08-13,20:57.
  */
 enum class MsgLevel(val id:Int, val color:ConeColor, val chatFormat: ChatFormatting) {
-    Info(0,DefaultColors.KleinBlue.color,ChatFormatting.AQUA),
-    Ok(1,DefaultColors.OliveGreen.color,ChatFormatting.GREEN),
-    Warn(2,DefaultColors.LightYellow.color,ChatFormatting.GOLD),
-    Err(3,DefaultColors.LightRed.color,ChatFormatting.RED)
+    Normal(0,DefaultColors.White.color,ChatFormatting.WHITE),
+    Info(1,DefaultColors.KleinBlue.color,ChatFormatting.AQUA),
+    Ok(2,DefaultColors.OliveGreen.color,ChatFormatting.GREEN),
+    Warn(3,DefaultColors.LightYellow.color,ChatFormatting.GOLD),
+    Err(4,DefaultColors.LightRed.color,ChatFormatting.RED)
     ;
 
     companion object {

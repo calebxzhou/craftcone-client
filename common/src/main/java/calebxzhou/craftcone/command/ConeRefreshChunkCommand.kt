@@ -4,7 +4,7 @@ import calebxzhou.craftcone.entity.ConeRoom
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.mc.Mcl
 import calebxzhou.craftcone.net.ConeNetSender
-import calebxzhou.craftcone.net.protocol.game.GetChunkPacket
+import calebxzhou.craftcone.net.protocol.game.GetChunkC2SPacket
 import com.mojang.brigadier.CommandDispatcher
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
@@ -28,7 +28,7 @@ object ConeRefreshChunkCommand {
                    Mcl.actionBarMsg = Component.literal(info)
                    logger.info { info }
                    ConeRoom.now?.let {
-                       val packet = GetChunkPacket(it.getDimIdByLevel(Mcl.level ?: let {
+                       val packet = GetChunkC2SPacket(it.getDimIdByLevel(Mcl.level ?: let {
                            logger.error { "当前游玩的存档为空" }
                            return@executes 1
                        }), cpos.toLong())

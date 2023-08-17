@@ -5,16 +5,17 @@
   "client": [
     "aGui",
     "mAlwaysEnableTabList",
+    "mNeverDisableMultiplayer",
     "mTitleScreen"
   ],
   "mixins": [
     "aCollectingNeighborUpdater",
     "aMultiNeighborUpdate",
-    "mPlayerPlaceBlock",
-    "mPlayerChangeBlockState",
     "mChunkSerializer",
     "mCollectingNeighborUpdater",
-    "mLevel"
+    "mLevel",
+    "mPlayerChangeBlockState",
+    "mPlayerPlaceBlock"
   ],
   "injectors": {
     "defaultRequire": 1

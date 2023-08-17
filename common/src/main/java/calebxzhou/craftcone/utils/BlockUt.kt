@@ -3,6 +3,7 @@ package calebxzhou.craftcone.utils
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockState
 
 /**
@@ -22,4 +23,10 @@ fun chunkForEachBlock(level: Level,chunkPos: ChunkPos, doFor: (BlockPos, BlockSt
             }
         }
     }
+}
+fun idOfBlockState(id:Int): BlockState? {
+    return Block.BLOCK_STATE_REGISTRY.byId(id)
+}
+fun blockStateOfId(blockState: BlockState) : Int{
+    return Block.BLOCK_STATE_REGISTRY.getId(blockState)
 }

@@ -10,13 +10,13 @@ import net.minecraft.network.FriendlyByteBuf
 /**
  * Created  on 2023-07-06,8:48.
  */
-data class PlayerJoinedRoomPacket(
+data class PlayerJoinedRoomS2CPacket(
     val pid: Int,
     val pName: String
 ) : Packet, InRoomProcessable{
-    companion object : BufferReadable<PlayerJoinedRoomPacket>{
-        override fun read(buf: FriendlyByteBuf): PlayerJoinedRoomPacket {
-            return PlayerJoinedRoomPacket(buf.readVarInt(),buf.readUtf())
+    companion object : BufferReadable<PlayerJoinedRoomS2CPacket>{
+        override fun read(buf: FriendlyByteBuf): PlayerJoinedRoomS2CPacket {
+            return PlayerJoinedRoomS2CPacket(buf.readVarInt(),buf.readUtf())
         }
 
     }

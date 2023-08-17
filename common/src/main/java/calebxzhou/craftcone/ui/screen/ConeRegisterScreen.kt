@@ -4,7 +4,7 @@ import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.protocol.MsgLevel
 import calebxzhou.craftcone.net.protocol.MsgType
-import calebxzhou.craftcone.net.protocol.account.RegisterPacket
+import calebxzhou.craftcone.net.protocol.account.RegisterC2SPacket
 import calebxzhou.craftcone.ui.coneMsg
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.FriendlyByteBuf
@@ -15,7 +15,7 @@ import net.minecraft.network.FriendlyByteBuf
 class ConeRegisterScreen(prevSc: Screen) : ConeOkCancelInputScreen(prevSc,"注册${Mc.playerName}·请设置密码"), OkResponseScreen{
 
     override fun onSubmit() {
-        ConeNetSender.sendPacket(RegisterPacket(Mc.playerName,inputValue))
+        ConeNetSender.sendPacket(RegisterC2SPacket(Mc.playerName,inputValue))
     }
 
     override fun onOk(data:FriendlyByteBuf) {

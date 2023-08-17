@@ -16,7 +16,7 @@ import net.minecraft.network.FriendlyByteBuf
 /**
  * Created  on 2023-07-17,17:16.
  */
-data class BlockDataPacket(
+data class BlockDataS2CPacket(
     //维度ID
     val dimId: Int,
     //方块位置
@@ -25,11 +25,14 @@ data class BlockDataPacket(
     val stateId: Int,
     //NBT额外数据(没有就null)
     val tag: CompoundTag?
-) : Packet, InRoomProcessable , BufferWritable {
-    companion object : BufferReadable<BlockDataPacket> {
-        override fun read(buf: FriendlyByteBuf): BlockDataPacket {
-            return BlockDataPacket(buf.readVarInt(), buf.readLong(), buf.readVarInt(), buf.readNbt())
-        }
+) : Packet, InRoomProcessable, BufferWritable {
+    companion object : BufferReadable<BlockDataS2CPacket> {
+        override fun read(buf: FriendlyByteBuf) = BlockDataS2CPacket(
+            buf.readVarInt(),
+            buf.readLong(),
+            buf.readVarInt(),
+            buf.readNbt()
+        )
 
     }
 
@@ -49,6 +52,9 @@ data class BlockDataPacket(
 
     override fun write(buf: FriendlyByteBuf) {
         buf.writeVarInt(dimId)
+        buf.writeLong(bpos)
+        buf.writeVarInt(stateId)
+        buf.writeNbt(tag)
     }
 
 
