@@ -26,7 +26,6 @@ object ConeRefreshChunkCommand {
                    val cpos = ConeChunkPos(x, z)
                    val info = "刷新区块中 $x,$z"
                    Mcl.actionBarMsg = Component.literal(info)
-                   logger.info { info }
                    ConeRoom.now?.let {
                        val packet = GetChunkC2SPacket(it.getDimIdByLevel(Mcl.level ?: let {
                            logger.error { "当前游玩的存档为空" }

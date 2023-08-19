@@ -11,7 +11,6 @@ class ConeRoomInfoScreen(prevScreen: Screen, private val room: ConeRoom) :
     ConeOkCancelScreen(prevScreen, "房间 $room 的信息") {
 
     override fun doRender(poseStack: PoseStack, mouseX: Int, mouseY: Int, partialTick: Float) {
-        drawCenteredString(poseStack, font, "名称：${room.name}", width / 2, 20, textColor)
         drawCenteredString(poseStack, font, "mc版本：${room.mcVersion}", width / 2, 20 * 2, textColor)
         drawCenteredString(
             poseStack,

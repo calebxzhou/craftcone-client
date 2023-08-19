@@ -14,7 +14,7 @@ import net.minecraft.network.FriendlyByteBuf
  * Created  on 2023-07-17,21:30.
  */
 class ConeLoginScreen(prevSc: Screen) : ConeOkCancelIntInputScreen(prevSc, "输入UID和密码"), OkResponseScreen {
-    private val pwdBox = ConeEditBox(w / 2 - 100, h / 3, 200).also { registerWidget(it) }
+    private val pwdBox = ConeEditBox(w / 2 - 100, h / 2+50, 200).also { registerWidget(it) }
     private val regBtn = ConeButton(w / 2 - 50, h - 20, 100, "注册") { Mc.screen = ConeRegisterScreen(this) }.also { registerWidget(it) }
 
     override fun onSubmit() {

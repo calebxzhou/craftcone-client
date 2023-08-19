@@ -13,6 +13,7 @@ import net.minecraft.network.FriendlyByteBuf
 data class OkDataS2CPacket(val data:FriendlyByteBuf): Packet,RenderThreadProcessable {
     companion object : BufferReadable<OkDataS2CPacket>{
         override fun read(buf: FriendlyByteBuf): OkDataS2CPacket {
+            buf.retain()
             return OkDataS2CPacket(buf)
         }
 

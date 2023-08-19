@@ -18,6 +18,11 @@ fun coneMsg(type: MsgType,level: MsgLevel,msg:String){
         MsgType.Toast -> Mc.addToast(ConeToast(level,msg))
     }
 }
-fun coneErr(msg: String){
+//错误dialog
+fun coneErrD(msg: String){
     coneMsg(MsgType.Dialog,MsgLevel.Err,msg)
+}
+//消息toast
+fun coneInfoT(msg: String){
+    coneMsg(MsgType.Toast,MsgLevel.Info,msg)
 }

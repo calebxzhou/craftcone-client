@@ -24,9 +24,7 @@ object Mcl {
             throw IllegalStateException("Minecraft Not Start !")
         }
     private val MCS: IntegratedServer?
-        get() = Minecraft.getInstance().singleplayerServer?.also {
-            logger.warn { "本地服务器未启动！" }
-        }
+        get() = Minecraft.getInstance().singleplayerServer
 
     val gameMode
         get() = MC.gameMode?.playerMode
@@ -36,7 +34,7 @@ object Mcl {
     val player
         get() = MC.player
     val level
-        get() = MC.level
+        get() = MC.level?.dimension()?.let { MCS?.getLevel(it) }
     fun logicThread(todo: (IntegratedServer) -> Unit){
         MCS?.let {
             it.execute{

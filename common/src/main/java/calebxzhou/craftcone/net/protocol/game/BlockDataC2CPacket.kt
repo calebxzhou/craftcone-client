@@ -32,7 +32,12 @@ data class BlockDataC2CPacket(
             buf.readVarInt(),
             buf.readLong(),
             buf.readVarInt(),
-            TagParser.parseTag(buf.readUtf())
+            buf.readUtf().let{
+                if(it.isNotEmpty())
+                    TagParser.parseTag(it)
+                else
+                    null
+            }
         )
 
     }
@@ -47,6 +52,7 @@ data class BlockDataC2CPacket(
         val bpos = BlockPos.of(this.bpos)
         lvl.setBlockDefault(bpos, state)
         tag?.let {
+            logger.info { "载入NBT $it" }
             lvl.getBlockEntity(bpos)?.load(it)
         }
     }

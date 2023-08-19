@@ -4,7 +4,7 @@ import calebxzhou.craftcone.net.ConeConnection
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
-import calebxzhou.craftcone.ui.coneErr
+import calebxzhou.craftcone.ui.coneErrD
 import net.minecraft.network.FriendlyByteBuf
 
 /**
@@ -19,7 +19,7 @@ class DisconnectS2CPacket:Packet,RenderThreadProcessable {
     }
     override fun process() {
         ConeConnection.disconnect()
-        coneErr("被服务器断开连接")
+        coneErrD("被服务器断开连接")
 
     }
 }

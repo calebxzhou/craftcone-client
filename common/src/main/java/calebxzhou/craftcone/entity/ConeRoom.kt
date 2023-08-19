@@ -9,11 +9,12 @@ import calebxzhou.craftcone.net.protocol.game.BlockDataC2CPacket
 import calebxzhou.craftcone.net.protocol.game.GetChunkC2SPacket
 import calebxzhou.craftcone.net.protocol.room.JoinRoomC2SPacket
 import calebxzhou.craftcone.net.protocol.room.LeaveRoomC2SPacket
-import calebxzhou.craftcone.ui.coneErr
+import calebxzhou.craftcone.ui.coneErrD
 import calebxzhou.craftcone.ui.coneMsg
 import calebxzhou.craftcone.ui.screen.ConeRoomInfoScreen
 import calebxzhou.craftcone.utils.blockStateOfId
 import net.minecraft.client.gui.screens.TitleScreen
+import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.core.BlockPos
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.resources.ResourceKey
@@ -84,7 +85,7 @@ data class ConeRoom(
         //载入房间
         fun loadAndJoin(room: ConeRoom) {
             if (Mc.blockStateAmount != room.blockStateAmount) {
-                coneErr("方块状态数量不一致：您${Mc.blockStateAmount}个/房间${room.blockStateAmount}个。检查Mod列表！")
+                coneErrD("方块状态数量不一致：您${Mc.blockStateAmount}个/房间${room.blockStateAmount}个。检查Mod列表！")
                 return
             }
             coneMsg(MsgType.Toast, MsgLevel.Info, "开始载入房间 $room")
@@ -126,7 +127,8 @@ data class ConeRoom(
     fun removePlayer(id: Int) {
         players -= id
     }
-    fun getPlayer(id:Int): ConePlayer? {
+
+    fun getPlayer(id: Int): ConePlayer? {
         return players[id]
     }
 
@@ -160,12 +162,16 @@ data class ConeRoom(
     }
 
     //根据维度取维度编号（取不到就默认主世界，0）
-    fun getDimIdByLevel(level: Level): Int {
+    fun getDimIdByLevel(level: ServerLevel): Int {
         return dimKeysId[level.dimension()] ?: 0
     }
 
     //当玩家破坏方块
-    fun onPlayerBreakBlock(level: Level, blockPos: BlockPos) {
+    fun onPlayerBreakBlock(clientLevel: Level, blockPos: BlockPos) {
+        if(clientLevel is ClientLevel)
+            return
+
+        val level = Mcl.getLevel(clientLevel.dimension())?:return
         sendPacket(
             BlockDataC2CPacket(
                 getDimIdByLevel(level),
@@ -176,45 +182,64 @@ data class ConeRoom(
     }
 
     //当玩家右键点击方块
-    fun onRightClickBlock(level: Level, pos: BlockPos) {
-        sendPacket(
-            BlockDataC2CPacket(
-                getDimIdByLevel(level),
-                pos.asLong(),
-                blockStateOfId(level.getBlockState(pos))
-            )
-        );
+    fun onRightClickBlock(clientLevel: Level, pos: BlockPos) {
+        if(clientLevel is ClientLevel)
+            return
+        val level = Mcl.getLevel(clientLevel.dimension())?:return
+        //Mcl.logicThread {
+            val tag = level.getBlockEntity(pos)?.saveWithoutMetadata()
+            sendPacket(
+                BlockDataC2CPacket(
+                    getDimIdByLevel(level),
+                    pos.asLong(),
+                    blockStateOfId(level.getBlockState(pos)),
+                    tag
+                )
+            );
+       // }
     }
 
     //是否是存档区块
-    fun isSavedChunk(level: Level, chunkPos: ConeChunkPos): Boolean {
+    fun isSavedChunk(level: ServerLevel, chunkPos: ConeChunkPos): Boolean {
         return savedChunks[getDimIdByLevel(level)]?.contains(chunkPos) ?: false
     }
 
     //当客户端读取区块数据时
-    fun onReadChunkData(level: Level, chunkPos: ConeChunkPos) {
+    fun onReadChunkData(clientLevel: Level, chunkPos: ConeChunkPos) {
+        val level = Mcl.getLevel(clientLevel.dimension())?:return
         if (isSavedChunk(level, chunkPos)) {
             sendPacket(GetChunkC2SPacket(getDimIdByLevel(level), chunkPos))
         }
     }
 
-    fun onPlayerPlaceBlock(level: Level, blockPos: BlockPos) {
-        sendPacket(
-            BlockDataC2CPacket(
-                getDimIdByLevel(level),
-                blockPos.asLong(), blockStateOfId(level.getBlockState(blockPos))
-            )
-        )
-    }
-
-    fun onSetBlock(level: Level, blockPos: BlockPos, blockState: BlockState) {
+    fun onPlayerPlaceBlock(clientLevel: Level, blockPos: BlockPos) {
+        if(clientLevel is ClientLevel)
+            return
+        val level = Mcl.getLevel(clientLevel.dimension())?:return
         sendPacket(
             BlockDataC2CPacket(
                 getDimIdByLevel(level),
                 blockPos.asLong(),
-                blockStateOfId(blockState)
+                blockStateOfId(level.getBlockState(blockPos)),
+                level.getBlockEntity(blockPos)?.saveWithoutMetadata()
             )
         )
+    }
+
+    fun onSetBlock(clientLevel: Level, blockPos: BlockPos, blockState: BlockState) {
+        if(clientLevel is ClientLevel)
+            return
+        val level = Mcl.getLevel(clientLevel.dimension())?:return
+
+            val tag = level.getBlockEntity(blockPos)?.saveWithoutMetadata()
+            sendPacket(
+                BlockDataC2CPacket(
+                    getDimIdByLevel(level),
+                    blockPos.asLong(),
+                    blockStateOfId(blockState),
+                    tag
+                )
+            )
     }
 
 }
