@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "package": "calebxzhou.craftcone.mc.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "aGui",
+    "mAlwaysEnableTabList",
+    "mNeverDisableMultiplayer",
+    "mTitleScreen"
+  ],
+  "mixins": [
+    "aCollectingNeighborUpdater",
+    "aMultiNeighborUpdate",
+    "mCollectingNeighborUpdater",
+    "mOnChangeBlockState",
+    "mPlayerChangeBlockState",
+    "mPlayerPlaceBlock"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
