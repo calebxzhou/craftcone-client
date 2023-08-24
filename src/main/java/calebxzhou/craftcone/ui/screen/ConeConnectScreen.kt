@@ -6,6 +6,9 @@ import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.ConeConnection
 import net.minecraft.client.gui.screens.Screen
 import java.net.InetSocketAddress
+import java.nio.file.Files
+import kotlin.io.path.Path
+import kotlin.io.path.exists
 
 /**
  * Created  on 2023-06-19,21:47.
@@ -19,10 +22,12 @@ class ConeConnectScreen(val titleScreen: Screen) : ConeOkCancelInputScreen(title
 
     override fun init() {
         super.init()
-        val addr = System.getProperty("craftcone.server")
-        if (!addr.isNullOrBlank()) {
-            inputValue = addr
-            onSubmit()
+        inputValue = Path("coneServerAddr.txt").let {
+            if (it.exists()) {
+                Files.readString(it)
+            } else {
+                ""
+            }
         }
     }
 
@@ -36,7 +41,9 @@ class ConeConnectScreen(val titleScreen: Screen) : ConeOkCancelInputScreen(title
         val addr = InetSocketAddress(ip, port)
         screenTitle = "连接中 $addr"
         ConeConnection.connect(addr)
+        Files.writeString(Path("coneServerAddr.txt"), inputValue)
         Mc.screen = ConeLoginScreen(titleScreen)
+
     }
 
 

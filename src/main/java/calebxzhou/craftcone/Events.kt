@@ -8,9 +8,12 @@ import calebxzhou.craftcone.net.ConeNetSender.sendPacket
 import calebxzhou.craftcone.net.protocol.game.GetChunkC2SPacket
 import calebxzhou.craftcone.net.protocol.game.SendChatMsgC2SPacket
 import com.mojang.brigadier.CommandDispatcher
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents
+import net.minecraft.client.Minecraft
+import net.minecraft.client.multiplayer.ClientPacketListener
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
@@ -28,6 +31,9 @@ import net.minecraft.world.level.chunk.ChunkAccess
 import org.quiltmc.qsl.command.api.CommandRegistrationCallback
 import org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents
 import org.quiltmc.qsl.lifecycle.api.event.ServerWorldLoadEvents
+import org.quiltmc.qsl.networking.api.PacketSender
+import org.quiltmc.qsl.networking.api.client.ClientPlayConnectionEvents
+import org.quiltmc.qsl.screen.api.client.ScreenEvents
 
 /**
  * Created  on 2023-06-29,18:12.
@@ -38,9 +44,15 @@ object Events {
         ServerChunkEvents.CHUNK_LOAD.register(::onChunkLoad)
         ServerMessageEvents.CHAT_MESSAGE.register(::onChat)
         ServerWorldLoadEvents.LOAD.register(::onLevelLoad)
-        ServerLifecycleEvents.READY.register(::onLocalServerReady)
+        //ServerLifecycleEvents.READY.register(::onLocalServerReady)
         ServerLifecycleEvents.STOPPING.register(::onLocalServerStopping)
+        ClientPlayConnectionEvents.JOIN.register(::onClientPlayerJoin)
         CommandRegistrationCallback.EVENT.register(::onRegisterCommand)
+        //TODO 当关闭容器画面时 上传容器内容
+    }
+
+    private fun onClientPlayerJoin(listener: ClientPacketListener, sender: PacketSender, minecraft: Minecraft) {
+        Mcl.startLanShare(ConeRoom.now?.isCreative ?: false)
     }
 
     private fun onChat(message: PlayerChatMessage, player: ServerPlayer, bound: ChatType.Bound) {
@@ -86,7 +98,7 @@ object Events {
 
     //本地服务器启动时
     private fun onLocalServerReady(server: MinecraftServer) {
-        Mcl.startLanShare(ConeRoom.now?.isCreative ?: false)
+
     }
 
 
