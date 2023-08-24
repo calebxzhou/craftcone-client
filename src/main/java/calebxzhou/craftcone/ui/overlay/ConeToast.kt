@@ -17,8 +17,8 @@ class ConeToast(val level: MsgLevel, val msg: String, val time: Int = 5000) : To
     private var lastProgress = 0f
     private var lastProgressTime = 0L
 
-    private val msgLines: MutableList<FormattedCharSequence> = Mc.font.split(Component.literal(msg), 100)
-    private val width = max(200, msgLines.maxOf(Mc.font::width))
+    private val msgLines: MutableList<FormattedCharSequence> = Mc.font.split(Component.literal(msg), 150)
+    private val width = max(150, msgLines.maxOf(Mc.font::width))
 
     private var timeSinceLastVisible = 0L
     private var visibility = Toast.Visibility.SHOW
@@ -26,18 +26,18 @@ class ConeToast(val level: MsgLevel, val msg: String, val time: Int = 5000) : To
         guiGraphics: GuiGraphics,
         toastComponent: ToastComponent,
         timeSinceLastVisible: Long
-    ): Toast.Visibility? {
+    ): Toast.Visibility {
 
         guiGraphics.fill(3, 10, 157, 33, level.color.opaque);
         msgLines.forEachIndexed { i, str ->
-            guiGraphics.drawString(Mc.font, str, 18, 22 + i * 12, DefaultColors.White.color.opaque)
+            guiGraphics.drawString(Mc.font, str, 18, 18 + i * 12, DefaultColors.White.color.opaque)
         }
 
         if (progress > 0f) {
             renderProgress(guiGraphics, timeSinceLastVisible)
         }
         checkVisibility(timeSinceLastVisible)
-        renderDisplayTimeLeft(guiGraphics)
+        //renderDisplayTimeLeft(guiGraphics)
 
         return visibility
     }
