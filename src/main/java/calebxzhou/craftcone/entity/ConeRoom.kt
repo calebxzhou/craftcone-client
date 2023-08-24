@@ -116,12 +116,19 @@ data class ConeRoom(
         return "$name(ID=$id)"
     }
 
-    fun addPlayer(player: ConePlayer) {
+    fun onOtherPlayerJoined(player: ConePlayer) {
+        coneMsg(MsgType.Chat, MsgLevel.Info, "${player.name} 加入了房间")
         players += player.id to player
     }
 
-    fun removePlayer(id: Int) {
-        players -= id
+    fun onOtherPlayerLeft(uid: Int) {
+        players[uid]?.let {
+            coneMsg(MsgType.Chat, MsgLevel.Info, "${it.name} 离开了房间")
+            players -= id
+        } ?: let {
+            logger.warn("收到了玩家 $uid 的离开房间包 但是没找到此玩家")
+            return
+        }
     }
 
     fun getPlayer(id: Int): ConePlayer? {

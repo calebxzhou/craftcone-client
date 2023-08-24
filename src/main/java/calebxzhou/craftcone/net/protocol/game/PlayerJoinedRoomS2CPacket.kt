@@ -22,7 +22,6 @@ data class PlayerJoinedRoomS2CPacket(
     }
 
     override fun process(server: IntegratedServer, room: ConeRoom) {
-        coneMsg(MsgType.Chat, MsgLevel.Info, "$pName 加入了房间")
-        room.addPlayer(ConePlayer(pid, pName))
+        room.onOtherPlayerJoined(ConePlayer(pid, pName))
     }
 }
