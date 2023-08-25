@@ -12,8 +12,10 @@ import calebxzhou.craftcone.ui.coneErrD
 import calebxzhou.craftcone.ui.coneMsg
 import calebxzhou.craftcone.ui.screen.ConeRoomInfoScreen
 import calebxzhou.craftcone.utils.blockStateOfId
+import kotlinx.serialization.Transient
 import net.minecraft.client.gui.screens.TitleScreen
 import net.minecraft.client.multiplayer.ClientLevel
+import net.minecraft.client.server.IntegratedServer
 import net.minecraft.core.BlockPos
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.resources.ResourceKey
@@ -48,6 +50,9 @@ data class ConeRoom(
     val seed: Long,
     //创建时间
     val createTime: Long,
+    //TODO 本地服务器
+    /*@Transient
+    val localServer : IntegratedServer*/
 ) : Packet, RenderThreadProcessable {
     //玩家列表
     private val players = hashMapOf<Int, ConePlayer>()
@@ -58,6 +63,8 @@ data class ConeRoom(
     //维度res key以及对应维度ID
     private val dimKeysId = hashMapOf<ResourceKey<Level>, Int>()
 
+    val playerInfos
+        get() = players.values.map { it.mcPlayerInfo }
     companion object : BufferReadable<ConeRoom> {
         @JvmStatic
         var now: ConeRoom? = null
@@ -119,16 +126,15 @@ data class ConeRoom(
     fun onOtherPlayerJoined(player: ConePlayer) {
         coneMsg(MsgType.Chat, MsgLevel.Info, "${player.name} 加入了房间")
         players += player.id to player
+        Mcl.toServerPlayer(player).run { Mcl.spawnPlayer(this) }
     }
 
-    fun onOtherPlayerLeft(uid: Int) {
-        players[uid]?.let {
-            coneMsg(MsgType.Chat, MsgLevel.Info, "${it.name} 离开了房间")
-            players -= id
-        } ?: let {
-            logger.warn("收到了玩家 $uid 的离开房间包 但是没找到此玩家")
-            return
-        }
+    fun onOtherPlayerLeft(uid: Int) = players[uid]?.let {
+        coneMsg(MsgType.Chat, MsgLevel.Info, "${it.name} 离开了房间")
+        players -= id
+    } ?: let {
+        logger.warn("收到了玩家 $uid 的离开房间包 但是没找到此玩家")
+        return
     }
 
     fun getPlayer(id: Int): ConePlayer? {
@@ -136,12 +142,13 @@ data class ConeRoom(
     }
 
     val createTimeStr: String
-        get() = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(
-            LocalDateTime.ofInstant(
+        get() = LocalDateTime.ofInstant(
                 Instant.ofEpochMilli(createTime),
                 ZoneId.systemDefault()
-            )
-        )
+        ).let {
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(it)
+        }
+
 
     //新增维度
     fun addDimension(level: ServerLevel) {
@@ -151,23 +158,12 @@ data class ConeRoom(
     }
 
     //根据维度编号取维度
-    fun getLevelByDimId(dimId: Int): ServerLevel {
-        val dim: ResourceKey<Level> = dimIdKeys[dimId] ?: run {
-            //Cone.numDimKeyMap.forEach { (k, v) -> LOG.error("$k $v") }
-            logger.warn("找不到编号为${dimId}的维度。默认为主世界！")
-            Level.OVERWORLD
-        }
-
-        val level = Mcl.getLevel(dim) ?: run {
-            throw IllegalStateException("处理数据包时，未在游玩状态！")
-        }
-        return level
+    fun getLevelByDimId(dimId: Int): ServerLevel? = dimIdKeys[dimId]?.let {
+        Mcl.getLevel(it)
     }
 
     //根据维度取维度编号（取不到就默认主世界，0）
-    fun getDimIdByLevel(level: ServerLevel): Int {
-        return dimKeysId[level.dimension()] ?: 0
-    }
+    fun getDimIdByLevel(level: ServerLevel): Int = dimKeysId[level.dimension()] ?: 0
 
     //当玩家破坏方块
     fun onPlayerBreakBlock(clientLevel: Level, blockPos: BlockPos) {

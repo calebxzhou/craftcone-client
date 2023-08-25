@@ -1,18 +1,22 @@
 package calebxzhou.craftcone.mc
 
+import calebxzhou.craftcone.entity.ConePlayer
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.mc.mixin.aGui
 import calebxzhou.craftcone.net.protocol.MsgLevel
 import calebxzhou.craftcone.net.protocol.MsgType
 import calebxzhou.craftcone.ui.coneMsg
+import com.mojang.authlib.GameProfile
 import net.minecraft.client.Minecraft
 import net.minecraft.client.server.IntegratedServer
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.HttpUtil
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.Level
+import java.util.*
 
 /**
  * Created  on 2023-08-15,8:15.
@@ -50,15 +54,18 @@ object Mcl {
         return MCS?.getLevel(dim)
     }
 
-    fun startLanShare(isCreative: Boolean) {
-        MCS?.publishServer(
+    fun getOverworld(mcs: IntegratedServer): ServerLevel {
+        return mcs.overworld()
+    }
+
+    fun startLanShare(isCreative: Boolean) = MCS?.publishServer(
             if (isCreative) GameType.CREATIVE else GameType.SURVIVAL,
             isCreative,
             HttpUtil.getAvailablePort()
         ) ?: let {
             logger.error("启动局域网模式失败")
         }
-    }
+
 
     fun addChatMsg(msg: String) {
         addChatMsg(Component.literal(msg))
@@ -73,4 +80,12 @@ object Mcl {
             coneMsg(MsgType.Toast, MsgLevel.Info, component.string)
         }
     }
+
+    fun toServerPlayer(player: ConePlayer): ServerPlayer? =
+        MCS?.let {
+            ServerPlayer(it, it.overworld(), GameProfile(UUID(0, player.id.toLong()), player.name))
+        }
+
+    fun spawnPlayer(player: ServerPlayer) = MCS?.overworld()?.addNewPlayer(player)
+
 }

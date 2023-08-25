@@ -3,6 +3,7 @@ package calebxzhou.craftcone.net.protocol.game
 import calebxzhou.craftcone.entity.ConeRoom
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.mc.Mc
+import calebxzhou.craftcone.mc.Mcl
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.BufferWritable
 import calebxzhou.craftcone.net.protocol.InRoomProcessable
@@ -13,6 +14,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.TagParser
 import net.minecraft.network.FriendlyByteBuf
+import net.minecraft.world.level.Level
 
 /**
  * Created  on 2023-07-17,17:16.
@@ -48,7 +50,10 @@ data class BlockDataC2CPacket(
             logger.warn("找不到状态ID$stateId 对应的状态")
             return
         }
-        val lvl = room.getLevelByDimId(dimId)
+        val lvl = room.getLevelByDimId(dimId) ?: let {
+            logger.warn("找不到编号为${dimId}的维度。默认为主世界！")
+            Mcl.getOverworld(server)
+        }
         val bpos = BlockPos.of(this.bpos)
         lvl.setBlockDefault(bpos, state)
         tag?.let {

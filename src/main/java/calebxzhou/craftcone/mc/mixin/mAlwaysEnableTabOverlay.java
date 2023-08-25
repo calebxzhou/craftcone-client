@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
  */
 
 @Mixin(Gui.class)
-public class mAlwaysEnableTabList {
+public class mAlwaysEnableTabOverlay {
 	//按TAB永远可以看到玩家列表
 	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;isLocalServer()Z"))
 	private boolean isLocalServer(Minecraft instance) {
