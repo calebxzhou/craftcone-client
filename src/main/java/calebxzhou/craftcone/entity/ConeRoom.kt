@@ -3,6 +3,7 @@ package calebxzhou.craftcone.entity
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.mc.Mcl
+import calebxzhou.craftcone.mc.Mcl.toMcPlayer
 import calebxzhou.craftcone.net.ConeNetSender.sendPacket
 import calebxzhou.craftcone.net.protocol.*
 import calebxzhou.craftcone.net.protocol.game.BlockDataC2CPacket
@@ -50,9 +51,6 @@ data class ConeRoom(
     val seed: Long,
     //创建时间
     val createTime: Long,
-    //TODO 本地服务器
-    /*@Transient
-    val localServer : IntegratedServer*/
 ) : Packet, RenderThreadProcessable {
     //玩家列表
     private val players = hashMapOf<Int, ConePlayer>()
@@ -92,9 +90,9 @@ data class ConeRoom(
                 return
             }
             coneMsg(MsgType.Toast, MsgLevel.Info, "开始载入房间 $room")
+            now = room
             logger.info("载入房间中 $room")
             sendPacket(JoinRoomC2SPacket(room.id))
-            now = room
             val levelName = "${Mc.playerName}-${room.id}"
             if (Mc.hasLevel(levelName)) {
                 Mc.loadLevel(levelName)
@@ -126,12 +124,13 @@ data class ConeRoom(
     fun onOtherPlayerJoined(player: ConePlayer) {
         coneMsg(MsgType.Chat, MsgLevel.Info, "${player.name} 加入了房间")
         players += player.id to player
-        Mcl.toServerPlayer(player).run { Mcl.spawnPlayer(this) }
+        player.toMcPlayer().let { Mcl.spawnPlayer(it) }
     }
 
     fun onOtherPlayerLeft(uid: Int) = players[uid]?.let {
         coneMsg(MsgType.Chat, MsgLevel.Info, "${it.name} 离开了房间")
         players -= id
+        Mcl.despawnPlayer(it.toMcPlayer())
     } ?: let {
         logger.warn("收到了玩家 $uid 的离开房间包 但是没找到此玩家")
         return

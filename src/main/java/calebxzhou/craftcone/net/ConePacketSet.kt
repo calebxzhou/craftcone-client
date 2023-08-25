@@ -79,15 +79,13 @@ object ConePacketSet {
                 packet.process()
             }
 
-            is ServerThreadProcessable -> Mcl.logicThread {
-                packet.process(it)
-            }
-
-            is InRoomProcessable -> Mcl.logicThread {
-                packet.process(it, ConeRoom.now ?: let {
-                    logger.warn("收到了房间内数据包，但是没有在房间内！")
-                    return@logicThread
-                })
+            is InRoomProcessable -> ConeRoom.now?.let { room ->
+                Mcl.logicThread { serv ->
+                    packet.process(
+                        serv,
+                        room
+                    )
+                }
             }
         }
     }

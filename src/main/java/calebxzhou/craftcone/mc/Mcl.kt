@@ -3,9 +3,7 @@ package calebxzhou.craftcone.mc
 import calebxzhou.craftcone.entity.ConePlayer
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.mc.mixin.aGui
-import calebxzhou.craftcone.net.protocol.MsgLevel
-import calebxzhou.craftcone.net.protocol.MsgType
-import calebxzhou.craftcone.ui.coneMsg
+import calebxzhou.craftcone.utils.OsDialogUt
 import com.mojang.authlib.GameProfile
 import net.minecraft.client.Minecraft
 import net.minecraft.client.server.IntegratedServer
@@ -14,6 +12,7 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.HttpUtil
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.Level
 import java.util.*
@@ -27,11 +26,16 @@ object Mcl {
         get() = Minecraft.getInstance() ?: run {
             throw IllegalStateException("Minecraft Not Start !")
         }
-    private val MCS: IntegratedServer?
-        get() = Minecraft.getInstance().singleplayerServer
+    private val MCS: IntegratedServer
+        get() = Minecraft.getInstance().singleplayerServer ?: run {
+            "未在游玩状态就访问本地服务器了，这是bug".let {
+                OsDialogUt.showMessageBox("error", it)
+                throw IllegalStateException(it)
+            }
+        }
 
     val isLocalServerReady
-        get() = MCS?.isReady ?: false
+        get() = MCS.isReady ?: false
     val gameMode
         get() = MC.gameMode?.playerMode
     var actionBarMsg
@@ -40,10 +44,10 @@ object Mcl {
     val player
         get() = MC.player
     val level
-        get() = MC.level?.dimension()?.let { MCS?.getLevel(it) }
+        get() = MC.level?.dimension()?.let { MCS.getLevel(it) }
 
     fun logicThread(todo: (IntegratedServer) -> Unit) {
-        MCS?.let {
+        MCS.let {
             it.execute {
                 todo.invoke(it)
             }
@@ -51,7 +55,7 @@ object Mcl {
     }
 
     fun getLevel(dim: ResourceKey<Level>): ServerLevel? {
-        return MCS?.getLevel(dim)
+        return MCS.getLevel(dim)
     }
 
     fun getOverworld(mcs: IntegratedServer): ServerLevel {
@@ -73,19 +77,16 @@ object Mcl {
 
     fun addChatMsg(component: Component) {
         logger.info("系统消息 $component")
-        try {
-            MC.gui.chat.addMessage(component)
-        } catch (e: NullPointerException) {
-            logger.warn("收到了聊天消息，但是客户端没在游玩中")
-            coneMsg(MsgType.Toast, MsgLevel.Info, component.string)
-        }
+        MC.gui.chat.addMessage(component)
     }
 
-    fun toServerPlayer(player: ConePlayer): ServerPlayer? =
-        MCS?.let {
-            ServerPlayer(it, it.overworld(), GameProfile(UUID(0, player.id.toLong()), player.name))
-        }
+    fun ConePlayer.toMcPlayer(): ServerPlayer =
+        ServerPlayer(MCS, MCS.overworld(), GameProfile(UUID(0, id.toLong()), name))
 
-    fun spawnPlayer(player: ServerPlayer) = MCS?.overworld()?.addNewPlayer(player)
+    fun spawnPlayer(player: ServerPlayer) = MCS.overworld().addFreshEntity(player)
+
+    fun despawnPlayer(player: ServerPlayer) = MCS.overworld().removePlayerImmediately(
+        player, Entity.RemovalReason.DISCARDED
+    )
 
 }
