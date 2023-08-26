@@ -15,29 +15,7 @@ object NeighborUpdateManager {
 
     //当mc添加neighbor update时
     @JvmStatic
-    fun onAdd(updates: CollectingNeighborUpdater.NeighborUpdates) {
-        val bpos = when (updates) {
-            is ShapeUpdate -> {
-                updates.pos
-            }
-
-            is CollectingNeighborUpdater.SimpleNeighborUpdate -> {
-                updates.pos
-            }
-
-            is CollectingNeighborUpdater.MultiNeighborUpdate -> {
-                (updates as aMultiNeighborUpdate).sourcePos
-            }
-
-            is CollectingNeighborUpdater.FullNeighborUpdate -> {
-                updates.pos
-            }
-
-            else -> {
-                logger.error("无效的方块更新！ $updates")
-                return
-            }
-        }
+    fun onAdd(bpos: BlockPos) {
         blockPosesInUpdate += bpos
     }
 
