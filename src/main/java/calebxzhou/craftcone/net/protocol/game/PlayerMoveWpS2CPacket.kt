@@ -2,7 +2,7 @@ package calebxzhou.craftcone.net.protocol.game
 
 import calebxzhou.craftcone.entity.ConeRoom
 import calebxzhou.craftcone.logger
-import calebxzhou.craftcone.mc.Mcl.toMcPlayer
+import calebxzhou.craftcone.mc.toMcPlayer
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.InRoomProcessable
 import calebxzhou.craftcone.net.protocol.Packet
@@ -24,7 +24,7 @@ data class PlayerMoveWpS2CPacket(
     }
 
     override fun process(server: IntegratedServer, room: ConeRoom) {
-        room.getPlayer(pid)?.toMcPlayer()?.let {
+        room.getPlayer(pid)?.toMcPlayer(server)?.let {
             it.xRot = w
             it.yRot = p
         } ?: let {

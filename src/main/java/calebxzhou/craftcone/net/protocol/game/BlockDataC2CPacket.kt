@@ -50,7 +50,7 @@ data class BlockDataC2CPacket(
             logger.warn("找不到状态ID$stateId 对应的状态")
             return
         }
-        val lvl = room.getLevelByDimId(dimId) ?: let {
+        val lvl = room.getLevelByDimId(dimId)?.let { server.getLevel(it) } ?: let {
             logger.warn("找不到编号为${dimId}的维度。默认为主世界！")
             Mcl.getOverworld(server)
         }

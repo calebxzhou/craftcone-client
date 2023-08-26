@@ -4,15 +4,18 @@ import calebxzhou.craftcone.command.ConeRefreshChunkCommand
 import calebxzhou.craftcone.entity.ConeChunkPos
 import calebxzhou.craftcone.entity.ConeRoom
 import calebxzhou.craftcone.mc.Mcl
+import calebxzhou.craftcone.misc.ChunkGenManager
 import calebxzhou.craftcone.net.ConeNetSender.sendPacket
 import calebxzhou.craftcone.net.protocol.game.GetChunkC2SPacket
 import calebxzhou.craftcone.net.protocol.game.SendChatMsgC2SPacket
 import com.mojang.brigadier.CommandDispatcher
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents
 import net.minecraft.client.Minecraft
+import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.multiplayer.ClientPacketListener
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
@@ -28,6 +31,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.chunk.ChunkAccess
+import net.minecraft.world.level.chunk.LevelChunk
 import org.quiltmc.qsl.command.api.CommandRegistrationCallback
 import org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents
 import org.quiltmc.qsl.lifecycle.api.event.ServerWorldLoadEvents
@@ -41,17 +45,30 @@ import org.quiltmc.qsl.screen.api.client.ScreenEvents
 object Events {
     fun register() {
         PlayerBlockBreakEvents.AFTER.register(::onBreakBlock)
-        ServerChunkEvents.CHUNK_LOAD.register(::onChunkLoad)
         ServerMessageEvents.CHAT_MESSAGE.register(::onChat)
         ServerWorldLoadEvents.LOAD.register(::onLevelLoad)
         //ServerLifecycleEvents.READY.register(::onLocalServerReady)
         ServerLifecycleEvents.STOPPING.register(::onLocalServerStopping)
         ClientPlayConnectionEvents.JOIN.register(::onClientPlayerJoin)
+        ClientPlayConnectionEvents.DISCONNECT.register(::onClientPlayerLeave)
+        ClientChunkEvents.CHUNK_LOAD.register(::onClientChunkLoad)
         CommandRegistrationCallback.EVENT.register(::onRegisterCommand)
         //TODO 当关闭容器画面时 上传容器内容
     }
 
+    private fun onClientChunkLoad(level: ClientLevel, chunk: LevelChunk) {
+        ConeRoom.now?.let {
+            sendPacket(GetChunkC2SPacket(it.getDimIdByLevel(level), chunk.pos.run { ConeChunkPos(x, z) }))
+        }
+    }
+
+    private fun onClientPlayerLeave(listener: ClientPacketListener, minecraft: Minecraft) {
+        Mcl.isLocalServerReady = false
+        ConeRoom.unload()
+    }
+
     private fun onClientPlayerJoin(listener: ClientPacketListener, sender: PacketSender, minecraft: Minecraft) {
+        Mcl.isLocalServerReady = true
         Mcl.startLanShare(ConeRoom.now?.isCreative ?: false)
     }
 
@@ -70,14 +87,7 @@ object Events {
         ConeRoom.now?.onPlayerBreakBlock(level, blockPos)
     }
 
-    private fun onChunkLoad(level: ServerLevel?, chunk: ChunkAccess) {
-        ConeRoom.now?.let {
-            sendPacket(GetChunkC2SPacket(it.getDimIdByLevel(level ?: return), chunk.pos.run { ConeChunkPos(x, z) }))
-        }
-    }
-
     private fun onLevelLoad(server: MinecraftServer, level: ServerLevel) {
-        logger.info("正在载入level $level")
         ConeRoom.now?.addDimension(level)
     }
 
@@ -91,8 +101,7 @@ object Events {
 
 
     private fun onLocalServerStopping(minecraftServer: MinecraftServer?) {
-        logger.info("本地服务器正在停止")
-        ConeRoom.unload()
+        ChunkGenManager.clear()
     }
 
 

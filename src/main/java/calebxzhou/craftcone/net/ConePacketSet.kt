@@ -73,23 +73,6 @@ object ConePacketSet {
         null
     }
 
-    fun processPacket(packet: Packet) {
-        when (packet) {
-            is RenderThreadProcessable -> Mc.renderThread {
-                packet.process()
-            }
-
-            is InRoomProcessable -> ConeRoom.now?.let { room ->
-                Mcl.logicThread { serv ->
-                    packet.process(
-                        serv,
-                        room
-                    )
-                }
-            }
-        }
-    }
-
 
     fun getPacketId(packetClass: Class<out Packet>): Int? = packetWriterClassIds[packetClass]
     enum class PacketType {

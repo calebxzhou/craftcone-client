@@ -23,6 +23,6 @@ class ConeNetReceiver : SimpleChannelInboundHandler<Packet>() {
     }
 
     override fun channelRead0(ctx: ChannelHandlerContext?, msg: Packet) {
-        ConePacketSet.processPacket(msg)
+        ConePacketProcessor.processPacket(msg)
     }
 }

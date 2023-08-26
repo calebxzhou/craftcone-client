@@ -3,7 +3,8 @@ package calebxzhou.craftcone.entity
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.mc.Mcl
-import calebxzhou.craftcone.mc.Mcl.toMcPlayer
+import calebxzhou.craftcone.mc.Mcl.MCS
+import calebxzhou.craftcone.mc.toMcPlayer
 import calebxzhou.craftcone.net.ConeNetSender.sendPacket
 import calebxzhou.craftcone.net.protocol.*
 import calebxzhou.craftcone.net.protocol.game.BlockDataC2CPacket
@@ -13,10 +14,8 @@ import calebxzhou.craftcone.ui.coneErrD
 import calebxzhou.craftcone.ui.coneMsg
 import calebxzhou.craftcone.ui.screen.ConeRoomInfoScreen
 import calebxzhou.craftcone.utils.blockStateOfId
-import kotlinx.serialization.Transient
 import net.minecraft.client.gui.screens.TitleScreen
 import net.minecraft.client.multiplayer.ClientLevel
-import net.minecraft.client.server.IntegratedServer
 import net.minecraft.core.BlockPos
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.resources.ResourceKey
@@ -55,15 +54,15 @@ data class ConeRoom(
     //玩家列表
     private val players = hashMapOf<Int, ConePlayer>()
 
-    //维度ID以及对应res key
-    private val dimIdKeys = hashMapOf<Int, ResourceKey<Level>>()
-
-    //维度res key以及对应维度ID
-    private val dimKeysId = hashMapOf<ResourceKey<Level>, Int>()
-
     val playerInfos
         get() = players.values.map { it.mcPlayerInfo }
+
     companion object : BufferReadable<ConeRoom> {
+        //维度ID以及对应res key
+        private val dimIdKeys = hashMapOf<Int, ResourceKey<Level>>()
+
+        //维度res key以及对应维度ID
+        private val dimKeysId = hashMapOf<ResourceKey<Level>, Int>()
         @JvmStatic
         var now: ConeRoom? = null
             private set
@@ -83,22 +82,29 @@ data class ConeRoom(
             )
         }
 
-        //载入房间
-        fun loadAndJoin(room: ConeRoom) {
+        //载入房间地图
+        fun loadRoomLevel(room: ConeRoom) {
             if (Mc.blockStateAmount != room.blockStateAmount) {
                 coneErrD("方块状态数量不一致：您${Mc.blockStateAmount}个/房间${room.blockStateAmount}个。检查Mod列表！")
                 return
             }
+
             coneMsg(MsgType.Toast, MsgLevel.Info, "开始载入房间 $room")
-            now = room
             logger.info("载入房间中 $room")
-            sendPacket(JoinRoomC2SPacket(room.id))
             val levelName = "${Mc.playerName}-${room.id}"
+            join(room)
             if (Mc.hasLevel(levelName)) {
                 Mc.loadLevel(levelName)
             } else {
                 Mc.createLevel(levelName, room.isCreative, room.seed)
             }
+
+        }
+
+        fun join(room: ConeRoom) {
+            sendPacket(JoinRoomC2SPacket(room.id))
+            now = room
+
         }
 
         //卸载房间
@@ -124,13 +130,13 @@ data class ConeRoom(
     fun onOtherPlayerJoined(player: ConePlayer) {
         coneMsg(MsgType.Chat, MsgLevel.Info, "${player.name} 加入了房间")
         players += player.id to player
-        player.toMcPlayer().let { Mcl.spawnPlayer(it) }
+        player.toMcPlayer(MCS!!).let { Mcl.spawnPlayer(it) }
     }
 
     fun onOtherPlayerLeft(uid: Int) = players[uid]?.let {
         coneMsg(MsgType.Chat, MsgLevel.Info, "${it.name} 离开了房间")
         players -= id
-        Mcl.despawnPlayer(it.toMcPlayer())
+        Mcl.despawnPlayer(it.toMcPlayer(MCS!!))
     } ?: let {
         logger.warn("收到了玩家 $uid 的离开房间包 但是没找到此玩家")
         return
@@ -151,24 +157,22 @@ data class ConeRoom(
 
     //新增维度
     fun addDimension(level: ServerLevel) {
+        logger.info("正在载入level ${level.dimension()}")
         val id = dimIdKeys.size
         dimIdKeys += id to level.dimension()
         dimKeysId += level.dimension() to id
     }
 
     //根据维度编号取维度
-    fun getLevelByDimId(dimId: Int): ServerLevel? = dimIdKeys[dimId]?.let {
-        Mcl.getLevel(it)
-    }
+    fun getLevelByDimId(dimId: Int) = dimIdKeys[dimId]
 
     //根据维度取维度编号（取不到就默认主世界，0）
-    fun getDimIdByLevel(level: ServerLevel): Int = dimKeysId[level.dimension()] ?: 0
+    fun getDimIdByLevel(level: Level): Int = dimKeysId[level.dimension()] ?: 0
 
     //当玩家破坏方块
     fun onPlayerBreakBlock(clientLevel: Level, blockPos: BlockPos) {
         if (clientLevel is ClientLevel)
             return
-
         val level = Mcl.getLevel(clientLevel.dimension()) ?: return
         sendPacket(
             BlockDataC2CPacket(

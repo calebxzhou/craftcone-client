@@ -15,11 +15,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class mCollectingNeighborUpdater {
 	@Inject(method = "addAndRun", at = @At(value = "HEAD"/*,target = "Ljava/util/ArrayDeque;push(Ljava/lang/Object;)V"*/))
 	private void onAdd(BlockPos blockPos, CollectingNeighborUpdater.NeighborUpdates neighborUpdates, CallbackInfo ci) {
-		NeighborUpdateManager.onAdd(neighborUpdates);
+		//NeighborUpdateManager.onAdd(neighborUpdates);
 	}
 
 	@Inject(method = "runUpdates", at = @At(value = "INVOKE", target = "Ljava/util/ArrayDeque;clear()V"))
 	private void onClear(CallbackInfo ci) {
-		NeighborUpdateManager.onClear();
+		//NeighborUpdateManager.onClear();
 	}
 }

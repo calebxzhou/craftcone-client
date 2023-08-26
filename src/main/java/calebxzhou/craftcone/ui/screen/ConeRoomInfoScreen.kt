@@ -32,7 +32,7 @@ class ConeRoomInfoScreen(prevScreen: Screen, private val room: ConeRoom) :
     }
 
     override fun onSubmit() {
-        ConeRoom.loadAndJoin(room)
+        ConeRoom.loadRoomLevel(room)
     }
 
     override fun onPressEnterKey() {

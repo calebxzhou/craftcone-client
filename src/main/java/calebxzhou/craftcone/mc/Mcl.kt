@@ -26,16 +26,11 @@ object Mcl {
         get() = Minecraft.getInstance() ?: run {
             throw IllegalStateException("Minecraft Not Start !")
         }
-    private val MCS: IntegratedServer
-        get() = Minecraft.getInstance().singleplayerServer ?: run {
-            "未在游玩状态就访问本地服务器了，这是bug".let {
-                OsDialogUt.showMessageBox("error", it)
-                throw IllegalStateException(it)
-            }
-        }
+    val MCS: IntegratedServer?
+        get() = Minecraft.getInstance().singleplayerServer
 
-    val isLocalServerReady
-        get() = MCS.isReady ?: false
+    @JvmStatic
+    var isLocalServerReady = false
     val gameMode
         get() = MC.gameMode?.playerMode
     var actionBarMsg
@@ -44,10 +39,10 @@ object Mcl {
     val player
         get() = MC.player
     val level
-        get() = MC.level?.dimension()?.let { MCS.getLevel(it) }
+        get() = MC.level?.dimension()?.let { MCS?.getLevel(it) }
 
     fun logicThread(todo: (IntegratedServer) -> Unit) {
-        MCS.let {
+        MCS?.let {
             it.execute {
                 todo.invoke(it)
             }
@@ -55,7 +50,7 @@ object Mcl {
     }
 
     fun getLevel(dim: ResourceKey<Level>): ServerLevel? {
-        return MCS.getLevel(dim)
+        return MCS?.getLevel(dim)
     }
 
     fun getOverworld(mcs: IntegratedServer): ServerLevel {
@@ -80,13 +75,17 @@ object Mcl {
         MC.gui.chat.addMessage(component)
     }
 
-    fun ConePlayer.toMcPlayer(): ServerPlayer =
-        ServerPlayer(MCS, MCS.overworld(), GameProfile(UUID(0, id.toLong()), name))
 
-    fun spawnPlayer(player: ServerPlayer) = MCS.overworld().addFreshEntity(player)
+    fun spawnPlayer(player: ServerPlayer) = MCS?.let { getOverworld(it).addFreshEntity(player) }
 
-    fun despawnPlayer(player: ServerPlayer) = MCS.overworld().removePlayerImmediately(
-        player, Entity.RemovalReason.DISCARDED
-    )
+    fun despawnPlayer(player: ServerPlayer) = MCS?.let {
+        getOverworld(it).removePlayerImmediately(
+            player, Entity.RemovalReason.DISCARDED
+        )
+    }
+
 
 }
+
+fun ConePlayer.toMcPlayer(mcs: IntegratedServer): ServerPlayer =
+    ServerPlayer(mcs, mcs.overworld(), GameProfile(UUID(0, id.toLong()), name))
