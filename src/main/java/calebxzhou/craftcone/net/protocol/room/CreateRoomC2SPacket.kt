@@ -15,8 +15,6 @@ data class CreateRoomC2SPacket(
     val mcVersion: String,
     //是否创造模式
     val isCreative: Boolean,
-    //mod加载器？Fabric：Forge
-    val isFabric: Boolean,
     //方块状态数量
     val blockStateAmount: Int,
 ) : Packet, BufferWritable {
@@ -24,7 +22,6 @@ data class CreateRoomC2SPacket(
         buf.writeUtf(rName)
         buf.writeUtf(mcVersion)
         buf.writeBoolean(isCreative)
-        buf.writeBoolean(isFabric)
         buf.writeVarInt(blockStateAmount)
     }
 

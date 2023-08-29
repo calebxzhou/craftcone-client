@@ -112,6 +112,8 @@ data class ConeRoom(
             }
             logger.info("正在卸载房间")
             sendPacket(LeaveRoomC2SPacket())
+            dimIdKeys.clear()
+            dimKeysId.clear()
             now = null
         }
     }
@@ -172,7 +174,7 @@ data class ConeRoom(
         sendPacket(
             BlockDataC2CPacket(
                 getDimIdByLevel(level),
-                blockPos.asLong(),
+                blockPos,
                 blockStateOfId(Blocks.AIR.defaultBlockState())
             )
         )
@@ -188,7 +190,7 @@ data class ConeRoom(
         sendPacket(
             BlockDataC2CPacket(
                 getDimIdByLevel(level),
-                pos.asLong(),
+                pos,
                 blockStateOfId(level.getBlockState(pos)),
                 tag
             )
@@ -204,7 +206,7 @@ data class ConeRoom(
         sendPacket(
             BlockDataC2CPacket(
                 getDimIdByLevel(level),
-                blockPos.asLong(),
+                blockPos,
                 blockStateOfId(level.getBlockState(blockPos)),
                 level.getBlockEntity(blockPos)?.saveWithoutMetadata()
             )
@@ -224,7 +226,7 @@ data class ConeRoom(
         sendPacket(
             BlockDataC2CPacket(
                 getDimIdByLevel(level),
-                blockPos.asLong(),
+                blockPos,
                 blockStateOfId(blockState),
                 tag
             )

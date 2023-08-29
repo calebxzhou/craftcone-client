@@ -11,6 +11,7 @@ class ConeByteBuf(source: ByteBuf) : FriendlyByteBuf(source) {
             writeBytes(objectId.toByteArray())
             return this
         }
-        fun FriendlyByteBuf.readObjectId(): ObjectId = ObjectId(readBytes(12).array())
+
+        fun FriendlyByteBuf.readObjectId(): ObjectId = ObjectId(readBytes(12).nioBuffer())
     }
 }

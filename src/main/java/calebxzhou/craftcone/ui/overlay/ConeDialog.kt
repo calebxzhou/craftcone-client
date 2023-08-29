@@ -7,6 +7,8 @@ import com.mojang.blaze3d.platform.InputConstants
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Overlay
+import org.lwjgl.glfw.GLFW
+import org.lwjgl.glfw.GLFW.*
 
 /**
  * Created  on 2023-07-23,22:05.
@@ -31,17 +33,13 @@ class ConeDialog private constructor(val type: MsgLevel, val msg: String) : Over
         )
         guiGraphics.drawCenteredString(
             Mc.font,
-            "(L+R)Alt = 明白",
+            "<右键点击：明白>",
             w / 2,
             h / 2 + 10,
             DefaultColors.White.color.opaque
         )
         val handle = Mc.hwnd
-        if (InputConstants.isKeyDown(handle, InputConstants.KEY_LALT) && InputConstants.isKeyDown(
-                handle,
-                InputConstants.KEY_RALT
-            )
-        ) {
+        if (glfwGetMouseButton(handle, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
             Mc.overlay = null
         }
     }

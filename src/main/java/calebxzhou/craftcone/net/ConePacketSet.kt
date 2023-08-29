@@ -3,12 +3,11 @@ package calebxzhou.craftcone.net
 import calebxzhou.craftcone.entity.ConeRoom
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.net.protocol.*
+import calebxzhou.craftcone.net.protocol.account.LoginByNameC2SPacket
 import calebxzhou.craftcone.net.protocol.account.LoginByUidC2SPacket
 import calebxzhou.craftcone.net.protocol.account.RegisterC2SPacket
 import calebxzhou.craftcone.net.protocol.game.*
-import calebxzhou.craftcone.net.protocol.general.DisconnectS2CPacket
-import calebxzhou.craftcone.net.protocol.general.OkDataS2CPacket
-import calebxzhou.craftcone.net.protocol.general.SysMsgS2CPacket
+import calebxzhou.craftcone.net.protocol.general.*
 import calebxzhou.craftcone.net.protocol.room.*
 import net.minecraft.network.FriendlyByteBuf
 
@@ -28,11 +27,15 @@ object ConePacketSet {
 
     init {
         registerPacket(ConeRoom::read)
+
         registerPacket(DisconnectS2CPacket::read)
+        registerPacket(GetServerInfoC2SPacket::class.java)
         registerPacket(OkDataS2CPacket::read)
+        registerPacket(ServerInfoS2CPacket::read)
         registerPacket(SysMsgS2CPacket::read)
 
         registerPacket(LoginByUidC2SPacket::class.java)
+        registerPacket(LoginByNameC2SPacket::class.java)
         registerPacket(RegisterC2SPacket::class.java)
 
         registerPacket(BlockDataC2CPacket::read)

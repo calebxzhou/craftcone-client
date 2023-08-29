@@ -18,7 +18,6 @@ object ConeNetSender {
 
     //TODO 做容器同步
 
-    val workGroup = NioEventLoopGroup()
 
     //发送线程
     private val senderScope = CoroutineScope(Dispatchers.IO)

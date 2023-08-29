@@ -13,9 +13,8 @@ data class SysMsgS2CPacket(
     val msg: String
 ) : Packet, RenderThreadProcessable {
     companion object : BufferReadable<SysMsgS2CPacket> {
-        override fun read(buf: FriendlyByteBuf): SysMsgS2CPacket {
-            return SysMsgS2CPacket(MsgType[buf.readVarInt()], MsgLevel[buf.readVarInt()], buf.readUtf())
-        }
+        override fun read(buf: FriendlyByteBuf): SysMsgS2CPacket =
+            SysMsgS2CPacket(MsgType[buf.readVarInt()], MsgLevel[buf.readVarInt()], buf.readUtf())
 
     }
 

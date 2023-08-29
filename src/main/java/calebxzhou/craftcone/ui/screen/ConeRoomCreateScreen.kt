@@ -2,6 +2,7 @@ package calebxzhou.craftcone.ui.screen
 
 import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.mc.Mc.blockStateAmount
+import calebxzhou.craftcone.net.ConeByteBuf.Companion.readObjectId
 import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.protocol.MsgLevel
 import calebxzhou.craftcone.net.protocol.MsgType
@@ -22,7 +23,6 @@ class ConeRoomCreateScreen(prevSc: Screen) : ConeOkCancelInputScreen(prevSc, "�
     OkResponseScreen {
     private val gameModeBtn: ConeButton = ConeButton(w / 2, 40, 80, "游戏模式：生存") { onChangeGameMode() }
     private val modAmount = QuiltLoader.getAllMods().size
-    private val isFabric = true
     private var isCreative = false
     override fun init() {
         super.init()
@@ -32,14 +32,14 @@ class ConeRoomCreateScreen(prevSc: Screen) : ConeOkCancelInputScreen(prevSc, "�
 
     override fun onSubmit() {
         ConeNetSender.sendPacket(
-            CreateRoomC2SPacket(inputValue, SharedConstants.VERSION_STRING, isCreative, isFabric, blockStateAmount)
+            CreateRoomC2SPacket(inputValue, SharedConstants.VERSION_STRING, isCreative, blockStateAmount)
         )
     }
 
     override fun doRender(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
         guiGraphics.drawCenteredString(
             font,
-            "你安装了${if (isFabric) "Fabric" else "Forge"} Mod$modAmount 个，方块状态$blockStateAmount 个。",
+            "你安装了 Mod$modAmount 个，方块状态$blockStateAmount 个。",
             width / 2, 100, textColor
         )
     }
@@ -53,7 +53,7 @@ class ConeRoomCreateScreen(prevSc: Screen) : ConeOkCancelInputScreen(prevSc, "�
     }
 
     override fun onOk(data: FriendlyByteBuf) {
-        val rid = data.readVarInt()
+        val rid = data.readObjectId().toHexString()
         coneMsg(MsgType.Dialog, MsgLevel.Ok, "成功创建房间ID=${rid}（请牢记此ID。已自动复制）")
         Mc.copyClipboard(rid.toString())
         onClose()

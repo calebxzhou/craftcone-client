@@ -38,6 +38,7 @@ abstract class ConeOkCancelScreen(
     }
 
     private fun trySubmit() = try {
+        screenTitle = "已提交请求，等待响应中..."
         onSubmit()
     } catch (e: Exception) {
         coneErrD("错误：$e")
