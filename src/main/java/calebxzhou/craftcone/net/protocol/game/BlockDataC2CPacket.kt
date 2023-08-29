@@ -47,34 +47,18 @@ data class BlockDataC2CPacket(
 
     override fun process(server: IntegratedServer, room: ConeRoom) = Mc.getBlockStateById(stateId)?.let { state->
         room.getLevelByDimId(dimId)?.run{server.getLevel(this)}?.let {level ->
-            val bpos = BlockPos.of(this.bpos)
             level.setBlockDefault(bpos,state)
-        }?:run{
-
+            if (tag != null) {
+                level.getBlockEntity(bpos)?.load(tag)
+            }
         }
     }?: run {
         logger.warn("Can't find Block State of given ID $stateId ")
     }
-    /*{
-        val state = Mc.getBlockStateById(stateId) ?: let {
-
-            return
-        }
-        val lvl = room.getLevelByDimId(dimId)?.let { server.getLevel(it) } ?: let {
-            logger.warn("找不到编号为${dimId}的维度。默认为主世界！")
-            Mcl.getOverworld(server)
-        }
-
-        lvl.setBlockDefault(bpos, state)
-        tag?.let {
-            logger.info("载入NBT $it")
-            lvl.getBlockEntity(bpos)?.load(it)
-        }
-    }*/
 
     override fun write(buf: FriendlyByteBuf) {
         buf.writeVarInt(dimId)
-        buf.writeLong(bpos)
+        buf.writeLong(bpos.asLong())
         buf.writeVarInt(stateId)
         buf.writeUtf(tag?.asString ?: "")
     }
