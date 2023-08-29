@@ -1,8 +1,10 @@
 package calebxzhou.craftcone.net.protocol.room
 
+import calebxzhou.craftcone.net.ConeByteBuf.Companion.writeObjectId
 import calebxzhou.craftcone.net.protocol.BufferWritable
 import calebxzhou.craftcone.net.protocol.Packet
 import net.minecraft.network.FriendlyByteBuf
+import org.bson.types.ObjectId
 
 /**
  * Created  on 2023-07-06,8:48.
@@ -10,10 +12,10 @@ import net.minecraft.network.FriendlyByteBuf
 //玩家请求加入房间
 data class JoinRoomC2SPacket(
     //room id
-    val rid: Int
+    val rid: ObjectId
 ) : Packet, BufferWritable {
     override fun write(buf: FriendlyByteBuf) {
-        buf.writeVarInt(rid)
+        buf.writeObjectId(rid)
     }
 
 

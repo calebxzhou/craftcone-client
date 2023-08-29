@@ -21,14 +21,7 @@ class ConeRoomInfoScreen(prevScreen: Screen, private val room: ConeRoom) :
             textColor
         )
         guiGraphics.drawCenteredString(font, "创建时间：${room.createTimeStr}", width / 2, 20 * 4, textColor)
-        guiGraphics.drawCenteredString(
 
-            font,
-            "mod加载器：${if (room.isFabric) "Fabric" else "Forge "}",
-            width / 2,
-            20 * 5,
-            textColor
-        )
     }
 
     override fun onSubmit() {

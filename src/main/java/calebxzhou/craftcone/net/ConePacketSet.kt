@@ -2,10 +2,8 @@ package calebxzhou.craftcone.net
 
 import calebxzhou.craftcone.entity.ConeRoom
 import calebxzhou.craftcone.logger
-import calebxzhou.craftcone.mc.Mc
-import calebxzhou.craftcone.mc.Mcl
 import calebxzhou.craftcone.net.protocol.*
-import calebxzhou.craftcone.net.protocol.account.LoginC2SPacket
+import calebxzhou.craftcone.net.protocol.account.LoginByUidC2SPacket
 import calebxzhou.craftcone.net.protocol.account.RegisterC2SPacket
 import calebxzhou.craftcone.net.protocol.game.*
 import calebxzhou.craftcone.net.protocol.general.DisconnectS2CPacket
@@ -34,7 +32,7 @@ object ConePacketSet {
         registerPacket(OkDataS2CPacket::read)
         registerPacket(SysMsgS2CPacket::read)
 
-        registerPacket(LoginC2SPacket::class.java)
+        registerPacket(LoginByUidC2SPacket::class.java)
         registerPacket(RegisterC2SPacket::class.java)
 
         registerPacket(BlockDataC2CPacket::read)

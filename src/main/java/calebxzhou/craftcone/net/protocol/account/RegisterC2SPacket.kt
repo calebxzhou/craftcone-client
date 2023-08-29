@@ -10,11 +10,13 @@ import net.minecraft.network.FriendlyByteBuf
 data class RegisterC2SPacket(
     val pName: String,
     val pwd: String,
+    val email: String,
 ) : Packet, BufferWritable {
 
     override fun write(buf: FriendlyByteBuf) {
         buf.writeUtf(pName)
         buf.writeUtf(pwd)
+        buf.writeUtf(email)
     }
 
 }

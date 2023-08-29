@@ -1,8 +1,7 @@
 package calebxzhou.craftcone.ui.components
 
-import calebxzhou.craftcone.Consts
+import calebxzhou.craftcone.REGEX_OBJID
 import calebxzhou.craftcone.mc.Mc
-import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.network.chat.Component
 
@@ -15,7 +14,7 @@ class ConeIdEditBox(x: Int, y: Int, w: Int) : EditBox(Mc.font, x, y, w, 20, Comp
     }
 
     val isValueValid
-        get() = value.isNotEmpty() && value.matches(Consts.regexInt)
+        get() = value.isNotEmpty() && value.matches(REGEX_OBJID)
 
 
     override fun tick() {

@@ -10,7 +10,7 @@ import net.minecraft.client.gui.screens.Screen
 /**
  * Created  on 2023-06-20,10:00.
  */
-class ConeRoomSelectScreen(prevSc: Screen) : ConeOkCancelIntInputScreen(prevSc, "加入房间ID") {
+class ConeRoomSelectScreen(prevSc: Screen) : ConeOkCancelIdInputScreen(prevSc, "加入房间ID") {
     private val createBtn = ConeButton(w / 2 - 60, h - 20, 60, "创建房间") { Mc.screen = ConeRoomCreateScreen(this) }
     private val delBtn = ConeButton(w / 2 + 30, h - 20, 60, "删除房间") { ConeNetSender.sendPacket(DelRoomC2SPacket()) }
     override fun init() {
@@ -20,7 +20,7 @@ class ConeRoomSelectScreen(prevSc: Screen) : ConeOkCancelIntInputScreen(prevSc, 
     }
 
     override fun onSubmit() {
-        ConeNetSender.sendPacket(GetRoomC2SPacket(intValue))
+        ConeNetSender.sendPacket(GetRoomC2SPacket(idValue))
     }
 
 

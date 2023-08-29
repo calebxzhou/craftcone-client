@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     java
     `maven-publish`
-
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     alias(libs.plugins.kotlin)
     alias(libs.plugins.quilt.loom)
 }
@@ -36,6 +36,8 @@ dependencies {
         }
     )
     modImplementation(libs.quilt.loader)
+    // https://mvnrepository.com/artifact/org.mongodb/bson
+    implementation("org.mongodb:bson:4.10.2")
 
 
     // QSL is not a complete API; You will need Quilted Fabric API to fill in the gaps.
@@ -133,3 +135,15 @@ publishing {
 loom {
     accessWidenerPath = file("src/main/resources/craftcone.accesswidener")
 }
+
+
+abstract class ConeReleaseTask : DefaultTask() {
+    @TaskAction
+    fun coneRelease() {
+        println("hello from GreetingTask")
+    }
+}
+
+// Create a task using the task type
+tasks.register<ConeReleaseTask>("coneRelease")
+

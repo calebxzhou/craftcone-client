@@ -88,4 +88,4 @@ object Mcl {
 }
 
 fun ConePlayer.toMcPlayer(mcs: IntegratedServer): ServerPlayer =
-    ServerPlayer(mcs, mcs.overworld(), GameProfile(UUID(0, id.toLong()), name))
+    ServerPlayer(mcs, mcs.overworld(), GameProfile(UUID.nameUUIDFromBytes(id.toByteArray()), name))

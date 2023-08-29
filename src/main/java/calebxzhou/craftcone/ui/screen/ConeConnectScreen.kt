@@ -1,6 +1,6 @@
 package calebxzhou.craftcone.ui.screen
 
-import calebxzhou.craftcone.Consts
+import calebxzhou.craftcone.DEFAULT_PORT
 import calebxzhou.craftcone.entity.ConePlayer
 import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.ConeConnection
@@ -34,7 +34,7 @@ class ConeConnectScreen(val titleScreen: Screen) : ConeOkCancelInputScreen(title
     override fun onSubmit() {
         val ip = inputValue.replace("：", ":")
         //端口号
-        var port = Consts.DefaultPort
+        var port = DEFAULT_PORT
         if (ip.contains(":")) {
             port = ip.split(":")[1].toInt()
         }

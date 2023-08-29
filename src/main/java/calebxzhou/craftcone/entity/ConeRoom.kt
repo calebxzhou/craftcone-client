@@ -5,6 +5,7 @@ import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.mc.Mcl
 import calebxzhou.craftcone.mc.Mcl.MCS
 import calebxzhou.craftcone.mc.toMcPlayer
+import calebxzhou.craftcone.net.ConeByteBuf.Companion.readObjectId
 import calebxzhou.craftcone.net.ConeNetSender.sendPacket
 import calebxzhou.craftcone.net.protocol.*
 import calebxzhou.craftcone.net.protocol.game.BlockDataC2CPacket
@@ -23,6 +24,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
+import org.bson.types.ObjectId
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -33,11 +35,9 @@ import java.time.format.DateTimeFormatter
  */
 data class ConeRoom(
     //房间ID
-    val id: Int,
+    val id: ObjectId,
     //房间名
     val name: String,
-    //房主id
-    val ownerId: Int,
     //mc版本
     val mcVersion: String,
     //创造
@@ -49,11 +49,12 @@ data class ConeRoom(
     //创建时间
     val createTime: Long,
 ) : Packet, RenderThreadProcessable {
+
     //玩家列表
-    private val players = hashMapOf<Int, ConePlayer>()
+    private val inRoomPlayers = hashMapOf<ObjectId, ConePlayer>()
 
     val playerInfos
-        get() = players.values.map { it.mcPlayerInfo }
+        get() = inRoomPlayers.values.map { it.mcPlayerInfo }
 
     companion object : BufferReadable<ConeRoom> {
         //维度ID以及对应res key
@@ -68,9 +69,8 @@ data class ConeRoom(
         //从服务器收到房间信息
         override fun read(buf: FriendlyByteBuf): ConeRoom {
             return ConeRoom(
-                buf.readVarInt(),
+                buf.readObjectId(),
                 buf.readUtf(),
-                buf.readVarInt(),
                 buf.readUtf(),
                 buf.readBoolean(),
                 buf.readVarInt(),
@@ -126,22 +126,20 @@ data class ConeRoom(
 
     fun onOtherPlayerJoined(player: ConePlayer) {
         coneMsg(MsgType.Chat, MsgLevel.Info, "${player.name} 加入了房间")
-        players += player.id to player
+        inRoomPlayers += player.id to player
         player.toMcPlayer(MCS!!).let { Mcl.spawnPlayer(it) }
     }
 
-    fun onOtherPlayerLeft(uid: Int) = players[uid]?.let {
+    fun onOtherPlayerLeft(uid: ObjectId) = inRoomPlayers[uid]?.let {
         coneMsg(MsgType.Chat, MsgLevel.Info, "${it.name} 离开了房间")
-        players -= id
+        inRoomPlayers -= id
         Mcl.despawnPlayer(it.toMcPlayer(MCS!!))
     } ?: let {
         logger.warn("收到了玩家 $uid 的离开房间包 但是没找到此玩家")
         return
     }
 
-    fun getPlayer(id: Int): ConePlayer? {
-        return players[id]
-    }
+    fun getPlayer(id: ObjectId): ConePlayer? = inRoomPlayers[id]
 
     val createTimeStr: String
         get() = LocalDateTime.ofInstant(
