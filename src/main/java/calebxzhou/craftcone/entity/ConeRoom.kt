@@ -40,8 +40,6 @@ data class ConeRoom(
     val ownerId: Int,
     //mc版本
     val mcVersion: String,
-    //mod加载器？Fabric：Forge
-    val isFabric: Boolean,
     //创造
     val isCreative: Boolean,
     //方块状态数量
@@ -74,7 +72,6 @@ data class ConeRoom(
                 buf.readUtf(),
                 buf.readVarInt(),
                 buf.readUtf(),
-                buf.readBoolean(),
                 buf.readBoolean(),
                 buf.readVarInt(),
                 buf.readLong(),
