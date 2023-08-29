@@ -23,7 +23,7 @@ data class BlockDataC2CPacket(
     //维度ID
     val dimId: Int,
     //方块位置
-    val bpos: Long,
+    val bpos: BlockPos,
     //状态ID
     val stateId: Int,
     //NBT额外数据(没有就null)
@@ -32,7 +32,7 @@ data class BlockDataC2CPacket(
     companion object : BufferReadable<BlockDataC2CPacket> {
         override fun read(buf: FriendlyByteBuf) = BlockDataC2CPacket(
             buf.readVarInt(),
-            buf.readLong(),
+            BlockPos.of(buf.readLong()),
             buf.readVarInt(),
             buf.readUtf().let {
                 if (it.isNotEmpty())
@@ -45,22 +45,32 @@ data class BlockDataC2CPacket(
     }
 
 
-    override fun process(server: IntegratedServer, room: ConeRoom) {
+    override fun process(server: IntegratedServer, room: ConeRoom) = Mc.getBlockStateById(stateId)?.let { state->
+        room.getLevelByDimId(dimId)?.run{server.getLevel(this)}?.let {level ->
+            val bpos = BlockPos.of(this.bpos)
+            level.setBlockDefault(bpos,state)
+        }?:run{
+
+        }
+    }?: run {
+        logger.warn("Can't find Block State of given ID $stateId ")
+    }
+    /*{
         val state = Mc.getBlockStateById(stateId) ?: let {
-            logger.warn("找不到状态ID$stateId 对应的状态")
+
             return
         }
         val lvl = room.getLevelByDimId(dimId)?.let { server.getLevel(it) } ?: let {
             logger.warn("找不到编号为${dimId}的维度。默认为主世界！")
             Mcl.getOverworld(server)
         }
-        val bpos = BlockPos.of(this.bpos)
+
         lvl.setBlockDefault(bpos, state)
         tag?.let {
             logger.info("载入NBT $it")
             lvl.getBlockEntity(bpos)?.load(it)
         }
-    }
+    }*/
 
     override fun write(buf: FriendlyByteBuf) {
         buf.writeVarInt(dimId)
