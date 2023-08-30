@@ -11,6 +11,7 @@ import org.bson.types.ObjectId
  */
 //获取房间信息
 data class GetRoomC2SPacket(
+    //null == myRoom
     val rid: ObjectId
 ) : Packet, BufferWritable {
     override fun write(buf: FriendlyByteBuf) {

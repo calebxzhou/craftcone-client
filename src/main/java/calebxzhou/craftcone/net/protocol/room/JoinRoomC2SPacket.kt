@@ -11,7 +11,6 @@ import org.bson.types.ObjectId
  */
 //玩家请求加入房间
 data class JoinRoomC2SPacket(
-    //room id
     val rid: ObjectId
 ) : Packet, BufferWritable {
     override fun write(buf: FriendlyByteBuf) {
