@@ -6,8 +6,11 @@ import calebxzhou.craftcone.mc.Mcl
 import calebxzhou.craftcone.net.protocol.InRoomProcessable
 import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
+import calebxzhou.craftcone.net.protocol.game.BlockDataAckS2CPacket
+import calebxzhou.craftcone.net.protocol.game.BlockDataC2CPacket
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import net.minecraft.client.Minecraft
 
 /**
  * Created  on 2023-08-26,11:20.
@@ -15,6 +18,14 @@ import kotlinx.coroutines.Dispatchers
 object ConePacketProcessor {
     private val procScope = CoroutineScope(Dispatchers.Default)
     fun processPacket(packet: Packet) {
+        //TODO test
+        if(packet is BlockDataC2CPacket || packet is BlockDataAckS2CPacket){
+            println("$packet")
+        }
+
+
+        if(Minecraft.getInstance() == null)
+            return
         when (packet) {
             is RenderThreadProcessable -> Mc.renderThread {
                 packet.process()
