@@ -74,7 +74,7 @@ object Events {
 
     private fun onChat(message: PlayerChatMessage, player: ServerPlayer, bound: ChatType.Bound) {
         //玩家发聊天消息时
-        message.unsignedContent?.let { SendChatMsgC2SPacket(it.string) }?.let { sendPacket(it) }
+        message.signedContent()?.let { sendPacket(SendChatMsgC2SPacket(it)) }
     }
 
     private fun onBreakBlock(

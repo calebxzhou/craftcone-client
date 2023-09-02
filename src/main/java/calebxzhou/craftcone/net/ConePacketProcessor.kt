@@ -18,12 +18,6 @@ import net.minecraft.client.Minecraft
 object ConePacketProcessor {
     private val procScope = CoroutineScope(Dispatchers.Default)
     fun processPacket(packet: Packet) {
-        //TODO test
-        if(packet is BlockDataC2CPacket || packet is BlockDataAckS2CPacket){
-            println("$packet")
-        }
-
-
         if(Minecraft.getInstance() == null)
             return
         when (packet) {
