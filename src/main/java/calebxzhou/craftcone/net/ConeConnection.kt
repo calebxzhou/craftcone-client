@@ -7,6 +7,8 @@ import io.netty.channel.ChannelInitializer
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.DatagramChannel
 import io.netty.channel.socket.nio.NioDatagramChannel
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder
+import io.netty.handler.codec.LengthFieldPrepender
 import java.net.InetSocketAddress
 
 /**
@@ -28,6 +30,8 @@ data class ConeConnection(
                         override fun initChannel(ch: DatagramChannel) {
                             ch.pipeline()
                                 .addLast(ConeNetEncoder())
+                                .addLast(LengthFieldBasedFrameDecoder(65536,0,2,0,2))
+                                .addLast(LengthFieldPrepender(2))
                                 .addLast(ConeNetDecoder())
                                 .addLast(ConeNetReceiver())
                         }
