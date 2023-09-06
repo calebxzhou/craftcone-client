@@ -1,9 +1,9 @@
 package calebxzhou.craftcone.net.protocol.room
 
-import calebxzhou.craftcone.net.ConeByteBuf.Companion.writeObjectId
 import calebxzhou.craftcone.net.protocol.BufferWritable
 import calebxzhou.craftcone.net.protocol.Packet
-import net.minecraft.network.FriendlyByteBuf
+import calebxzhou.craftcone.utils.ByteBufUt.writeObjectId
+import io.netty.buffer.ByteBuf
 import org.bson.types.ObjectId
 
 /**
@@ -14,7 +14,7 @@ data class GetRoomC2SPacket(
     //null == myRoom
     val rid: ObjectId
 ) : Packet, BufferWritable {
-    override fun write(buf: FriendlyByteBuf) {
+    override fun write(buf: ByteBuf) {
         buf.writeObjectId(rid)
     }
 }

@@ -1,7 +1,5 @@
 package calebxzhou.craftcone.misc
 
-import calebxzhou.craftcone.logger
-import net.minecraft.server.level.ChunkHolder
 import net.minecraft.world.level.chunk.ChunkAccess
 
 /**

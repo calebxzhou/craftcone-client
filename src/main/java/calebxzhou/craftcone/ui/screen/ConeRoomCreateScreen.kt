@@ -2,17 +2,17 @@ package calebxzhou.craftcone.ui.screen
 
 import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.mc.Mc.blockStateAmount
-import calebxzhou.craftcone.net.ConeByteBuf.Companion.readObjectId
 import calebxzhou.craftcone.net.ConeNetSender
 import calebxzhou.craftcone.net.protocol.MsgLevel
 import calebxzhou.craftcone.net.protocol.MsgType
 import calebxzhou.craftcone.net.protocol.room.CreateRoomC2SPacket
 import calebxzhou.craftcone.ui.components.ConeButton
 import calebxzhou.craftcone.ui.coneMsg
+import calebxzhou.craftcone.utils.ByteBufUt.readObjectId
+import io.netty.buffer.ByteBuf
 import net.minecraft.SharedConstants
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.chat.Component
 import org.quiltmc.loader.api.QuiltLoader
 
@@ -52,7 +52,7 @@ class ConeRoomCreateScreen(prevSc: Screen) : ConeOkCancelInputScreen(prevSc, "�
         isCreative = false
     }
 
-    override fun onOk(data: FriendlyByteBuf) {
+    override fun onOk(data: ByteBuf) {
         val rid = data.readObjectId().toHexString()
         coneMsg(MsgType.Dialog, MsgLevel.Ok, "成功创建房间ID=${rid}（请牢记此ID。已自动复制）")
         Mc.copyClipboard(rid.toString())

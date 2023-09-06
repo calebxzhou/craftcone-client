@@ -1,11 +1,11 @@
 package calebxzhou.craftcone.ui.screen
 
-import net.minecraft.network.FriendlyByteBuf
+import io.netty.buffer.ByteBuf
 
 
 /**
  * Created  on 2023-07-24,11:16.
  */
 interface OkResponseScreen {
-    fun onOk(data: FriendlyByteBuf)
+    fun onOk(data: ByteBuf)
 }

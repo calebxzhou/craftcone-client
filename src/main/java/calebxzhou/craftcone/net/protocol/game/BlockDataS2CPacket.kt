@@ -3,23 +3,25 @@ package calebxzhou.craftcone.net.protocol.game
 import calebxzhou.craftcone.entity.ConeRoom
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.mc.Mc
-import calebxzhou.craftcone.mc.Mcl
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.BufferWritable
 import calebxzhou.craftcone.net.protocol.InRoomProcessable
 import calebxzhou.craftcone.net.protocol.Packet
+import calebxzhou.craftcone.utils.ByteBufUt.readUtf
+import calebxzhou.craftcone.utils.ByteBufUt.readVarInt
+import calebxzhou.craftcone.utils.ByteBufUt.writeUtf
+import calebxzhou.craftcone.utils.ByteBufUt.writeVarInt
 import calebxzhou.craftcone.utils.LevelUt.setBlockDefault
+import io.netty.buffer.ByteBuf
 import net.minecraft.client.server.IntegratedServer
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.TagParser
-import net.minecraft.network.FriendlyByteBuf
-import net.minecraft.world.level.Level
 
 /**
  * Created  on 2023-07-17,17:16.
  */
-data class BlockDataC2CPacket(
+data class BlockDataS2CPacket(
     //维度ID
     val dimId: Int,
     //方块位置
@@ -28,9 +30,9 @@ data class BlockDataC2CPacket(
     val stateId: Int,
     //NBT额外数据(没有就null)
     val tag: CompoundTag? = null
-) : Packet, InRoomProcessable, BufferWritable {
-    companion object : BufferReadable<BlockDataC2CPacket> {
-        override fun read(buf: FriendlyByteBuf) = BlockDataC2CPacket(
+) : Packet, InRoomProcessable {
+    companion object : BufferReadable<BlockDataS2CPacket> {
+        override fun read(buf: ByteBuf) = BlockDataS2CPacket(
             buf.readVarInt(),
             BlockPos.of(buf.readLong()),
             buf.readVarInt(),
@@ -54,13 +56,6 @@ data class BlockDataC2CPacket(
         }
     }?: run {
         logger.warn("Can't find Block State of given ID $stateId ")
-    }
-
-    override fun write(buf: FriendlyByteBuf) {
-        buf.writeVarInt(dimId)
-        buf.writeLong(bpos.asLong())
-        buf.writeVarInt(stateId)
-        buf.writeUtf(tag?.asString ?: "")
     }
 
 

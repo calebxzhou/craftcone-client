@@ -3,9 +3,11 @@ package calebxzhou.craftcone.mc
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.toasts.Toast
 import net.minecraft.client.gui.screens.TitleScreen
-import net.minecraft.core.RegistryAccess
 import net.minecraft.world.Difficulty
-import net.minecraft.world.level.*
+import net.minecraft.world.level.GameRules
+import net.minecraft.world.level.GameType
+import net.minecraft.world.level.LevelSettings
+import net.minecraft.world.level.WorldDataConfiguration
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.levelgen.WorldOptions

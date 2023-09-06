@@ -6,8 +6,6 @@ import calebxzhou.craftcone.mc.Mcl
 import calebxzhou.craftcone.net.protocol.InRoomProcessable
 import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
-import calebxzhou.craftcone.net.protocol.game.BlockDataAckS2CPacket
-import calebxzhou.craftcone.net.protocol.game.BlockDataC2CPacket
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import net.minecraft.client.Minecraft

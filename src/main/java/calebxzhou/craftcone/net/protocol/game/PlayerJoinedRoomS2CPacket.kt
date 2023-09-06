@@ -2,11 +2,11 @@ package calebxzhou.craftcone.net.protocol.game
 
 import calebxzhou.craftcone.entity.ConePlayer
 import calebxzhou.craftcone.entity.ConeRoom
-import calebxzhou.craftcone.net.ConeByteBuf.Companion.readObjectId
 import calebxzhou.craftcone.net.protocol.*
-import calebxzhou.craftcone.ui.coneMsg
+import calebxzhou.craftcone.utils.ByteBufUt.readObjectId
+import calebxzhou.craftcone.utils.ByteBufUt.readUtf
+import io.netty.buffer.ByteBuf
 import net.minecraft.client.server.IntegratedServer
-import net.minecraft.network.FriendlyByteBuf
 import org.bson.types.ObjectId
 
 /**
@@ -17,7 +17,7 @@ data class PlayerJoinedRoomS2CPacket(
     val pName: String
 ) : Packet, InRoomProcessable {
     companion object : BufferReadable<PlayerJoinedRoomS2CPacket> {
-        override fun read(buf: FriendlyByteBuf): PlayerJoinedRoomS2CPacket {
+        override fun read(buf: ByteBuf): PlayerJoinedRoomS2CPacket {
             return PlayerJoinedRoomS2CPacket(buf.readObjectId(), buf.readUtf())
         }
 

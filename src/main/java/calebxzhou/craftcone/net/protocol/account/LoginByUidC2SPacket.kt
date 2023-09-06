@@ -1,9 +1,10 @@
 package calebxzhou.craftcone.net.protocol.account
 
-import calebxzhou.craftcone.net.ConeByteBuf.Companion.writeObjectId
 import calebxzhou.craftcone.net.protocol.BufferWritable
 import calebxzhou.craftcone.net.protocol.Packet
-import net.minecraft.network.FriendlyByteBuf
+import calebxzhou.craftcone.utils.ByteBufUt.writeObjectId
+import calebxzhou.craftcone.utils.ByteBufUt.writeUtf
+import io.netty.buffer.ByteBuf
 import org.bson.types.ObjectId
 
 /**
@@ -17,7 +18,7 @@ data class LoginByUidC2SPacket(
     val pwd: String,
 ) : Packet, BufferWritable {
 
-    override fun write(buf: FriendlyByteBuf) {
+    override fun write(buf: ByteBuf) {
         buf.writeObjectId(uid)
         buf.writeUtf(pwd)
     }

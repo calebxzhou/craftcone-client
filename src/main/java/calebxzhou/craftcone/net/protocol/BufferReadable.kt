@@ -1,6 +1,6 @@
 package calebxzhou.craftcone.net.protocol
 
-import net.minecraft.network.FriendlyByteBuf
+import io.netty.buffer.ByteBuf
 
 
 /**
@@ -9,5 +9,5 @@ import net.minecraft.network.FriendlyByteBuf
 //通用数据包
 interface BufferReadable<T : Packet> {
     // 读取 数据
-    fun read(buf: FriendlyByteBuf): T
+    fun read(buf: ByteBuf): T
 }

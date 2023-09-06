@@ -1,10 +1,9 @@
 package calebxzhou.craftcone.net.protocol.account
 
-import calebxzhou.craftcone.net.ConeByteBuf.Companion.writeObjectId
 import calebxzhou.craftcone.net.protocol.BufferWritable
 import calebxzhou.craftcone.net.protocol.Packet
-import net.minecraft.network.FriendlyByteBuf
-import org.bson.types.ObjectId
+import calebxzhou.craftcone.utils.ByteBufUt.writeUtf
+import io.netty.buffer.ByteBuf
 
 /**
  * Created  on 2023-07-13,17:27.
@@ -16,7 +15,7 @@ data class LoginByNameC2SPacket(
     //密码
     val pwd: String,
 ) : Packet, BufferWritable {
-    override fun write(buf: FriendlyByteBuf) {
+    override fun write(buf: ByteBuf) {
         buf.writeUtf(name)
         buf.writeUtf(pwd)
     }

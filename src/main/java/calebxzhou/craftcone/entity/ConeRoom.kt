@@ -5,20 +5,21 @@ import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.mc.Mcl
 import calebxzhou.craftcone.mc.Mcl.MCS
 import calebxzhou.craftcone.mc.toMcPlayer
-import calebxzhou.craftcone.net.ConeByteBuf.Companion.readObjectId
 import calebxzhou.craftcone.net.ConeNetSender.sendPacket
 import calebxzhou.craftcone.net.protocol.*
-import calebxzhou.craftcone.net.protocol.game.BlockDataC2CPacket
 import calebxzhou.craftcone.net.protocol.room.JoinRoomC2SPacket
 import calebxzhou.craftcone.net.protocol.room.LeaveRoomC2SPacket
 import calebxzhou.craftcone.ui.coneErrD
 import calebxzhou.craftcone.ui.coneMsg
 import calebxzhou.craftcone.ui.screen.ConeRoomInfoScreen
+import calebxzhou.craftcone.utils.ByteBufUt.readObjectId
+import calebxzhou.craftcone.utils.ByteBufUt.readUtf
+import calebxzhou.craftcone.utils.ByteBufUt.readVarInt
 import calebxzhou.craftcone.utils.blockStateOfId
+import io.netty.buffer.ByteBuf
 import net.minecraft.client.gui.screens.TitleScreen
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.core.BlockPos
-import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.Level
@@ -67,7 +68,7 @@ data class ConeRoom(
             private set
 
         //从服务器收到房间信息
-        override fun read(buf: FriendlyByteBuf): ConeRoom {
+        override fun read(buf: ByteBuf): ConeRoom {
             return ConeRoom(
                 buf.readObjectId(),
                 buf.readUtf(),

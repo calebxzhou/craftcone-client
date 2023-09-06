@@ -3,11 +3,8 @@ package calebxzhou.craftcone.ui.overlay
 import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.net.protocol.MsgLevel
 import calebxzhou.craftcone.ui.DefaultColors
-import com.mojang.blaze3d.platform.InputConstants
-import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Overlay
-import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFW.*
 
 /**

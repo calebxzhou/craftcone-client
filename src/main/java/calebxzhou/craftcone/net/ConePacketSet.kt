@@ -2,14 +2,15 @@ package calebxzhou.craftcone.net
 
 import calebxzhou.craftcone.entity.ConeRoom
 import calebxzhou.craftcone.logger
-import calebxzhou.craftcone.net.protocol.*
+import calebxzhou.craftcone.net.protocol.BufferWritable
+import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.net.protocol.account.LoginByNameC2SPacket
 import calebxzhou.craftcone.net.protocol.account.LoginByUidC2SPacket
 import calebxzhou.craftcone.net.protocol.account.RegisterC2SPacket
 import calebxzhou.craftcone.net.protocol.game.*
 import calebxzhou.craftcone.net.protocol.general.*
 import calebxzhou.craftcone.net.protocol.room.*
-import net.minecraft.network.FriendlyByteBuf
+import io.netty.buffer.ByteBuf
 
 /**
  * Created  on 2023-07-14,8:55.
@@ -20,7 +21,7 @@ object ConePacketSet {
     private val packetTypes = arrayListOf<PacketType>()
 
     //s2c读
-    private val packetIdReaders = linkedMapOf<Int, (FriendlyByteBuf) -> Packet>()
+    private val packetIdReaders = linkedMapOf<Int, (ByteBuf) -> Packet>()
 
     //c2s写
     private val packetWriterClassIds = linkedMapOf<Class<out BufferWritable>, Int>()
@@ -40,9 +41,7 @@ object ConePacketSet {
         registerPacket(LoginByNameC2SPacket::class.java)
         registerPacket(RegisterC2SPacket::class.java)
 
-        registerPacket(BlockDataAckS2CPacket::read)
-        registerPacket(BlockDataC2CPacket::read)
-        registerPacket(BlockDataC2CPacket::class.java)
+        registerPacket(BlockDataS2CPacket::read)
         registerPacket(GetChunkC2SPacket::class.java)
         registerPacket(MovePlayerWpC2SPacket::class.java)
         registerPacket(MovePlayerXyzC2SPacket::class.java)
@@ -51,6 +50,7 @@ object ConePacketSet {
         registerPacket(PlayerMoveWpS2CPacket::read)
         registerPacket(PlayerMoveXyzS2CPacket::read)
         registerPacket(SendChatMsgC2SPacket::class.java)
+        registerPacket(SetBlockC2SPacket::class.java)
 
         registerPacket(CreateRoomC2SPacket::class.java)
         registerPacket(DelRoomC2SPacket::class.java)
@@ -62,7 +62,7 @@ object ConePacketSet {
 
     }
 
-    private fun registerPacket(reader: (FriendlyByteBuf) -> Packet) {
+    private fun registerPacket(reader: (ByteBuf) -> Packet) {
         packetIdReaders += packetTypes.size to reader
         packetTypes += PacketType.READ
     }
@@ -73,7 +73,7 @@ object ConePacketSet {
     }
 
 
-    fun createPacket(packetId: Int, data: FriendlyByteBuf): Packet? = packetIdReaders[packetId]?.invoke(data) ?: let {
+    fun createPacket(packetId: Int, data: ByteBuf): Packet? = packetIdReaders[packetId]?.invoke(data) ?: let {
         logger.error("找不到ID$packetId 的包")
         null
     }

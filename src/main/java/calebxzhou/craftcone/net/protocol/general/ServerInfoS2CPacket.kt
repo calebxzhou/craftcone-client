@@ -3,7 +3,9 @@ package calebxzhou.craftcone.net.protocol.general
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
-import net.minecraft.network.FriendlyByteBuf
+import calebxzhou.craftcone.utils.ByteBufUt.readUtf
+import calebxzhou.craftcone.utils.ByteBufUt.readVarInt
+import io.netty.buffer.ByteBuf
 
 /**
  * Created  on 2023-08-29,20:17.
@@ -17,7 +19,7 @@ data class ServerInfoS2CPacket(
     val icon: String,
 ) : Packet, RenderThreadProcessable {
     companion object : BufferReadable<ServerInfoS2CPacket> {
-        override fun read(buf: FriendlyByteBuf) = ServerInfoS2CPacket(
+        override fun read(buf: ByteBuf) = ServerInfoS2CPacket(
             buf.readVarInt(),
             buf.readVarInt(),
             buf.readVarInt(),

@@ -3,7 +3,6 @@ package calebxzhou.craftcone.mc
 import calebxzhou.craftcone.entity.ConePlayer
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.mc.mixin.aGui
-import calebxzhou.craftcone.utils.OsDialogUt
 import com.mojang.authlib.GameProfile
 import net.minecraft.client.Minecraft
 import net.minecraft.client.server.IntegratedServer

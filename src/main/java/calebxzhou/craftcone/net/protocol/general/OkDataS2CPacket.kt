@@ -5,14 +5,14 @@ import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
 import calebxzhou.craftcone.ui.screen.OkResponseScreen
-import net.minecraft.network.FriendlyByteBuf
+import io.netty.buffer.ByteBuf
 
 /**
  * Created  on 2023-08-15,8:47.
  */
-data class OkDataS2CPacket(val data: FriendlyByteBuf) : Packet, RenderThreadProcessable {
+data class OkDataS2CPacket(val data: ByteBuf) : Packet, RenderThreadProcessable {
     companion object : BufferReadable<OkDataS2CPacket> {
-        override fun read(buf: FriendlyByteBuf): OkDataS2CPacket {
+        override fun read(buf: ByteBuf): OkDataS2CPacket {
             buf.retain()
             return OkDataS2CPacket(buf)
         }

@@ -2,7 +2,9 @@ package calebxzhou.craftcone.net.protocol.room
 
 import calebxzhou.craftcone.net.protocol.BufferWritable
 import calebxzhou.craftcone.net.protocol.Packet
-import net.minecraft.network.FriendlyByteBuf
+import calebxzhou.craftcone.utils.ByteBufUt.writeUtf
+import calebxzhou.craftcone.utils.ByteBufUt.writeVarInt
+import io.netty.buffer.ByteBuf
 
 /**
  * Created  on 2023-07-06,8:48.
@@ -18,7 +20,7 @@ data class CreateRoomC2SPacket(
     //方块状态数量
     val blockStateAmount: Int,
 ) : Packet, BufferWritable {
-    override fun write(buf: FriendlyByteBuf) {
+    override fun write(buf: ByteBuf) {
         buf.writeUtf(rName)
         buf.writeUtf(mcVersion)
         buf.writeBoolean(isCreative)

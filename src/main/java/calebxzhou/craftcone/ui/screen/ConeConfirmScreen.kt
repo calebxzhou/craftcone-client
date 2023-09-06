@@ -1,6 +1,5 @@
 package calebxzhou.craftcone.ui.screen
 
-import calebxzhou.craftcone.mc.Mc
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
 
