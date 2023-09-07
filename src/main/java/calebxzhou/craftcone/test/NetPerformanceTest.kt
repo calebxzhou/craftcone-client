@@ -6,6 +6,7 @@ import calebxzhou.craftcone.net.ConeConnection
 import calebxzhou.craftcone.net.ConeNetSender.sendPacket
 import calebxzhou.craftcone.net.protocol.account.LoginByNameC2SPacket
 import calebxzhou.craftcone.net.protocol.game.GetChunkC2SPacket
+import calebxzhou.craftcone.net.protocol.game.SetBlockC2SPacket
 import calebxzhou.craftcone.net.protocol.room.JoinRoomC2SPacket
 import net.minecraft.core.BlockPos
 import org.bson.types.ObjectId
@@ -28,7 +29,7 @@ fun write512x512blocks(){
     for(x in -256..256){
         for(z in -256 .. 256){
             val y=64
-            sendPacket(BlockDataC2CPacket(0, BlockPos(x,y,z),1))
+            sendPacket(SetBlockC2SPacket(0, BlockPos(x,y,z),1))
         }
     }
     val t2 = System.currentTimeMillis()

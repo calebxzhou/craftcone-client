@@ -7,6 +7,7 @@ import calebxzhou.craftcone.mc.Mcl.MCS
 import calebxzhou.craftcone.mc.toMcPlayer
 import calebxzhou.craftcone.net.ConeNetSender.sendPacket
 import calebxzhou.craftcone.net.protocol.*
+import calebxzhou.craftcone.net.protocol.game.SetBlockC2SPacket
 import calebxzhou.craftcone.net.protocol.room.JoinRoomC2SPacket
 import calebxzhou.craftcone.net.protocol.room.LeaveRoomC2SPacket
 import calebxzhou.craftcone.ui.coneErrD
@@ -173,7 +174,7 @@ data class ConeRoom(
             return
         val level = Mcl.getLevel(clientLevel.dimension()) ?: return
         sendPacket(
-            BlockDataC2CPacket(
+            SetBlockC2SPacket(
                 getDimIdByLevel(level),
                 blockPos,
                 blockStateOfId(Blocks.AIR.defaultBlockState())
@@ -189,7 +190,7 @@ data class ConeRoom(
         //Mcl.logicThread {
         val tag = level.getBlockEntity(pos)?.saveWithoutMetadata()
         sendPacket(
-            BlockDataC2CPacket(
+            SetBlockC2SPacket(
                 getDimIdByLevel(level),
                 pos,
                 blockStateOfId(level.getBlockState(pos)),
@@ -205,7 +206,7 @@ data class ConeRoom(
             return
         val level = Mcl.getLevel(clientLevel.dimension()) ?: return
         sendPacket(
-            BlockDataC2CPacket(
+            SetBlockC2SPacket(
                 getDimIdByLevel(level),
                 blockPos,
                 blockStateOfId(level.getBlockState(blockPos)),
@@ -225,7 +226,7 @@ data class ConeRoom(
 
         val tag = level.getBlockEntity(blockPos)?.saveWithoutMetadata()
         sendPacket(
-            BlockDataC2CPacket(
+            SetBlockC2SPacket(
                 getDimIdByLevel(level),
                 blockPos,
                 blockStateOfId(blockState),
