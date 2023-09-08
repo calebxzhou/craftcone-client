@@ -1,5 +1,6 @@
 package calebxzhou.craftcone.net.protocol.general
 
+import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.net.protocol.BufferReadable
 import calebxzhou.craftcone.net.protocol.Packet
 import calebxzhou.craftcone.net.protocol.RenderThreadProcessable
@@ -31,6 +32,6 @@ data class ServerInfoS2CPacket(
     }
 
     override fun process() {
-        TODO("Not yet implemented")
+        logger.info(this)
     }
 }

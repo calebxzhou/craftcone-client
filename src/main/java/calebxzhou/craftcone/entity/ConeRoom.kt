@@ -194,7 +194,7 @@ data class ConeRoom(
                 getDimIdByLevel(level),
                 pos,
                 blockStateOfId(level.getBlockState(pos)),
-                tag
+                tag?.asString
             )
         );
         // }
@@ -210,7 +210,7 @@ data class ConeRoom(
                 getDimIdByLevel(level),
                 blockPos,
                 blockStateOfId(level.getBlockState(blockPos)),
-                level.getBlockEntity(blockPos)?.saveWithoutMetadata()
+                level.getBlockEntity(blockPos)?.saveWithoutMetadata()?.asString
             )
         )
     }
@@ -230,7 +230,7 @@ data class ConeRoom(
                 getDimIdByLevel(level),
                 blockPos,
                 blockStateOfId(blockState),
-                tag
+                tag?.asString
             )
         )
     }

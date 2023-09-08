@@ -11,11 +11,13 @@ import io.netty.handler.codec.MessageToByteEncoder
  */
 class ConeNetEncoder : MessageToByteEncoder<BufferWritable>() {
     override fun encode(ctx: ChannelHandlerContext, packet: BufferWritable, data: ByteBuf) {
+        logger.debug("Encoding packet ${packet.javaClass.simpleName} ")
         ConePacketSet.getPacketId(packet.javaClass)?.let { packetId->
             data.writeByte(packetId)
             packet.write(data)
-        }?: let{
-            logger.error("找不到$packet 对应的包ID")
+            logger.debug("Packet ${packet.javaClass.simpleName} encoded with ID $packetId, size ${data.readableBytes()}")
+        } ?: run {
+            logger.error("Can't find corresponding ID of Packet ${packet.javaClass.simpleName}")
         }
     }
 }

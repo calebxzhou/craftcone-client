@@ -17,6 +17,8 @@ import net.minecraft.world.level.levelgen.presets.WorldPresets
  * Created  on 2023-08-12,16:21.
  */
 object Mc {
+    val isStarted
+        get() = Minecraft.getInstance() != null
     private val MC: Minecraft
         get() = Minecraft.getInstance() ?: run {
             throw IllegalStateException("Minecraft Not Start !")
@@ -49,11 +51,15 @@ object Mc {
     }
 
     fun renderThread(todo: () -> Unit) {
-        MC.execute(todo)
+        if (Mc.isStarted)
+            MC.execute(todo)
+        else
+            todo()
     }
 
     fun goTitleScreen() {
-        screen = TitleScreen()
+        if (Mc.isStarted)
+            screen = TitleScreen()
     }
 
     fun addToast(toast: Toast) {

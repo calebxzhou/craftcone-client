@@ -6,9 +6,15 @@ import io.netty.channel.ChannelFuture
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.DatagramChannel
+import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioDatagramChannel
+import io.netty.channel.socket.nio.NioServerSocketChannel
+import io.netty.channel.socket.nio.NioSocketChannel
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder
 import io.netty.handler.codec.LengthFieldPrepender
+import io.netty.handler.codec.LineBasedFrameDecoder
+import net.minecraft.network.Varint21FrameDecoder
+import net.minecraft.network.Varint21LengthFieldPrepender
 import java.net.InetSocketAddress
 
 /**
@@ -25,15 +31,15 @@ data class ConeConnection(
             now = ConeConnection(
                 Bootstrap()
                     .group(NioEventLoopGroup())
-                    .channel(NioDatagramChannel::class.java)
-                    .handler(object : ChannelInitializer<DatagramChannel>() {
-                        override fun initChannel(ch: DatagramChannel) {
+                    .channel(NioSocketChannel::class.java)
+                    .handler(object : ChannelInitializer<SocketChannel>() {
+                        override fun initChannel(ch: SocketChannel) {
                             ch.pipeline()
-                                .addLast(ConeNetEncoder())
-                                .addLast(LengthFieldBasedFrameDecoder(65536,0,2,0,2))
-                                .addLast(LengthFieldPrepender(2))
-                                .addLast(ConeNetDecoder())
-                                .addLast(ConeNetReceiver())
+                                .addLast("splitter", Varint21FrameDecoder())
+                                .addLast("prepender", Varint21LengthFieldPrepender())
+                                .addLast("decoder", ConeNetDecoder())
+                                .addLast("packet_handler", ConeNetReceiver())
+                                .addLast("encoder", ConeNetEncoder())
                         }
 
                     })

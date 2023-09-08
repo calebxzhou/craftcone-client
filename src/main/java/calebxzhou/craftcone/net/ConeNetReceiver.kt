@@ -22,7 +22,14 @@ class ConeNetReceiver : SimpleChannelInboundHandler<Packet>() {
         Mc.goTitleScreen()
     }
 
+    override fun channelInactive(ctx: ChannelHandlerContext) {
+        Mc.goTitleScreen()
+    }
     override fun channelRead0(ctx: ChannelHandlerContext?, msg: Packet) {
         ConePacketProcessor.processPacket(msg)
+    }
+
+    override fun channelReadComplete(ctx: ChannelHandlerContext) {
+        ctx.flush()
     }
 }

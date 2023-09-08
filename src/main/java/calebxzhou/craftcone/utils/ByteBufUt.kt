@@ -1,6 +1,7 @@
 package calebxzhou.craftcone.utils
 
 import io.netty.buffer.ByteBuf
+import io.netty.buffer.Unpooled
 import io.netty.handler.codec.DecoderException
 import io.netty.handler.codec.EncoderException
 import org.bson.types.ObjectId
@@ -28,13 +29,22 @@ fun getVarIntSize(input: Int): Int {
 private fun getMaxEncodedUtfLength(i: Int): Int {
     return i * 3
 }
-fun ByteBuf.writeObjectId(objectId: ObjectId) : ByteBuf{
-    writeBytes(objectId.toByteArray())
-    return this
-}
-fun ByteBuf.readObjectId():ObjectId = ObjectId(
-    readBytes(12).nioBuffer()
-)
+
+    /*fun ByteBuf.writeObjectId(objectId: ObjectId) : ByteBuf{
+        writeUtf(objectId.toHexString())
+        return this
+    }
+    fun ByteBuf.readObjectId():ObjectId = ObjectId(
+        readUtf()
+    )*/
+    fun ByteBuf.writeObjectId(objectId: ObjectId): ByteBuf {
+        writeBytes(objectId.toByteArray())
+        return this
+    }
+
+    fun ByteBuf.readObjectId(): ObjectId = ObjectId(
+        readBytes(12).nioBuffer()
+    )
 fun ByteBuf.readUtf(): String  {
     return this.readUtf(32767)
 }

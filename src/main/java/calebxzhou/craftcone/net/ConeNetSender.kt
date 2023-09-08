@@ -1,5 +1,6 @@
 package calebxzhou.craftcone.net
 
+import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.net.protocol.BufferWritable
 import calebxzhou.craftcone.net.protocol.MsgLevel
 import calebxzhou.craftcone.net.protocol.MsgType
@@ -18,17 +19,15 @@ object ConeNetSender {
     //TODO 做容器同步
 
 
-    //发送线程
-    private val senderScope = CoroutineScope(Dispatchers.IO)
 
     @JvmStatic
     fun sendPacket(packet: BufferWritable) {
-        senderScope.launch {
+        logger.debug("Sending packet ${packet.javaClass.simpleName}")
             ConeConnection.now?.channelFuture?.channel()?.writeAndFlush(packet) ?: let {
                 coneMsg(MsgType.Dialog, MsgLevel.Err, "连接服务器失败")
                 ConeConnection.disconnect()
             }
-        }
+
         //发走
     }
 

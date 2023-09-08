@@ -29,7 +29,7 @@ data class SetBlockC2SPacket(
     //状态ID
     val stateId: Int,
     //NBT额外数据(没有就null)
-    val tag: CompoundTag? = null
+    val tag: String? = null
 ) : Packet,  BufferWritable {
 
 
@@ -37,7 +37,7 @@ data class SetBlockC2SPacket(
         buf.writeVarInt(dimId)
         buf.writeLong(bpos.asLong())
         buf.writeVarInt(stateId)
-        buf.writeUtf(tag?.asString ?: "")
+        buf.writeUtf(tag ?: "")
     }
 
 

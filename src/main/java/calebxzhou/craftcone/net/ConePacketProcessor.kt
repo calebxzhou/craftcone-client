@@ -1,6 +1,7 @@
 package calebxzhou.craftcone.net
 
 import calebxzhou.craftcone.entity.ConeRoom
+import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.mc.Mcl
 import calebxzhou.craftcone.net.protocol.InRoomProcessable
@@ -16,8 +17,7 @@ import net.minecraft.client.Minecraft
 object ConePacketProcessor {
     private val procScope = CoroutineScope(Dispatchers.Default)
     fun processPacket(packet: Packet) {
-        if(Minecraft.getInstance() == null)
-            return
+        logger.debug("Processing packet ${packet.javaClass.simpleName}")
         when (packet) {
             is RenderThreadProcessable -> Mc.renderThread {
                 packet.process()
