@@ -1,13 +1,11 @@
-package calebxzhou.craftcone
+package calebxzhou.craftcone.mc
 
 import calebxzhou.craftcone.command.ConeRefreshChunkCommand
 import calebxzhou.craftcone.entity.ConeChunkPos
 import calebxzhou.craftcone.entity.ConeRoom
-import calebxzhou.craftcone.mc.Mcl
 import calebxzhou.craftcone.misc.ChunkGenManager
 import calebxzhou.craftcone.net.ConeNetSender.sendPacket
-import calebxzhou.craftcone.net.protocol.game.GetChunkC2SPacket
-import calebxzhou.craftcone.net.protocol.game.SendChatMsgC2SPacket
+import calebxzhou.craftcone.net.protocol.game.*
 import com.mojang.brigadier.CommandDispatcher
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
@@ -30,6 +28,7 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.chunk.LevelChunk
 import org.quiltmc.qsl.command.api.CommandRegistrationCallback
+import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents
 import org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents
 import org.quiltmc.qsl.lifecycle.api.event.ServerWorldLoadEvents
 import org.quiltmc.qsl.networking.api.PacketSender
@@ -40,16 +39,30 @@ import org.quiltmc.qsl.networking.api.client.ClientPlayConnectionEvents
  */
 object Events {
     fun register() {
-        PlayerBlockBreakEvents.AFTER.register(::onBreakBlock)
-        ServerMessageEvents.CHAT_MESSAGE.register(::onChat)
-        ServerWorldLoadEvents.LOAD.register(::onLevelLoad)
+        PlayerBlockBreakEvents.AFTER.register(Events::onBreakBlock)
+        ServerMessageEvents.CHAT_MESSAGE.register(Events::onChat)
+        ServerWorldLoadEvents.LOAD.register(Events::onLevelLoad)
         //ServerLifecycleEvents.READY.register(::onLocalServerReady)
-        ServerLifecycleEvents.STOPPING.register(::onLocalServerStopping)
-        ClientPlayConnectionEvents.JOIN.register(::onClientPlayerJoin)
-        ClientPlayConnectionEvents.DISCONNECT.register(::onClientPlayerLeave)
-        ClientChunkEvents.CHUNK_LOAD.register(::onClientChunkLoad)
-        CommandRegistrationCallback.EVENT.register(::onRegisterCommand)
+        ServerLifecycleEvents.STOPPING.register(Events::onLocalServerStopping)
+        ClientPlayConnectionEvents.JOIN.register(Events::onClientPlayerJoin)
+        ClientPlayConnectionEvents.DISCONNECT.register(Events::onClientPlayerLeave)
+        ClientChunkEvents.CHUNK_LOAD.register(Events::onClientChunkLoad)
+        CommandRegistrationCallback.EVENT.register(Events::onRegisterCommand)
+        ClientTickEvents.START.register(::onClientTickStart)
         //TODO 当关闭容器画面时 上传容器内容
+    }
+
+    var ticks = 0
+    private fun onClientTickStart(mc: Minecraft) {
+        if(ticks<20){
+            mc.player?.let {
+                sendPacket(MovePlayerXyzC2SPacket(it.x.toFloat(),it.y.toFloat(),it.z.toFloat()))
+                sendPacket(MovePlayerWpC2SPacket(it.xRot, it.yRot))
+            }
+            ticks++
+        }else{
+            ticks=0
+        }
     }
 
     private fun onClientChunkLoad(level: ClientLevel, chunk: LevelChunk) {
