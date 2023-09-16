@@ -28,7 +28,7 @@ data class PlayerMoveXyzS2CPacket(
     }
 
     override fun process(server: IntegratedServer, room: ConeRoom) = room.getPlayer(uid)
-        ?.toMcPlayer(server)
+        ?.toMcPlayer()
         ?.setPos(Vec3(x.toDouble(), y.toDouble(), z.toDouble()))
         ?: let {
         logger.warn("找不到玩家$uid")

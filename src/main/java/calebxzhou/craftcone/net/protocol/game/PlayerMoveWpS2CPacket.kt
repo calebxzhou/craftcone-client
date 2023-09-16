@@ -26,7 +26,7 @@ data class PlayerMoveWpS2CPacket(
     }
 
     override fun process(server: IntegratedServer, room: ConeRoom) {
-        room.getPlayer(uid)?.toMcPlayer(server)?.let {
+        room.getPlayer(uid)?.toMcPlayer()?.let {
             it.xRot = w
             it.yRot = p
         } ?: let {

@@ -3,7 +3,6 @@ package calebxzhou.craftcone.entity
 import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.mc.Mc
 import calebxzhou.craftcone.mc.Mcl
-import calebxzhou.craftcone.mc.Mcl.MCS
 import calebxzhou.craftcone.mc.toMcPlayer
 import calebxzhou.craftcone.net.ConeNetSender.sendPacket
 import calebxzhou.craftcone.net.protocol.*
@@ -103,7 +102,6 @@ data class ConeRoom(
         fun join(room: ConeRoom) {
             sendPacket(JoinRoomC2SPacket(room.id))
             now = room
-
         }
 
         //卸载房间
@@ -131,13 +129,13 @@ data class ConeRoom(
     fun onOtherPlayerJoined(player: ConePlayer) {
         coneMsg(MsgType.Chat, MsgLevel.Info, "${player.name} 加入了房间")
         inRoomPlayers += player.id to player
-        player.toMcPlayer(MCS!!).let { Mcl.spawnPlayer(it) }
+        player.toMcPlayer().let { Mcl.spawnPlayer(it) }
     }
 
     fun onOtherPlayerLeft(uid: ObjectId) = inRoomPlayers[uid]?.let {
         coneMsg(MsgType.Chat, MsgLevel.Info, "${it.name} 离开了房间")
         inRoomPlayers -= id
-        Mcl.despawnPlayer(it.toMcPlayer(MCS!!))
+        Mcl.despawnPlayer(it.toMcPlayer())
     } ?: let {
         logger.warn("收到了玩家 $uid 的离开房间包 但是没找到此玩家")
         return

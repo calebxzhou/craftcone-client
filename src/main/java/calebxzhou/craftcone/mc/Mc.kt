@@ -45,7 +45,8 @@ object Mc {
         get() = Block.BLOCK_STATE_REGISTRY
     val blockStateAmount
         get() = Block.BLOCK_STATE_REGISTRY.size()
-
+    val playingLevel
+        get() = MC.level
     fun getBlockStateById(id: Int): BlockState? {
         return blockStates.byId(id)
     }

@@ -5,6 +5,7 @@ import calebxzhou.craftcone.logger
 import calebxzhou.craftcone.mc.mixin.aGui
 import com.mojang.authlib.GameProfile
 import net.minecraft.client.Minecraft
+import net.minecraft.client.player.RemotePlayer
 import net.minecraft.client.server.IntegratedServer
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
@@ -12,6 +13,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.HttpUtil
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.Level
 import java.util.*
@@ -75,16 +77,14 @@ object Mcl {
     }
 
 
-    fun spawnPlayer(player: ServerPlayer) = MCS?.let { getOverworld(it).addFreshEntity(player) }
+    fun spawnPlayer(player: Player) = MCS?.let { getOverworld(it).addFreshEntity(player) }
 
-    fun despawnPlayer(player: ServerPlayer) = MCS?.let {
-        getOverworld(it).removePlayerImmediately(
-            player, Entity.RemovalReason.DISCARDED
-        )
+    fun despawnPlayer(player: Player) = MCS?.let {
+        player.kill()
     }
 
 
 }
 
-fun ConePlayer.toMcPlayer(mcs: IntegratedServer): ServerPlayer =
-    ServerPlayer(mcs, mcs.overworld(), GameProfile(UUID.nameUUIDFromBytes(id.toByteArray()), name))
+fun ConePlayer.toMcPlayer(): Player =
+    RemotePlayer(Mc.playingLevel!!, GameProfile(UUID.nameUUIDFromBytes(id.toByteArray()), name))
